@@ -41,7 +41,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Patient Role - بدون صلاحيات إدارية
         Role::firstOrCreate(['name' => 'patient', 'guard_name' => 'api']);
 
-        // إنشاء يوزر أدمن افتراضي 
+        // إنشاء يوزر أدمن افتراضي
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
