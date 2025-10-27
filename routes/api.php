@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\MessageSent;
+use App\Http\Controllers\ChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -29,3 +31,29 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
     });
 });
+
+Route::post('/login', function (Request $request) {
+    $user = User::where('email', $request->email)->first();
+
+    // if (! $user || ! Hash::check($request->password, $user->password)) {
+        // return response()->json(['message' => 'Invalid credentials'], 401);
+    // }
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+    ]);
+});
+
+ 
+
+
+
+// ==========start Routs chat=============
+/**Packagist
+ *composer require laravel/reverb
+ *php artisan reverb:install
+ */
+Route::apiResource('chats', ChatController::class);
