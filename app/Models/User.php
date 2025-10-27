@@ -34,6 +34,9 @@ class User extends Authenticatable
         'profile_photo',
         'location_lat',
         'location_lng',
+        'email_otp',
+        'email_verified_at',
+        'email_otp_expires_at',
     ];
 
     /**
@@ -57,5 +60,9 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
     }
 }
