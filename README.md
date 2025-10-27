@@ -1,61 +1,158 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🩺 Doctor Appointment System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Backend:** Laravel 12 (PHP 8.2+)  
+**Frontend:** Mobile App (Flutter / React Native)  
+**Database:** MySQL / PostgreSQL
 
-## About Laravel
+## 📖 Overview
+Doctor Appointment System هو مشروع متكامل بيهدف لتسهيل عملية **حجز المواعيد الطبية** بين المرضى والأطباء من خلال تطبيق موبايل، مع **لوحة تحكم ويب للإدارة (Admins & Helpers)**.  
+النظام بيشمل تسجيل المستخدمين، البحث عن الأطباء حسب الموقع أو التخصص، الحجز والدفع، التقييمات، الدردشة الفورية، والإشعارات اللحظية.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 👩‍⚕️ For Patients
+- التسجيل والدخول (Email / Mobile / Google / OTP).
+- البحث عن الأطباء حسب التخصص أو الموقع الجغرافي (Google Maps API).
+- إدارة المفضلة (Add/Remove Favorites).
+- حجز المواعيد مع طرق دفع متعددة (PayPal / Stripe / Cash).
+- استعراض الحجوزات القادمة والسابقة.
+- كتابة التقييمات بعد الجلسة.
+- الدردشة الفورية مع الطبيب (Laravel WebSocket).
+- إعدادات الحساب (تعديل الملف الشخصي / كلمة المرور / حذف الحساب).
+- استقبال الإشعارات (FCM / APNS).
 
-## Learning Laravel
+### 🧑‍⚕️ For Doctors
+- الحساب يُنشأ من قبل الأدمن ويتم تفعيله عبر البريد أو OTP.
+- تسجيل الدخول الآمن (Email / Mobile / Google / OTP).
+- إدارة جدول المواعيد (availability).
+- عرض وإدارة الحجوزات (قبول / إلغاء / إعادة جدولة).
+- عرض تقييمات المرضى والرد عليها.
+- إدارة الملف الشخصي (الاسم، التخصص، العيادة، السعر).
+- تقارير الأرباح والحجوزات.
+- دردشة فورية مع المرضى.
+- تلقي إشعارات بالحجوزات والمراجعات الجديدة.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🧑‍💻 For Admins & Helpers (Web Dashboard)
+- تسجيل الدخول الآمن مع 2FA (OTP).
+- إدارة المستخدمين والأطباء (إنشاء، تعديل، حذف، تعليق الحساب).
+- إدارة الحجوزات والمدفوعات والمنازعات.
+- مراقبة النظام (System Logs / Reports).
+- إدارة محتوى الأسئلة الشائعة (FAQs) والسياسات (Policies).
+- إشعارات وتنبيهات فورية.
+- صلاحيات مرنة باستخدام Spatie Laravel Permission (Roles: Admin, Doctor, Patient).
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ⚙️ Tech Stack
 
-## Laravel Sponsors
+| Layer | Technology |
+|-------|-------------|
+| **Backend** | PHP 8.2+, Laravel 12 |
+| **Database** | MySQL / PostgreSQL |
+| **Frontend (Mobile)** | Flutter / React Native |
+| **Authentication** | Laravel Sanctum (JWT Tokens) |
+| **Payments** | PayPal API, Stripe API |
+| **Maps / Location** | Google Maps API |
+| **Notifications** | Firebase Cloud Messaging (FCM), Apple Push Notification Service (APNS) |
+| **Real-time Chat** | Laravel Echo + WebSockets |
+| **Hosting / Scalability** | AWS / Laravel Vapor |
+| **Security** | HTTPS, encryption, GDPR/HIPAA compliance |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🧩 System Modules
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+| Module | Description |
+|--------|--------------|
+| **Authentication** | تسجيل الدخول والتفعيل عبر OTP أو Google |
+| **Doctors Management** | إضافة وتحديث بيانات الأطباء وتخصصاتهم |
+| **Patients Management** | إدارة ملفات المرضى وتاريخ حجوزاتهم |
+| **Bookings** | إنشاء، إلغاء، إعادة جدولة المواعيد |
+| **Payments** | معالجة المدفوعات عبر PayPal أو Stripe |
+| **Reviews** | كتابة التقييمات بعد الجلسات |
+| **Chat** | دردشة فورية بين الطبيب والمريض |
+| **Notifications** | إشعارات للحجوزات والتحديثات |
+| **Favorites** | حفظ الأطباء المفضلين |
+| **System Logs** | تسجيل الأحداث (logging & auditing) |
+| **FAQs / Policies** | إدارة الأسئلة الشائعة والسياسات |
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🔒 Security & Compliance
+- استخدام HTTPS + JWT Authentication.
+- تشفير بيانات المستخدمين وكلمات المرور.
+- توافق مع معايير GDPR/HIPAA لحماية البيانات الصحية.
+- فحص صلاحيات الوصول باستخدام **Spatie Laravel Permission**.
+- نسخ احتياطي يومي للبيانات.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🧠 Architecture
+- **Layered Architecture** (Controllers → Services → Models).
+- **RESTful API** بالكامل للموبايل.
+- **RBAC** للتحكم في الصلاحيات.
+- **Event Broadcasting** مع WebSockets.
+- **Queue Jobs** لإرسال الإشعارات وتنفيذ المهام المؤجلة.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📊 Performance & Scalability
+- زمن استجابة الـ API أقل من 2 ثانية.
+- دعم أكثر من 100 مستخدم متزامن مبدئيًا.
+- Caching باستخدام Redis.
+- إمكانية نشر على **Laravel Vapor** أو **AWS EC2**.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🧾 Installation (for Backend)
+```bash
+git clone https://github.com/Huma-volve/round7-cure-php-team-one.git
+cd round7-cure-php-team-one
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan serve
+```
+
+---
+
+## 🧑‍💻 Default Roles & Accounts
+Seeder Roles:
+- `admin`
+- `doctor`
+- `patient`
+
+Default Admin User:
+```
+Email: admin@example.com
+Password: password123
+```
+
+---
+
+## 📱 API Endpoints (Examples)
+```
+POST   /api/patient/register
+POST   /api/patient/login
+GET    /api/doctors/nearby
+POST   /api/booking/create
+GET    /api/patient/bookings
+POST   /api/chat/send
+```
+
+---
+
+## 🧩 Risks & Mitigations
+| Risk | Mitigation |
+|------|-------------|
+| Payment failure | Laravel Retry Queues |
+| Data breach | Encryption + Access Control |
+| Scalability issues | Caching + Load Balancing |
+
+---
+
+## 🧾 License
+This project is licensed under the **MIT License**.
