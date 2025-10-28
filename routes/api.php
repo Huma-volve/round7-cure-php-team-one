@@ -33,3 +33,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/resend-email-otp', [AuthController::class, 'resendEmailOtp'])->middleware('auth:sanctum');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
+Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
+Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
