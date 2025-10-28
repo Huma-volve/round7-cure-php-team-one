@@ -27,10 +27,3 @@ Route::get('/test-role', function () {
     ]);
 });
 
-// Authentication endpoints
-use App\Http\Controllers\Api\AuthController;
-
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/user', [AuthController::class, 'user'])->name('user')->middleware('auth:sanctum');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
-
