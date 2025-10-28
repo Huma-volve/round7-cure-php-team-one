@@ -2,30 +2,27 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| API Routes - Cure Platform
+|--------------------------------------------------------------------------
+|
+| All API routes are loaded via route service provider.
+| Routes are organized in separate files for better maintainability:
+| - routes/api/public.php   -> Public endpoints (no auth required)
+| - routes/api/patient.php  -> Patient endpoints (role: patient)
+| - routes/api/doctor.php   -> Doctor endpoints (role: doctor)
+| - routes/api/admin.php    -> Admin endpoints (role: admin)
+| - routes/api/shared.php   -> Shared endpoints (authenticated users)
+|
+*/
 
-// روت اختبار RBAC
-Route::get('/test-role', function () {
-    $user = User::first();
-    
-    if (!$user) {
-        return response()->json(['error' => 'No users found'], 404);
-    }
-    
-    return response()->json([
-        'user_id' => $user->id,
-        'roles' => $user->getRoleNames(),
-        'has_admin' => $user->hasRole('admin'),
-    ]);
-});
+// Authentication routes in public.php
 
-// Admin protected routes
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return response()->json(['ok' => true, 'area' => 'admin only']);
-    });
-});
+// Load route files
+require __DIR__.'/api/public.php';
+require __DIR__.'/api/shared.php';
+require __DIR__.'/api/patient.php';
+require __DIR__.'/api/doctor.php';
+require __DIR__.'/api/admin.php';
