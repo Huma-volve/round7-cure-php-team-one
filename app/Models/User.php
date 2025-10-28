@@ -37,6 +37,12 @@ class User extends Authenticatable
         'location_lng',
     ];
 
+public function favorites()
+{
+    return $this->belongsToMany(Doctor::class, 'favorites' ,'user_id', 'doctor_id')->withTimestamps();
+}
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
