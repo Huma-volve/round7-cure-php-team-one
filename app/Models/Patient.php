@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
-use Illuminate\Database\Eloquent\Model;
-
 class Patient extends Model
-
 {
+
     use HasFactory;
 
     protected $fillable = [
@@ -18,7 +18,12 @@ class Patient extends Model
         'gender',
         'medical_notes',
     ];
-    public function user()
+
+    protected $casts = [
+        'birthdate' => 'date',
+    ];
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -27,4 +32,20 @@ class Patient extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+
+    public function activeBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class)
+            ->whereNotIn('status', ['cancelled'])
+            ->orderBy('date_time', 'desc');
+    }
+
+
 }

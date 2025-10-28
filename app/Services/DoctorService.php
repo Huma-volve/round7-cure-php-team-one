@@ -51,9 +51,9 @@ class DoctorService  {
             'specialty',
             'reviews.patient.user'
         ] )->findOrFail($doctorId);
- 
 
-
+        $doctor->average_rating = $doctor->getAverageRatingAttribute();
+        $doctor->reviews_count = $doctor->getReviewsCountAttribute();
 
         return $doctor;
     } //end getDoctorDetails
