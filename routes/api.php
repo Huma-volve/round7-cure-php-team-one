@@ -1,7 +1,19 @@
 <?php
 
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
+use PhpParser\Comment\Doc;
+use Spatie\Permission\Contracts\Role;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
+
+Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +30,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// روت اختبار RBAC
+Route::get('/test-role', function () {
+    $user = User::first();
+
+    if (!$user) {
+        return response()->json(['error' => 'No users found'], 404);
+    }
+
+    return response()->json([
+        'user_id' => $user->id,
+        'roles' => $user->getRoleNames(),
+        'has_admin' => $user->hasRole('admin'),
+    ]);
+});
+
 // Authentication routes in public.php
+
 
 // Load route files
 require __DIR__.'/api/public.php';
