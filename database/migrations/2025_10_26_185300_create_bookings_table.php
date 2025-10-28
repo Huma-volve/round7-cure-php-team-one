@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'rescheduled'])->default('pending');
             $table->decimal('price', 8, 2);
             $table->timestamps();
+            $table->unique(['doctor_id', 'date_time'], 'unique_doctor_datetime');
         });
     }
 
