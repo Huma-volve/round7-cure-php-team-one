@@ -22,7 +22,12 @@ class DoctorController extends Controller
         $user = Auth::user() ?? null; // ممكن تكون null لو العام لاسوء
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
+
+
         return response()->json([
+            
+            'status' => true,
+            'message' => 'Doctor data loaded successfully',
             'data' => $doctor
         ]);
     }

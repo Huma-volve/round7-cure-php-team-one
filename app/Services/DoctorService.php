@@ -45,14 +45,14 @@ class DoctorService  {
 
 
     public function getDoctorDetails($doctorId, $user = null){
-        
-        $doctor = Doctor::with('user', 'specialty' )->findOrFail($doctorId);
 
-        // if($user){
-        //     $doctor->is_favorite = $this->favoriteService->isFavorite($user, $doctor);
-        // } else {
-        //     $doctor->is_favorite = false;
-        // }
+        $doctor = Doctor::with([
+            'user',
+            'specialty',
+            'reviews.patient.user'
+        ] )->findOrFail($doctorId);
+ 
+
 
 
         return $doctor;
