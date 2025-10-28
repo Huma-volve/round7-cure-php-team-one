@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
 class Booking extends Model
 {
     use HasFactory;
@@ -18,14 +19,16 @@ class Booking extends Model
     public const STATUS_CANCELLED = BookingStatus::CANCELLED;
     public const STATUS_RESCHEDULED = BookingStatus::RESCHEDULED;
 
+
     protected $fillable = [
         'doctor_id',
         'patient_id',
         'date_time',
         'payment_method',
-        'status',
         'price',
+        'status',
     ];
+
 
     protected $casts = [
         'date_time' => 'datetime',
@@ -36,21 +39,20 @@ class Booking extends Model
      * Get the doctor for this booking
      */
     public function doctor(): BelongsTo
+
     {
         return $this->belongsTo(Doctor::class);
     }
 
-    /**
-     * Get the patient for this booking
-     */
+
+
     public function patient(): BelongsTo
+
     {
         return $this->belongsTo(Patient::class);
     }
 
-    /**
-     * Get the payment for this booking
-     */
+
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
@@ -98,4 +100,5 @@ class Booking extends Model
         return $query->where('status', 'cancelled');
     }
 }
+
 

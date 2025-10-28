@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;

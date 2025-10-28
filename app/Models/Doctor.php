@@ -13,7 +13,7 @@ class Doctor extends Model
 
     protected $fillable = [
         'user_id',
-        'specialty',
+        'specialty_id',
         'license_number',
         'clinic_address',
         'latitude',
@@ -21,6 +21,9 @@ class Doctor extends Model
         'session_price',
         'availability_json',
     ];
+    protected $appends = ['average_rating', 'reviews_count' , 'availability'];
+   protected $hidden = ['availability_json', 'created_at', 'updated_at'];
+
 
     protected $casts = [
         'availability_json' => 'array',
@@ -28,18 +31,45 @@ class Doctor extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
     ];
-
-    /**
-     * Get the user that owns the doctor
-     */
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get all bookings for this doctor
-     */
+    public function specialty()
+{
+    return $this->belongsTo(Specialty::class);
+}
+
+
+ public function favorites()
+{
+    return $this->belongsToMany(User::class, 'favorites');
+}
+
+    public function reviews()
+{
+    return $this->hasMany(Review::class);
+
+}
+
+    public function getAvailabilityAttribute()
+    {
+        return json_decode($this->availability_json, true);
+    }
+
+public function getAverageRatingAttribute()
+{
+    return round($this->reviews()->avg('rating') ?? 0, 2);
+}
+
+public function getReviewsCountAttribute()
+{
+    return $this->reviews()->count();
+}
+
+
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
@@ -57,4 +87,5 @@ class Doctor extends Model
     }
 
 }
+
 
