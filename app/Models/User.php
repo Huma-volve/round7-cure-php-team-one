@@ -37,6 +37,7 @@ class User extends Authenticatable
         'email_otp',
         'email_verified_at',
         'email_otp_expires_at',
+        'email_otp_sent_at',
     ];
 
     /**
@@ -58,7 +59,10 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'email_otp_sent_at' => 'datetime',
+            'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
+            
         ];
     }
     public function patient()
