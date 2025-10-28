@@ -35,6 +35,10 @@ class User extends Authenticatable
         'profile_photo',
         'location_lat',
         'location_lng',
+        'email_otp',
+        'email_verified_at',
+        'email_otp_expires_at',
+        'email_otp_sent_at',
     ];
 
 public function favorites()
@@ -62,9 +66,14 @@ public function favorites()
     {
         return [
             'email_verified_at' => 'datetime',
+            'email_otp_sent_at' => 'datetime',
+            'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
+            
         ];
     }
+
+    
 
     /**
      * Get the patient profile for this user
@@ -81,4 +90,5 @@ public function favorites()
     {
         return $this->hasOne(Doctor::class);
     }
+
 }
