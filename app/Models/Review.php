@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Models\Doctor;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Review extends Model
@@ -18,6 +21,11 @@ class Review extends Model
         'comment',
     ];
 
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id');
+    }
+
      public function patient()
     {
         return $this->belongsTo(Patient::class);
@@ -27,4 +35,5 @@ class Review extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+
 }
