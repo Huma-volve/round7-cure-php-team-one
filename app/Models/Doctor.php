@@ -2,26 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Doctor extends Model
- {
+{
+    use HasFactory;
+
     protected $fillable = [
+        'user_id',
+        'specialty_id',
+        'license_number',
+        'clinic_address',
+        'latitude',
+        'longitude',
+        'session_price',
+        'availability_json',
+    ];
+    protected $appends = ['average_rating', 'reviews_count' , 'availability'];
+   protected $hidden = ['availability_json', 'created_at', 'updated_at'];
 
-    'user_id',
-    'specialty_id',
-    'license_number',
-    'clinic_address',
-    'latitude',
-    'longitude',
-    'session_price',
-    'availability_json',
-];
-protected $appends = ['average_rating', 'reviews_count' , 'availability'];
-protected $hidden = ['availability_json', 'created_at', 'updated_at'];
 
-
-    public function user()
+    protected $casts = [
+        'availability_json' => 'array',
+        'session_price' => 'decimal:2',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+    ];
+    
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -59,4 +70,22 @@ public function getReviewsCountAttribute()
 }
 
 
- }
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get confirmed/upcoming bookings
+     */
+    public function upcomingBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class)
+            ->where('status', 'confirmed')
+            ->where('date_time', '>=', now())
+            ->orderBy('date_time');
+    }
+
+}
+
+

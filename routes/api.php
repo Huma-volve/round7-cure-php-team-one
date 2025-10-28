@@ -11,18 +11,25 @@ use Spatie\Permission\Contracts\Role;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
 
-Route::get('/doctors-details/{id}', [DoctorController::class, 'show'])->name('doctors.show');
+Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
 
 
 
+/*
+|--------------------------------------------------------------------------
+| API Routes - Cure Platform
+|--------------------------------------------------------------------------
+|
+| All API routes are loaded via route service provider.
+| Routes are organized in separate files for better maintainability:
+| - routes/api/public.php   -> Public endpoints (no auth required)
+| - routes/api/patient.php  -> Patient endpoints (role: patient)
+| - routes/api/doctor.php   -> Doctor endpoints (role: doctor)
+| - routes/api/admin.php    -> Admin endpoints (role: admin)
+| - routes/api/shared.php   -> Shared endpoints (authenticated users)
+|
+*/
 
-
-
-
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 // روت اختبار RBAC
 Route::get('/test-role', function () {
@@ -39,9 +46,12 @@ Route::get('/test-role', function () {
     ]);
 });
 
-// Admin protected routes
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return response()->json(['ok' => true, 'area' => 'admin only']);
-    });
-});
+// Authentication routes in public.php
+
+
+// Load route files
+require __DIR__.'/api/public.php';
+require __DIR__.'/api/shared.php';
+require __DIR__.'/api/patient.php';
+require __DIR__.'/api/doctor.php';
+require __DIR__.'/api/admin.php';
