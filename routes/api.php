@@ -1,12 +1,14 @@
 <?php
 
 
+use App\Http\Controllers\Api\ReviewController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\NotificationController;
 use PhpParser\Comment\Doc;
 use Spatie\Permission\Contracts\Role;
 
@@ -32,6 +34,10 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 |
 */
 
+
+
+Route::apiResource('reviews',ReviewController::class)->middleware('auth:sanctum');
+Route::apiResource('notifications',NotificationController::class)->middleware('auth:sanctum');
 
 
 // روت اختبار RBAC

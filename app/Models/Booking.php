@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Constants\BookingStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -19,16 +18,28 @@ class Booking extends Model
     public const STATUS_CANCELLED = BookingStatus::CANCELLED;
     public const STATUS_RESCHEDULED = BookingStatus::RESCHEDULED;
 
-
     protected $fillable = [
         'doctor_id',
         'patient_id',
         'date_time',
         'payment_method',
-        'price',
         'status',
+        'price'
     ];
+    
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class, 'doctor_id');
+    }
 
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class, 'patient_id');
+    }
+
+    public function review(){
+        return $this->hasOne(Review::class , 'id');
+    }
 
     protected $casts = [
         'date_time' => 'datetime',
@@ -38,21 +49,7 @@ class Booking extends Model
     /**
      * Get the doctor for this booking
      */
-    public function doctor(): BelongsTo
-
-    {
-        return $this->belongsTo(Doctor::class);
-    }
-
-
-
-    public function patient(): BelongsTo
-
-    {
-        return $this->belongsTo(Patient::class);
-    }
-
-
+    
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
@@ -100,5 +97,6 @@ class Booking extends Model
         return $query->where('status', 'cancelled');
     }
 }
+
 
 

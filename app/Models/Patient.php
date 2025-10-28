@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +15,6 @@ class Patient extends Model
     protected $guard_name = 'api';
     protected $fillable = ['medical_notes', 'user_id','gender','birthdate'];
     
-
     protected $casts = [
         'birthdate' => 'date',
     ];
@@ -30,12 +28,10 @@ class Patient extends Model
         return $this->hasMany(Review::class);
     }
 
-
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
     }
-
 
     public function activeBookings(): HasMany
     {
@@ -43,7 +39,5 @@ class Patient extends Model
             ->whereNotIn('status', ['cancelled'])
             ->orderBy('date_time', 'desc');
     }
-
-
 
 }
