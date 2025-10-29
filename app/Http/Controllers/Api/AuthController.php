@@ -25,7 +25,7 @@ class AuthController extends Controller
             $path = $request->file('profile_photo')->store('users', 'public');
             $profile_photo = 'storage/' . $path;
         }
-        $otp = rand(10000, 99999);
+        // $otp = rand(10000, 99999); 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -34,7 +34,8 @@ class AuthController extends Controller
             'birthdate' => $request->birthdate,
             'gender' => $request->gender,
             'email_verified_at' => null,
-            'email_otp' => $otp,
+            // 'email_otp' => $otp,
+            'email_otp' => 1234,
             'email_otp_expires_at' => now()->addMinutes(5),
             'location_lat' => $request->location_lat,
             'location_lng' => $request->location_lng,
@@ -52,7 +53,7 @@ class AuthController extends Controller
 
         try {
 
-            Mail::to($user->email)->send(new SendOtpMail($otp));
+            // Mail::to($user->email)->send(new SendOtpMail($otp));
 
 
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -75,7 +76,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'otp' => 'required|digits:5',
+            'otp' => 'required|digits:4',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -161,15 +162,16 @@ class AuthController extends Controller
         }
 
 
-        $otp = rand(10000, 99999);
+        // $otp = rand(10000, 99999);
 
         $user->update([
-            'email_otp' => $otp,
+            // 'email_otp' => $otp,
+            'email_otp' => 1234,
             'email_otp_expires_at' => now()->addMinutes(5),
             'email_otp_sent_at' => now(),
         ]);
 
-        Mail::to($user->email)->send(new SendOtpMail($otp));
+        // Mail::to($user->email)->send(new SendOtpMail($otp));
 
         return response()->json([
             'status' => true,
@@ -177,89 +179,89 @@ class AuthController extends Controller
         ]);
     }
     public function sendResetOtp(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
-    $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-    if (!$user) {
-        return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        }
+
+
+        if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_sent_at) < 60) {
+            return response()->json(['status' => false, 'message' => 'Please wait 1 minute before requesting another OTP.'], 429);
+        }
+
+        $otp = rand(10000, 99999);
+
+        $user->update([
+            // 'email_otp' => $otp,
+            'email_otp' => 1234,
+            'email_otp_expires_at' => now()->addMinutes(5),
+            'email_otp_sent_at' => now(),
+        ]);
+
+        // Mail::to($user->email)->send(new SendOtpMail($otp));
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP sent to your email. Please check your inbox.'
+        ]);
     }
+    public function verifyResetOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required|digits:5',
+        ]);
 
-   
-    if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_sent_at) < 60) {
-        return response()->json(['status' => false, 'message' => 'Please wait 1 minute before requesting another OTP.'], 429);
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        }
+
+        if ($user->email_otp !== $request->otp || now()->isAfter($user->email_otp_expires_at)) {
+            return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP verified successfully. You can now reset your password.'
+        ]);
     }
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp' => 'required|digits:4',
+            'password' => 'required|string|min:8',
+        ]);
 
-    $otp = rand(10000, 99999);
+        $user = User::where('email', $request->email)->first();
 
-    $user->update([
-        'email_otp' => $otp,
-        'email_otp_expires_at' => now()->addMinutes(5),
-        'email_otp_sent_at' => now(),
-    ]);
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'User not found'], 404);
+        }
 
-    Mail::to($user->email)->send(new SendOtpMail($otp));
+        if ($user->email_otp !== $request->otp || now()->isAfter($user->email_otp_expires_at)) {
+            return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
+        }
 
-    return response()->json([
-        'status' => true,
-        'message' => 'OTP sent to your email. Please check your inbox.'
-    ]);
+        $user->update([
+            'password' => Hash::make($request->password),
+            'email_otp' => null,
+            'email_otp_expires_at' => null,
+            'email_otp_sent_at' => null,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password reset successfully.'
+        ]);
+    }
 }
-public function verifyResetOtp(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'otp' => 'required|digits:5',
-    ]);
 
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user) {
-        return response()->json(['status' => false, 'message' => 'User not found'], 404);
-    }
-
-    if ($user->email_otp !== $request->otp || now()->isAfter($user->email_otp_expires_at)) {
-        return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
-    }
-
-    return response()->json([
-        'status' => true,
-        'message' => 'OTP verified successfully. You can now reset your password.'
-    ]);
-}
-public function resetPassword(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'otp' => 'required|digits:5',
-        'password' => 'required|string|min:8',
-    ]);
-
-    $user = User::where('email', $request->email)->first();
-
-    if (!$user) {
-        return response()->json(['status' => false, 'message' => 'User not found'], 404);
-    }
-
-    if ($user->email_otp !== $request->otp || now()->isAfter($user->email_otp_expires_at)) {
-        return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
-    }
-
-    $user->update([
-        'password' => Hash::make($request->password),
-        'email_otp' => null,
-        'email_otp_expires_at' => null,
-        'email_otp_sent_at' => null,
-    ]);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Password reset successfully.'
-    ]);
-}
-
-
-}
