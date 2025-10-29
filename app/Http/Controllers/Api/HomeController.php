@@ -43,16 +43,5 @@ class HomeController extends Controller
     }
 
 
-    public function toggleFavorite($doctorId)
-{
-    $doctor = Doctor::findOrFail($doctorId);
-    $user = Auth::user() ?? User::find(1);
 
-    $status = $this->favoriteService->toggleFavorite($user, $doctor);
-
-    return response()->json([
-        'message' => $status == 'added' ? 'Added to favorites' : 'Removed from favorites',
-        'status' => $status
-    ]);
-}
 }
