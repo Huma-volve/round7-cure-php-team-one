@@ -12,11 +12,18 @@ class FavoriteService{
         if ($this->isFavorite($user, $doctor)) {
 
             $user->favorites()->detach($doctor->id);
-            return 'removed';
+            return [
+                'status' => 'removed', // or added
+                'doctor_id' => $doctor->id
+                ];
         } else {
 
             $user->favorites()->syncWithoutDetaching([$doctor->id]);
-            return 'added';
+            
+            return [
+                'status' => 'added', // or removed
+                'doctor_id' => $doctor->id
+                ];
         }
     }
 
@@ -28,7 +35,9 @@ class FavoriteService{
 
  public function getFavorites(User $user)
     {
-        return $user->favorites()->get();
+        return $user->favorites()
+        ->with('user:id,name,profile_photo' , 'specialty:id,name') // Eager load user details
+        ->get();
     }
 }
 

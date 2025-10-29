@@ -26,12 +26,12 @@ class Doctor extends Model
 
 
     protected $casts = [
-        'availability_json' => 'array',
+        // 'availability_json' => 'array',
         'session_price' => 'decimal:2',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
     ];
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
