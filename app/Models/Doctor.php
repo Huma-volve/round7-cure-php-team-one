@@ -21,12 +21,13 @@ class Doctor extends Model
         'session_price',
         'availability_json',
     ];
-    protected $appends = ['average_rating', 'reviews_count' , 'availability'];
-   protected $hidden = ['availability_json', 'created_at', 'updated_at'];
+
+   protected $appends = ['average_rating', 'reviews_count' ];
+   protected $hidden = [ 'created_at', 'updated_at'];
 
 
     protected $casts = [
-        // 'availability_json' => 'array',
+        'availability_json' => 'array',
         'session_price' => 'decimal:2',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
@@ -54,10 +55,10 @@ class Doctor extends Model
 
 }
 
-    public function getAvailabilityAttribute()
-    {
-        return json_decode($this->availability_json, true);
-    }
+    // public function getAvailabilityAttribute()
+    // {
+    //     return json_decode($this->availability_json, true);
+    // }
 
 public function getAverageRatingAttribute()
 {

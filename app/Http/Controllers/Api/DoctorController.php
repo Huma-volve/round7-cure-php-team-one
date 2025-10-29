@@ -28,10 +28,9 @@ class DoctorController extends Controller
 
     public function showDoctor($id, Request $request)
     {
+    
         $user = Auth::user() ?? null; // ممكن تكون null لو العام لاسوء
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
-
-
 
         return response()->json([
 
