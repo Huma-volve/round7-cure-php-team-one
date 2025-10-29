@@ -1,26 +1,26 @@
 <?php
-
 namespace App\Services;
 
+use Log;
 use Vonage\Client;
 use Vonage\Client\Credentials\Basic;
-use Vonage\SMS\Message\SMS;
 
 class VonageService
 {
     public static function sendSms($to, $text)
     {
-        $basic  = new Basic(config('services.vonage.key'), config('services.vonage.secret'));
+        $basic  = new Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
         $client = new Client($basic);
 
-       
-        if (!str_starts_with($to, '+')) {
-            $to = '+2' . $to; 
+        try {
+            $response = $client->sms()->send(
+                new \Vonage\SMS\Message\SMS($to, env('VONAGE_FROM'), $text)
+            );
+
+            return $response->current()->getStatus();
+        } catch (\Exception $e) {
+            Log::error('Vonage SMS failed: '.$e->getMessage());
+            return false;
         }
-
-        $message = new SMS($to, config('services.vonage.from'), $text);
-        $response = $client->sms()->send($message);
-
-        return $response;
     }
 }
