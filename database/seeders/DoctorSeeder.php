@@ -52,7 +52,9 @@ class DoctorSeeder extends Seeder
         ];
         foreach ($users as $index => $user) {
             Doctor::create(array_merge(['user_id' => $user->id], $doctorsData[$index]));
+        $user->assignRole('doctor');
         }
+        
 
 
     }
