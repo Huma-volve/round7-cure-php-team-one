@@ -25,7 +25,7 @@ class AuthController extends Controller
             $path = $request->file('profile_photo')->store('users', 'public');
             $profile_photo = 'storage/' . $path;
         }
-        // $otp = rand(10000, 99999); 
+        // $otp = rand(10000, 99999);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -63,7 +63,7 @@ class AuthController extends Controller
                 'data' => new UserResource($user),
                 'token' => $token
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'Could not register or send email',
