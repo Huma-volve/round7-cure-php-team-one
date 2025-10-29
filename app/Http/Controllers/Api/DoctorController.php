@@ -23,8 +23,8 @@ class DoctorController extends Controller
     public function __construct( protected DoctorService  $doctorService,
          private BookingService  $bookingService,
          private BookingRepository $BookingRepository )
-    {
-    }
+    {}
+
 
     public function showDoctor($id, Request $request)
     {
@@ -51,9 +51,9 @@ class DoctorController extends Controller
                 return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
             }
 
-            $upcomingBookings = $this->bookingRepository->getDoctorUpcomingBookings($doctor->id);
-            $pendingBookings = $this->bookingRepository->getDoctorPendingBookings($doctor->id);
-            $stats = $this->bookingRepository->getDoctorStats($doctor->id);
+            $upcomingBookings = $this->BookingRepository->getDoctorUpcomingBookings($doctor->id);
+            $pendingBookings = $this->BookingRepository->getDoctorPendingBookings($doctor->id);
+            $stats = $this->BookingRepository->getDoctorStats($doctor->id);
 
             return $this->successResponse([
                 'upcoming' => BookingResource::collection($upcomingBookings),
@@ -78,7 +78,7 @@ class DoctorController extends Controller
                 return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
             }
 
-            $bookings = $this->bookingRepository->getDoctorBookings($doctor->id, [
+            $bookings = $this->BookingRepository->getDoctorBookings($doctor->id, [
                 'status' => $request->status,
                 'upcoming_only' => $request->boolean('upcoming_only'),
             ]);
@@ -99,7 +99,7 @@ class DoctorController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $booking = $this->bookingRepository->findByIdWithRelations($id);
+            $booking = $this->BookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
                 return $this->notFoundResponse('الموعد غير موجود');

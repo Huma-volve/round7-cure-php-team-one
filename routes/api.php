@@ -1,8 +1,8 @@
 <?php
 
-
 use App\Http\Controllers\Api\ReviewController;
 use App\Models\User;
+use App\Http\Controllers\Api\FavoriteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -12,10 +12,7 @@ use App\Http\Controllers\Api\NotificationController;
 use PhpParser\Comment\Doc;
 use Spatie\Permission\Contracts\Role;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
 
-Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
 
 
 
@@ -33,6 +30,16 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 | - routes/api/shared.php   -> Shared endpoints (authenticated users)
 |
 */
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/doctor/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
+    Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
+     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
+
+});
 
 
 
