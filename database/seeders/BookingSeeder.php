@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Booking;
+use App\Models\Specialty;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,9 +24,12 @@ class BookingSeeder extends Seeder
         ]);
         $doctorUser->assignRole('doctor');
 
+        // إنشاء أو جلب التخصص
+        $specialty1 = Specialty::firstOrCreate(['name' => 'Cardiology']);
+
         $doctor = Doctor::create([
             'user_id' => $doctorUser->id,
-            'specialty' => 'طب القلب',
+            'specialty_id' => $specialty1->id,
             'license_number' => 'DOC123456',
             'clinic_address' => 'الرياض، المملكة العربية السعودية',
             'latitude' => 24.7136,
@@ -51,9 +55,12 @@ class BookingSeeder extends Seeder
         ]);
         $doctorUser2->assignRole('doctor');
 
+        // إنشاء أو جلب التخصص
+        $specialty2 = Specialty::firstOrCreate(['name' => 'Pediatrics']);
+
         $doctor2 = Doctor::create([
             'user_id' => $doctorUser2->id,
-            'specialty' => 'طب الأطفال',
+            'specialty_id' => $specialty2->id,
             'license_number' => 'DOC654321',
             'clinic_address' => 'جدة، المملكة العربية السعودية',
             'latitude' => 21.4858,
