@@ -1,18 +1,17 @@
 <?php
 
-use App\Http\Controllers\Api\ReviewController;
-use App\Models\User;
-use App\Http\Controllers\Api\FavoriteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\FavoriteController;
+
+use Illuminate\Http\Request;
 use PhpParser\Comment\Doc;
 use Spatie\Permission\Contracts\Role;
-
-
+use App\Models\User;
 
 
 
@@ -30,6 +29,8 @@ use Spatie\Permission\Contracts\Role;
 | - routes/api/shared.php   -> Shared endpoints (authenticated users)
 |
 */
+
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/doctor/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
@@ -69,6 +70,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
     });
 });
+// Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
