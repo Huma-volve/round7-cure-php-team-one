@@ -86,5 +86,11 @@ public function getReviewsCountAttribute()
             ->orderBy('date_time');
     }
 
+
+       public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
+
 }
 
