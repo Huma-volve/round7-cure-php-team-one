@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+        use Carbon\Carbon;
 
 class UserResource extends JsonResource
 {
@@ -28,24 +29,23 @@ class UserResource extends JsonResource
         //     'gender' => optional($this->patient)->gender,
         //     'medical_notes' => optional($this->patient)->medical_notes,
         // ],
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'mobile' => $this->mobile,
-            'birthdate' => $this->birthdate->format('Y-m-d'),
-            'profile_photo' => $this->profile_photo ? asset($this->profile_photo) : null,
-            'role' => $this->getRoleNames()->first(),
 
+return [
+    'id' => $this->id,
+    'name' => $this->name,
+    'email' => $this->email,
+    'mobile' => $this->mobile,
+    'birthdate' => $this->birthdate ? Carbon::parse($this->birthdate)->format('Y-m-d') : null,
+    'profile_photo' => $this->profile_photo ? asset($this->profile_photo) : null,
+    'role' => $this->getRoleNames()->first(),
 
-            'doctor' => $this->when($this->hasRole('doctor'), new DoctorResource($this->doctor)),
+    'doctor' => $this->when($this->hasRole('doctor'), new DoctorResource($this->doctor)),
 
-
-            'patient' => $this->when($this->hasRole('patient'), [
-                'birthdate' => optional($this->patient)->birthdate->format('Y-m-d'),
-                'gender' => optional($this->patient)->gender,
-                'medical_notes' => optional($this->patient)->medical_notes,
-            ]),
-        ];
+    'patient' => $this->when($this->hasRole('patient'), [
+        'birthdate' => optional($this->patient)->birthdate ? Carbon::parse(optional($this->patient)->birthdate)->format('Y-m-d') : null,
+        'gender' => optional($this->patient)->gender,
+        'medical_notes' => optional($this->patient)->medical_notes,
+    ]),
+];
     }
 }

@@ -54,5 +54,39 @@ class RolesAndPermissionsSeeder extends Seeder
         if (!$adminUser->hasRole('admin')) {
             $adminUser->assignRole('admin');
         }
+
+
+
+
+
+        // إنشاء doctor أدمن افتراضي
+        $doctorUser = User::firstOrCreate(
+            ['email' => 'doctortest@example.com'],
+            [
+                'name' => 'doctor test',
+            'password' => bcrypt('123456'),
+                'mobile' => '01144778523',
+            ]
+        );
+
+        if (!$doctorUser->hasRole('doctor')) {
+            $doctorUser->assignRole('doctor');
+        }
+
+
+
+        // إنشاء patient أدمن افتراضي
+        $patientUser = User::firstOrCreate(
+            ['email' => 'patient1@example.com'],
+            [
+                'name' => 'patient test',
+                'password' => Hash::make('password'),
+                'mobile' => '01144778598',
+            ]
+        );
+
+        if (!$patientUser->hasRole('patient')) {
+            $patientUser->assignRole('patient');
+        }
     }
 }

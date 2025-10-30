@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -89,6 +90,56 @@ public function favorites()
     public function doctor(): HasOne
     {
         return $this->hasOne(Doctor::class);
+    }
+
+
+
+
+
+
+
+
+
+    /** */
+        
+    public function doctorChats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'doctor_id');
+    }
+
+ 
+    public function patientChats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'patient_id');
+    }
+
+  
+
+    // ✅ لو المستخدم طرف أول في الشات
+    public function chatsAsUserOne()
+    {
+        return $this->hasMany(Chat::class, 'user_one_id');
+    }
+
+    // ✅ لو المستخدم طرف ثاني في الشات
+    public function chatsAsUserTwo()
+    {
+        return $this->hasMany(Chat::class, 'user_two_id');
+    }
+
+    // ✅ وده access مريح يجيب كل الشاتات اللي المستخدم طرف فيها
+    public function chats()
+    {
+        return $this->chatsAsUserOne->merge($this->chatsAsUserTwo);
+    }
+
+
+
+
+    public function allChats()
+    {
+        return Chat::where('doctor_id', $this->id)
+                   ->orWhere('patient_id', $this->id);
     }
 
 }
