@@ -1,16 +1,17 @@
 <?php
 
 
-use App\Http\Controllers\Api\ReviewController;
 use App\Models\User;
+use PhpParser\Comment\Doc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\NotificationController;
-use PhpParser\Comment\Doc;
 use Spatie\Permission\Contracts\Role;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\NotificationController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
@@ -70,6 +71,12 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
 Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
 Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(function () {
+    Route::post('/mobile/request-change', 'requestMobileChange');
+    Route::post('/mobile/verify-change', 'verifyMobileChange');
+    Route::post('/updateProfile', 'updateProfile');
+});
+
 
 // Authentication routes in public.php
 
