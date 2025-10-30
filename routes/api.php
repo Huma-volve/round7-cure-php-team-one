@@ -75,7 +75,12 @@ Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(f
     Route::post('/mobile/request-change', 'requestMobileChange');
     Route::post('/mobile/verify-change', 'verifyMobileChange');
     Route::post('/updateProfile', 'updateProfile');
+
 });
+Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileLogin']);
+Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
+Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+
 
 
 // Authentication routes in public.php

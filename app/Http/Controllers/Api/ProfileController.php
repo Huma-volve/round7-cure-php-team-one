@@ -72,16 +72,17 @@ class ProfileController extends Controller
         ]);
 
         $user = auth()->user();
-        $otp = rand(1000, 9999);
+        // $otp = rand(1000, 9999);
+        $otp = 1234;
 
 
         $user->update([
             'phone_otp' => $otp,
-            'phone_otp_expires_at' => now()->addMinutes(5),
+            'phone_otp_expires_at' => now()->addMinutes(3),
         ]);
 
 
-        \App\Services\VonageService::sendSms($request->mobile, "Your OTP code is: $otp");
+       \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
 
 
         session(['new_mobile' => $request->mobile]);
