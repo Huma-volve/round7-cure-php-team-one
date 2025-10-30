@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Mail\SendOtpMail;
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 // correct for email verification
 // class AuthController extends Controller
@@ -637,23 +639,30 @@ class AuthController extends Controller
     
 
     // login
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        $credentials = $request->only('email', 'password');
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('auth_token')->plainTextToken;
-            return response()->json(['token' => $token, new UserResource($user)]);
-        }
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['error' => 'fail to login'], 401);
+        return response()->json([
+            'status' => true,
+            'message' => 'تم تسجيل الدخول بنجاح',
+            'token' => $token,
+            'user' => new UserResource($user)
+        ], 200);
     }
+
+    return response()->json(['status' => false, 'error' => 'fail to login'], 401);
+}
+
 
     // update
     public function updateProfile(Request $request)
