@@ -39,6 +39,8 @@ class User extends Authenticatable
         'email_verified_at',
         'email_otp_expires_at',
         'email_otp_sent_at',
+        'phone_otp' ,
+        'phone_otp_expires_at',
     ];
 
 public function favorites()
@@ -69,7 +71,7 @@ public function favorites()
             'email_otp_sent_at' => 'datetime',
             'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
-            
+            'birthdate' => 'date',
         ];
     }
 
