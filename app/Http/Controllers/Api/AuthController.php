@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\SendOtpMail;
 use Illuminate\Http\Request;
@@ -271,11 +272,6 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-
 
     // login
     public function login(Request $request)
@@ -312,7 +308,8 @@ class AuthController extends Controller
             $path = $request->file('profile_photo')->store('users', 'public');
             $profile_photo = 'storage/' . $path;
         }
-        $otp = rand(1000, 9999);
+        // $otp = rand(1000, 9999);
+        $otp = 1234;
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -323,7 +320,7 @@ class AuthController extends Controller
             'email_verified_at' => null,
             'email_otp' => $otp,
             // 'email_otp' => 1234,
-            'email_otp_expires_at' => now()->addMinutes(5),
+            'email_otp_expires_at' => now()->addMinutes(3),
             'location_lat' => $request->location_lat,
             'location_lng' => $request->location_lng,
             'profile_photo' => $profile_photo,
@@ -421,7 +418,8 @@ class AuthController extends Controller
         }
 
 
-        $otp = rand(1000, 9999);
+        // $otp = rand(1000, 9999);
+        $otp = 1234;
 
         $user->update([
             'email_otp' => $otp,
@@ -453,16 +451,16 @@ class AuthController extends Controller
         }
 
 
-        if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_sent_at) < 120) {
+        if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_expires_at) < 30) {
             return response()->json(['status' => false, 'message' => 'Please wait 1 minute before requesting another OTP.'], 429);
         }
 
-        $otp = rand(1000, 9999);
-
+        // $otp = rand(1000, 9999);
+        $otp = 1234;
         $user->update([
             'email_otp' => $otp,
             // 'email_otp' => 1234,
-            'email_otp_expires_at' => now()->addMinutes(5),
+            'email_otp_expires_at' => now()->addMinutes(3),
             'email_otp_sent_at' => now(),
         ]);
 
@@ -471,7 +469,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'message' => 'OTP sent to your email. Please check your inbox.'
+            'message' => 'OTP sent to your phone. Please check your inbox.'
         ]);
     }
     public function verifyResetOtp(Request $request)
@@ -525,6 +523,88 @@ class AuthController extends Controller
             'message' => 'Password reset successfully.'
         ]);
     }
+    // login with phone number
+    public function sendOtpFormobileLogin(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required|string',
+        ]);
 
-    
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Mobile not found'], 404);
+        }
+
+        // $otp = rand(1000, 9999);
+        $otp = 1234;
+
+
+        $user->update([
+            'phone_otp' => $otp,
+            'phone_otp_expires_at' => Carbon::now()->addMinutes(3),
+        ]);
+
+
+        // \App\Services\VonageService::sendSms($user->mobile, "Your OTP code is: $otp");
+
+        return response()->json(['message' => 'OTP sent successfully']);
+    }
+
+
+    public function verifyOtpForMobileLogin(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required|string',
+            'otp' => 'required|numeric',
+        ]);
+
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Mobile not found'], 404);
+        }
+
+
+        if (
+            $user->phone_otp != $request->otp ||
+            Carbon::now()->greaterThan($user->phone_otp_expires_at)
+        ) {
+            return response()->json(['error' => 'Invalid or expired OTP'], 401);
+        }
+
+
+        $user->update([
+            'phone_otp' => null,
+            'phone_otp_expires_at' => null,
+        ]);
+
+
+        Auth::login($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => new UserResource($user),
+        ]);
+    }
+    public function deleteAccount(Request $request)
+    {
+        $user = auth('sanctum')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Soft delete
+        $user->delete();
+
+
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully ',
+        ]);
+    }
 }
