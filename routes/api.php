@@ -74,12 +74,13 @@ Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(function () {
     Route::post('/mobile/request-change', 'requestMobileChange');
     Route::post('/mobile/verify-change', 'verifyMobileChange');
-    Route::post('/updateProfile', 'updateProfile');
+    Route::put('/updateProfile', 'updateProfile');
 
 });
 Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileLogin']);
 Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
 Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 
 
