@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\Rules\Password;
 // correct for email verification
 // class AuthController extends Controller
@@ -607,4 +608,37 @@ class AuthController extends Controller
             'message' => 'Account deleted successfully ',
         ]);
     }
+    
+    public function googleLogin(Request $request)
+{
+    $request->validate([
+        'token' => 'required|string',
+    ]);
+
+    $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+    $payload = $client->verifyIdToken($request->token);
+
+    if (!$payload) {
+        return response()->json(['error' => 'Invalid Google token'], 401);
+    }
+
+    $user = User::updateOrCreate(
+        ['email' => $payload['email']],
+        [
+            'name' => $payload['name'] ?? '',
+            'google_id' => $payload['sub'],
+            'email_verified_at' => now(),
+            'profile_photo' => $payload['picture'] ?? null,
+        ]
+    );
+
+    Auth::login($user);
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login successful with Google',
+        'token' => $token,
+        'user' => $user,
+    ]);
+}
 }
