@@ -1,23 +1,21 @@
 <?php
 
 
-use App\Http\Controllers\Api\ReviewController;
+
+
 use App\Models\User;
+use PhpParser\Comment\Doc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\NotificationController;
-use PhpParser\Comment\Doc;
 use Spatie\Permission\Contracts\Role;
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
-
-Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
-
-
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +31,18 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 | - routes/api/shared.php   -> Shared endpoints (authenticated users)
 |
 */
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+
+Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
+    Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
+     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
+
+});
 
 
 
@@ -62,6 +72,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
     });
 });
+// Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -70,6 +81,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
 Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
 Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(function () {
+    Route::post('/mobile/request-change', 'requestMobileChange');
+    Route::post('/mobile/verify-change', 'verifyMobileChange');
+    Route::put('/updateProfile', 'updateProfile');
+
+});
+Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileLogin']);
+Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
+Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+Route::post('/google-login', [AuthController::class, 'googleLogin']);
+
+
 
 // Authentication routes in public.php
 

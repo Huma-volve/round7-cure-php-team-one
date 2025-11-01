@@ -35,9 +35,14 @@ return [
         ],
     ],
     'vonage' => [
-    'key' => env('VONAGE_KEY'),
-    'secret' => env('VONAGE_SECRET'),
-    'from' => env('VONAGE_FROM', 'Vonage'),
+        'key' => env('VONAGE_KEY'),
+        'secret' => env('VONAGE_SECRET'),
+        'from' => env('VONAGE_FROM', 'Vonage'),
+    ],
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
 
