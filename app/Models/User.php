@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
 
     /**
      * The name of the guard for the Spatie permissions.
@@ -39,6 +40,9 @@ class User extends Authenticatable
         'email_verified_at',
         'email_otp_expires_at',
         'email_otp_sent_at',
+        'phone_otp' ,
+        'phone_otp_expires_at',
+        'deleted_at',
     ];
 
 public function favorites()
@@ -69,7 +73,7 @@ public function favorites()
             'email_otp_sent_at' => 'datetime',
             'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
-            
+            'birthdate' => 'date',
         ];
     }
 
