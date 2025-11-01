@@ -4,43 +4,24 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Services\FavoriteService;
-
+use Hamcrest\Core\Set;
 
 class DoctorService  {
 
     protected $favoriteService;
+    protected $searchService;
 
-    public function __construct(FavoriteService $favoriteService)
+    public function __construct(FavoriteService $favoriteService , SearchService $searchService)
     {
         $this->favoriteService = $favoriteService;
+        $this->searchService  = $searchService;
     }
 
     public function getNearbyDoctors(User $user, $latitude, $longitude, $search = null , $radius =10){
-
-       $doctors = Doctor::with('user')->selectRaw(
-            "*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance",
-             [$latitude, $longitude, $latitude]
-        )
-        ->when($search, function($query, $search) {
-            $query->whereHas('user', function($q) use ($search) {
-                $q->where('name', 'like', "%$search%");
-            })
-             ->orWhereHas('specialty', function($q) use ($search) {
-               $q->where('name', 'like', "%$search%");
-             });
-
-        })
-        ->havingRaw("distance < ?", [$radius])
-        ->orderBy("distance", "asc")
-        ->get();
-
-        $doctors->each(function($doctor) use ($user) {
-            $doctor->is_favorite = $this->favoriteService->isFavorite($user, $doctor);
-        });
+        
+        $doctors = $this->searchService->searchDoctors($latitude, $longitude, $search, $radius , $user);
 
         return $doctors;
-
-
     } //end getNearbyDoctors
 
 
