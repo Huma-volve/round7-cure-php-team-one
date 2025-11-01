@@ -1,6 +1,8 @@
 <?php
 
 
+
+
 use App\Models\User;
 use PhpParser\Comment\Doc;
 use Illuminate\Http\Request;
@@ -9,16 +11,11 @@ use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\NotificationController;
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
-
-Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
-
-
+use App\Http\Controllers\Api\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +31,18 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 | - routes/api/shared.php   -> Shared endpoints (authenticated users)
 |
 */
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+
+Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
+    Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
+     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
+
+});
 
 
 
@@ -63,6 +72,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
     });
 });
+// Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
