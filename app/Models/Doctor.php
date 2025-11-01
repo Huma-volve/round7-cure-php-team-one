@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 class Doctor extends Model
 {
-    use HasFactory;
+    use HasFactory , Searchable;
 
     protected $fillable = [
         'user_id',
@@ -32,6 +33,16 @@ class Doctor extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
     ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->user->name,
+            'specialty' => $this->specialty->name,
+            'clinic_address' => $this->clinic_address,
+        ];
+    }
 
     public function user(): BelongsTo
     {

@@ -1,19 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\ReviewController;
-use App\Http\Controllers\Api\FavoriteController;
 
-use Illuminate\Http\Request;
-use PhpParser\Comment\Doc;
-use Spatie\Permission\Contracts\Role;
+
+
 use App\Models\User;
-
-
+use PhpParser\Comment\Doc;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Contracts\Role;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,9 +33,9 @@ use App\Models\User;
 */
 
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
 
-Route::get('/doctor/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
+Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
@@ -79,6 +81,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
 Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
 Route::post('/forgot-password/reset', [AuthController::class, 'resetPassword']);
+Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(function () {
+    Route::post('/mobile/request-change', 'requestMobileChange');
+    Route::post('/mobile/verify-change', 'verifyMobileChange');
+    Route::put('/updateProfile', 'updateProfile');
+
+});
+Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileLogin']);
+Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
+Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+Route::post('/google-login', [AuthController::class, 'googleLogin']);
+
+
 
 // Authentication routes in public.php
 

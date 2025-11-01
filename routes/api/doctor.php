@@ -20,6 +20,7 @@ Route::middleware(['auth:sanctum', 'role:doctor'])
 
         // Dashboard
         Route::get('/dashboard', 'dashboard')->name('dashboard');
+        Route::get('/doctor/{id}',  'showDoctor')->name('show');
 
         // Bookings Management
         Route::prefix('bookings')->name('bookings.')->group(function () {
