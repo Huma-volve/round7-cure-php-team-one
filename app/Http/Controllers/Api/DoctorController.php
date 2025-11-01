@@ -20,21 +20,18 @@ class DoctorController extends Controller
 {
      use ApiResponseTrait;
 
-    public function __construct( protected DoctorService  $doctorService,
-         private BookingService  $bookingService,
-         private BookingRepository $BookingRepository )
-    {
-    }
+    public function __construct(
+        protected DoctorService $doctorService,
+        private BookingService $bookingService,
+        private BookingRepository $bookingRepository
+    ) {}
 
     public function showDoctor($id, Request $request)
     {
         $user = Auth::user() ?? null; // ممكن تكون null لو العام لاسوء
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
-
-
         return response()->json([
-
             'status' => true,
             'message' => 'Doctor data loaded successfully',
             'data' => $doctor
@@ -183,7 +180,6 @@ class DoctorController extends Controller
             default => $this->serverErrorResponse('حدث خطأ أثناء العملية', $e->getMessage())
         };
     }
-
 }
 
 
