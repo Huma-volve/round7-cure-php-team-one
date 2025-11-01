@@ -17,15 +17,18 @@ Route::middleware(['auth:sanctum', 'role:doctor'])
     ->name('doctor.')
     ->controller(DoctorController::class)
     ->group(function () {
-        
+
         // Dashboard
         Route::get('/dashboard', 'dashboard')->name('dashboard');
-        
+        Route::get('/doctor/{id}',  'showDoctor')->name('show');
+
         // Bookings Management
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::get('/', 'bookings')->name('index');
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/confirm', 'confirmBooking')->name('confirm');
+
         });
     });
+
 
