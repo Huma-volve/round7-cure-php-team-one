@@ -33,9 +33,6 @@ class FavoriteController extends Controller
         }catch (\Exception $e){
             return ApiResponse::error(null, $e->getMessage(), 500);
         }
-
-
-
     }
 
     public function getFavorites()
@@ -53,8 +50,7 @@ class FavoriteController extends Controller
 
         }catch (\Exception $e){
             return ApiResponse::error(null, $e->getMessage(), 500);
-        }
-
+       }
     }
 
     public function checkFavorite(Doctor $doctor)
@@ -66,11 +62,9 @@ class FavoriteController extends Controller
         if (!$isFavorite) {
             return ApiResponse::error(null, 'Doctor is not a favorite.', 404);
         }
-
         return ApiResponse::success(['is_favorite' => $isFavorite]);
         }catch (\Exception $e){
             return ApiResponse::error(null, $e->getMessage(), 500);
         }
-
     }
 }
