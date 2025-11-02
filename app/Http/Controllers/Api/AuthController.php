@@ -309,7 +309,6 @@ class AuthController extends Controller
             $path = $request->file('profile_photo')->store('users', 'public');
             $profile_photo = 'storage/' . $path;
         }
-        // $otp = rand(10000, 99999);
         // $otp = rand(1000, 9999);
         $otp = 1234;
         $user = User::create([

@@ -39,5 +39,9 @@ class Patient extends Model
             ->whereNotIn('status', ['cancelled'])
             ->orderBy('date_time', 'desc');
     }
+        public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
 
 }
