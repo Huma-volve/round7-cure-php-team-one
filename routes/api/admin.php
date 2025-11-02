@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Admin API Controller
-// TODO: Create AdminApiController in app/Http/Controllers/Api/AdminApiController.php
-
 /*
 |--------------------------------------------------------------------------
 | Admin API Routes

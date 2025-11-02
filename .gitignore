@@ -25,6 +25,7 @@ Thumbs.db
 
 PROJECT_GUIDE.md
 Cure_API.postman_collection.json
+PAYMENTS_DOCUMENTATION.md
 
 # Ignore AuthController
-app/Http/Controllers/Api/AuthController.php
+# app/Http/Controllers/Api/AuthController.php
