@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SearchHistory extends Model
 {
      protected $table = 'search_history';
-     
+
     protected $fillable = [
         'user_id',
         'search_query',
