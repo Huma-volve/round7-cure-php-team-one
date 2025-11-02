@@ -11,6 +11,7 @@ use App\Http\Resources\PaymentResource;
 use App\Http\Requests\RescheduleBookingRequest;
 use App\Models\Booking;
 use App\Models\Doctor;
+use App\Models\User;
 use App\Repositories\BookingRepository;
 use App\Repositories\PaymentRepository;
 use App\Services\Booking\BookingService;
@@ -33,8 +34,10 @@ class DoctorController extends Controller
 
     public function showDoctor(Request $request , $id )
     {
+
         try{
-        $user = Auth::user() ;
+
+        $user = Auth::user();
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
         return $this->successResponse([
