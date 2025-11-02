@@ -24,15 +24,18 @@ class DoctorResource extends JsonResource
                 'lng' => (float) $this->longitude,
             ],
             'session_price' => (float) $this->session_price,
+            'average_rating' => $this->average_rating ?? 0,
+            'reviews_count' => $this->reviews_count ?? 0,
+            'availability' => $this->availability ?? $this->availability_json,
             'user' => $this->when($this->relationLoaded('user'), function () {
                 return [
+                    'id' => $this->user->id ?? null,
                     'name' => $this->user->name ?? null,
                     'email' => $this->user->email ?? null,
                     'mobile' => $this->user->mobile ?? null,
                     'profile_photo' => $this->user->profile_photo ?? null,
                 ];
             }),
-            'availability' => $this->availability_json,
         ];
     }
 }
