@@ -9,12 +9,14 @@
         "php": "^8.2",
         "google/apiclient": "*",
         "laravel/framework": "^12.0",
+        "laravel/reverb": "^1.6",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "spatie/laravel-permission": "^6.21",
         "srmklive/paypal": "^3.0",
         "stripe/stripe-php": "^18.0",
         "vonage/client": "^4.2"
+
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
