@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 8, 2);
             $table->string('transaction_id')->unique();
-            $table->enum('gateway', ['paypal', 'stripe']);
+            $table->enum('gateway', ['paypal', 'stripe', 'cash']);
             $table->enum('status', ['success', 'failed', 'pending'])->default('pending');
             $table->timestamps();
         });

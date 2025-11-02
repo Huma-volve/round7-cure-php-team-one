@@ -17,6 +17,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(StripeClient::class, function () {
             $secret = (string) config('services.stripe.secret', env('STRIPE_SECRET'));
+            
+            if (empty($secret) || $secret === 'sk_test_xxx' || $secret === 'YOUR_STRIPE_SECRET') {
+                throw new \RuntimeException(
+                    'Stripe API key is not configured. Please set STRIPE_SECRET in your .env file. ' .
+                    'Get your API key from https://dashboard.stripe.com/apikeys'
+                );
+            }
+            
             return new StripeClient($secret);
         });
 
