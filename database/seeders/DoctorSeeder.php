@@ -29,7 +29,7 @@ class DoctorSeeder extends Seeder
                 'latitude' => 30.0520,
                 'longitude' => 31.2370,
                 'session_price' => 400.00,
-                'availability_json' => json_encode(['sat' => '5-9', 'mon' => '3-8']),
+                'availability_json' => json_encode(['day' => 'mon', 'from' => '15:00', 'to' => '20:00']),
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Dermatology')->first()->id,
@@ -52,7 +52,9 @@ class DoctorSeeder extends Seeder
         ];
         foreach ($users as $index => $user) {
             Doctor::create(array_merge(['user_id' => $user->id], $doctorsData[$index]));
+        $user->assignRole('doctor');
         }
+        
 
 
     }
