@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Traits\HandlesRoleUpdates;
 
 class ProfileController extends Controller
-{   // update
+{   
+    use HandlesRoleUpdates;
+    // update
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
@@ -63,7 +66,7 @@ class ProfileController extends Controller
     public function requestMobileChange(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|string|max:20',
+            'mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
         ]);
 
         $user = auth()->user();
@@ -91,7 +94,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'otp' => 'required|numeric',
-            'new_mobile' => 'required|string|max:20',
+            'new_mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
         ]);
 
         $user = auth()->user();
