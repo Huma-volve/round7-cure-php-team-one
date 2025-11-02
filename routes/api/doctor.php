@@ -27,7 +27,15 @@ Route::middleware(['auth:sanctum', 'role:doctor'])
             Route::get('/', 'bookings')->name('index');
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/confirm', 'confirmBooking')->name('confirm');
+            Route::put('/{id}/cancel', 'cancelBooking')->name('cancel');
+            Route::put('/{id}/reschedule', 'rescheduleBooking')->name('reschedule');
+        });
 
+        // Payments Management
+        Route::prefix('payments')->name('payments.')->group(function () {
+            Route::get('/', 'payments')->name('index');
+            Route::get('/booking/{bookingId}', 'getBookingPayment')->name('booking');
+            Route::get('/stats', 'getPaymentStats')->name('stats');
         });
     });
 

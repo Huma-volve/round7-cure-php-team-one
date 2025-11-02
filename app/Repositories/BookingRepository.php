@@ -120,7 +120,7 @@ class BookingRepository
      */
     public function findByIdWithRelations(int $id): ?Booking
     {
-        return Booking::with(['doctor.user', 'patient.user'])
+        return Booking::with(['doctor.user', 'patient.user', 'payment'])
             ->find($id);
     }
 }

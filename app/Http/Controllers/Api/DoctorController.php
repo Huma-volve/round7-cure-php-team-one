@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Services\DoctorService;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorResource;
+use App\Http\Resources\PaymentResource;
+use App\Http\Requests\RescheduleBookingRequest;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Repositories\BookingRepository;
+use App\Repositories\PaymentRepository;
 use App\Services\Booking\BookingService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +26,8 @@ class DoctorController extends Controller
     public function __construct(
         protected DoctorService $doctorService,
         private BookingService $bookingService,
-        private BookingRepository $bookingRepository
+        private BookingRepository $bookingRepository,
+        private PaymentRepository $paymentRepository
     ) {}
 
 
@@ -109,7 +113,7 @@ class DoctorController extends Controller
                 return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
             }
 
-            $bookings = $this->BookingRepository->getDoctorBookings($doctor->id, [
+            $bookings = $this->bookingRepository->getDoctorBookings($doctor->id, [
                 'status' => $request->status,
                 'upcoming_only' => $request->boolean('upcoming_only'),
             ]);
@@ -130,7 +134,7 @@ class DoctorController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $booking = $this->BookingRepository->findByIdWithRelations($id);
+            $booking = $this->bookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
                 return $this->notFoundResponse('الموعد غير موجود');
@@ -170,6 +174,142 @@ class DoctorController extends Controller
             return $this->successResponse(
                 new BookingResource($booking),
                 'تم تأكيد الموعد بنجاح'
+            );
+
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * إلغاء موعد
+     */
+    public function cancelBooking($id): JsonResponse
+    {
+        try {
+            $booking = Booking::findOrFail($id);
+            $doctor = Auth::user()->doctor;
+
+            if ($booking->doctor_id != $doctor->id) {
+                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+            }
+
+            $booking = $this->bookingService->cancelBooking($booking);
+
+            return $this->successResponse(
+                new BookingResource($booking->load(['doctor.user', 'patient.user'])),
+                'تم إلغاء الموعد بنجاح'
+            );
+
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * إعادة جدولة موعد
+     */
+    public function rescheduleBooking(RescheduleBookingRequest $request, $id): JsonResponse
+    {
+        try {
+            $booking = Booking::findOrFail($id);
+            $doctor = Auth::user()->doctor;
+
+            if ($booking->doctor_id != $doctor->id) {
+                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+            }
+
+            $booking = $this->bookingService->rescheduleBooking($booking, $request->date_time);
+
+            return $this->successResponse(
+                new BookingResource($booking->load(['doctor.user', 'patient.user'])),
+                'تم إعادة جدولة الموعد بنجاح'
+            );
+
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * عرض جميع المدفوعات للطبيب
+     */
+    public function payments(Request $request): JsonResponse
+    {
+        try {
+            $doctor = Auth::user()->doctor;
+
+            if (!$doctor) {
+                return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
+            }
+
+            $payments = $this->paymentRepository->getDoctorPayments($doctor->id, [
+                'status' => $request->status,
+                'date_from' => $request->date_from,
+                'date_to' => $request->date_to,
+            ]);
+
+            return $this->paginatedResponse(
+                PaymentResource::collection($payments)->response()->getData(true),
+                'تم جلب المدفوعات بنجاح'
+            );
+
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * عرض مدفوعة حجز محدد
+     */
+    public function getBookingPayment($bookingId): JsonResponse
+    {
+        try {
+            $doctor = Auth::user()->doctor;
+
+            if (!$doctor) {
+                return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
+            }
+
+            $booking = Booking::findOrFail($bookingId);
+
+            if ($booking->doctor_id != $doctor->id) {
+                return $this->unauthorizedResponse('هذا الحجز ليس لك');
+            }
+
+            $payment = $this->paymentRepository->getBookingPayment($bookingId);
+
+            if (!$payment) {
+                return $this->notFoundResponse('لا توجد مدفوعة لهذا الحجز');
+            }
+
+            return $this->successResponse(
+                new PaymentResource($payment),
+                'تم جلب بيانات المدفوعة بنجاح'
+            );
+
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * إحصائيات المدفوعات للطبيب
+     */
+    public function getPaymentStats(): JsonResponse
+    {
+        try {
+            $doctor = Auth::user()->doctor;
+
+            if (!$doctor) {
+                return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
+            }
+
+            $stats = $this->paymentRepository->getDoctorPaymentStats($doctor->id);
+
+            return $this->successResponse(
+                $stats,
+                'تم جلب إحصائيات المدفوعات بنجاح'
             );
 
         } catch (\Exception $e) {
