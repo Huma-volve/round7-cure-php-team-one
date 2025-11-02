@@ -26,8 +26,8 @@ class UpdateProfileRequest extends FormRequest
 
         $rules = [
             'name' => ['string', 'max:255'],
-            'password' => ['nullable', Password::defaults()],
-            'current_password' => ['required_with:password'],
+            'password' => ['nullable', Password::defaults(),'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'current_password' => ['required_with:password','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048'],
             'birthdate' => ['nullable', 'date', 'date_format:Y-m-d'],
             'gender' => ['nullable', 'in:male,female'],

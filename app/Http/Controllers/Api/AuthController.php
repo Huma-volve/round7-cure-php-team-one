@@ -279,7 +279,10 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => [
+                'required',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
         ]);
 
         $credentials = $request->only('email', 'password');
@@ -499,7 +502,12 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -528,7 +536,7 @@ class AuthController extends Controller
     public function sendOtpFormobileLogin(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|string',
+            'mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
         ]);
 
         $user = User::where('mobile', $request->mobile)->first();
@@ -556,7 +564,7 @@ class AuthController extends Controller
     public function verifyOtpForMobileLogin(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|string',
+            'mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
             'otp' => 'required|numeric',
         ]);
 
@@ -610,35 +618,35 @@ class AuthController extends Controller
     }
 
     public function googleLogin(Request $request)
-{
-    $request->validate([
-        'token' => 'required|string',
-    ]);
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
 
-    $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
-    $payload = $client->verifyIdToken($request->token);
+        $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+        $payload = $client->verifyIdToken($request->token);
 
-    if (!$payload) {
-        return response()->json(['error' => 'Invalid Google token'], 401);
+        if (!$payload) {
+            return response()->json(['error' => 'Invalid Google token'], 401);
+        }
+
+        $user = User::updateOrCreate(
+            ['email' => $payload['email']],
+            [
+                'name' => $payload['name'] ?? '',
+                'google_id' => $payload['sub'],
+                'email_verified_at' => now(),
+                'profile_photo' => $payload['picture'] ?? null,
+            ]
+        );
+
+        Auth::login($user);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful with Google',
+            'token' => $token,
+            'user' => $user,
+        ]);
     }
-
-    $user = User::updateOrCreate(
-        ['email' => $payload['email']],
-        [
-            'name' => $payload['name'] ?? '',
-            'google_id' => $payload['sub'],
-            'email_verified_at' => now(),
-            'profile_photo' => $payload['picture'] ?? null,
-        ]
-    );
-
-    Auth::login($user);
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    return response()->json([
-        'message' => 'Login successful with Google',
-        'token' => $token,
-        'user' => $user,
-    ]);
-}
 }
