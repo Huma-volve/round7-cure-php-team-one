@@ -136,6 +136,16 @@ Accept: application/json
         "profile_photo": null
       }
     },
+    "payment": {
+      "id": 1,
+      "booking_id": 1,
+      "amount": 200.00,
+      "transaction_id": "cash_6907b0fbadfab",
+      "gateway": "cash",
+      "status": "pending",
+      "created_at": "2025-10-29 18:00:00",
+      "updated_at": "2025-10-29 18:00:00"
+    },
     "can_cancel": true,
     "can_reschedule": true,
     "created_at": "2025-10-29 18:00:00",
@@ -247,6 +257,7 @@ GET /api/patient/bookings?status=confirmed&date=2025-11-15
             "email": "patient@example.com"
           }
         },
+        "payment": null,
         "can_cancel": true,
         "can_reschedule": true,
         "created_at": "2025-10-29 18:00:00",
@@ -328,6 +339,16 @@ GET /api/patient/bookings/1
         "mobile": "0553333333"
       }
     },
+    "payment": {
+      "id": 1,
+      "booking_id": 1,
+      "amount": 200.00,
+      "transaction_id": "stripe_pi_abc123",
+      "gateway": "stripe",
+      "status": "success",
+      "created_at": "2025-10-29 18:00:00",
+      "updated_at": "2025-10-29 18:05:00"
+    },
     "can_cancel": true,
     "can_reschedule": false,
     "created_at": "2025-10-29 18:00:00",
@@ -383,6 +404,7 @@ GET /api/patient/bookings/1
     "price": 200.00,
     "doctor": { ... },
     "patient": { ... },
+    "payment": null,
     "can_cancel": true,
     "can_reschedule": true,
     "created_at": "2025-10-29 18:00:00",
@@ -426,6 +448,16 @@ No body required
     "price": 200.00,
     "doctor": { ... },
     "patient": { ... },
+    "payment": {
+      "id": 1,
+      "booking_id": 1,
+      "amount": 200.00,
+      "transaction_id": "cash_6907b0fbadfab",
+      "gateway": "cash",
+      "status": "failed",
+      "created_at": "2025-10-29 18:00:00",
+      "updated_at": "2025-10-29 18:35:00"
+    },
     "can_cancel": false,
     "can_reschedule": false,
     "created_at": "2025-10-29 18:00:00",
@@ -483,9 +515,14 @@ No body required
 
 ### 2. Payment Method:
 - عند اختيار `"cash"`: Booking يُنشأ مباشرة (status: pending)
-- عند اختيار `"stripe"` أو `"paypal"`: سيتم تحديث workflow بعد تنفيذ Payment System
+- عند اختيار `"stripe"` أو `"paypal"`: يتم إنشاء payment intent وجلب تفاصيل الدفع
 
-### 3. Status Flow:
+### 3. Payment Information:
+- **Response Field**: `payment` object (nullable)
+- **Contains**: تفاصيل المدفوعة إذا كانت موجودة (id, amount, transaction_id, gateway, status)
+- **Note**: قد يكون `null` إذا لم يتم إنشاء مدفوعة بعد
+
+### 4. Status Flow:
 ```
 pending → confirmed (بعد الدفع/التأكيد)
 pending → cancelled (إلغاء)
@@ -493,13 +530,13 @@ confirmed → rescheduled (إعادة جدولة)
 rescheduled → cancelled (إلغاء)
 ```
 
-### 4. Permissions:
+### 5. Permissions:
 - فقط المريض صاحب الموعد يمكنه:
   - إعادة الجدولة
   - الإلغاء
   - عرض التفاصيل
 
-### 5. Business Rules:
+### 6. Business Rules:
 - **Cancel**: يجب أن يكون الموعد بعد 24 ساعة
 - **Reschedule**: يجب أن يكون الموعد في المستقبل
 - **Book**: لا يمكن حجز موعد في الماضي
@@ -571,6 +608,6 @@ if (data.success) {
 
 ---
 
-**Last Updated:** 2025-10-29  
-**Version:** 1.0.0
+**Last Updated:** 2025-11-02  
+**Version:** 1.1.0
 

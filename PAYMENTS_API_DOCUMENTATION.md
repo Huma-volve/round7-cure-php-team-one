@@ -258,7 +258,7 @@ Accept: application/json
 | `payment_id` | string | ✅ Yes | رقم الدفع من Gateway | Transaction ID من Stripe/PayPal |
 
 #### Validation Rules:
-- ✅ `gateway` must be `stripe` or `paypal` (لا يمكن تأكيد `cash` عبر API)
+- ✅ `gateway` must be `stripe` or `paypal` (Cash payments are handled offline - لا تحتاج تأكيد عبر API)
 - ✅ `payment_id` must be valid transaction ID
 
 #### Gateway-Specific Notes:
@@ -787,6 +787,6 @@ if (result.error) {
 
 ---
 
-**Last Updated:** 2025-10-29  
-**Version:** 1.0.0
+**Last Updated:** 2025-11-02  
+**Version:** 1.1.0
 

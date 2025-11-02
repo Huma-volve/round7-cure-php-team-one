@@ -1,0 +1,33 @@
+*   [33m456a599[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmohamed_samir[m[33m)[m Merge main into mohamed_samir - Integrate Doctor Panel features with latest main changes
+[31m|[m[32m\[m  
+[31m|[m *   [33m0f0879b[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #17 from Huma-volve/esraa-ragab
+[31m|[m [33m|[m[34m\[m  
+[31m|[m [33m|[m *   [33ma92797d[m Resolved notifications conflicts
+[31m|[m [33m|[m [35m|[m[33m\[m  
+[31m|[m [33m|[m [35m|[m[33m/[m  
+[31m|[m [33m|[m[33m/[m[35m|[m   
+[31m|[m * [35m|[m   [33m24ead11[m Merge pull request #18 from Huma-volve/eslam
+[31m|[m [1;31m|[m[1;32m\[m [35m\[m  
+[31m|[m [1;31m|[m * [35m\[m   [33m1072456[m Resolve conflicts
+[31m|[m [1;31m|[m [1;33m|[m[1;31m\[m [35m\[m  
+[31m|[m [1;31m|[m [1;33m|[m[1;31m/[m [35m/[m  
+[31m|[m [1;31m|[m[1;31m/[m[1;33m|[m [35m|[m   
+[31m|[m * [1;33m|[m [35m|[m   [33mfc70d80[m Merge pull request #16 from Huma-volve/mohamed_samir
+[31m|[m [1;35m|[m[1;36m\[m [1;33m\[m [35m\[m  
+[31m|[m [1;35m|[m [1;36m|[m * [35m|[m [33ma896f29[m edit route doctor
+[31m|[m [1;35m|[m [1;36m|[m [1;36m|[m * [33m41a699a[m add notifications
+[31m|[m [1;35m|[m [1;36m|[m [1;36m|[m * [33m5e95977[m add notifications
+* [1;35m|[m [1;36m|[m [1;36m|[m [1;36m|[m [33mf8079cd[m feat: Add Doctor Panel features - booking management (cancel/reschedule) and payment management endpoints
+[1;36m|[m [1;35m|[m[1;36m/[m [1;36m/[m [1;36m/[m  
+[1;36m|[m[1;36m/[m[1;35m|[m [1;36m|[m [1;36m|[m   
+* [1;35m|[m [1;36m|[m [1;36m|[m [33mb1e27be[m[33m ([m[1;31morigin/mohamed_samir[m[33m)[m fix: Restore Payments configuration in .env.example
+* [1;35m|[m [1;36m|[m [1;36m|[m [33m0211213[m Merge main into mohamed_samir - Resolve conflicts
+[31m|[m[1;35m\[m[1;35m|[m [1;36m|[m [1;36m|[m 
+[31m|[m * [1;36m|[m [1;36m|[m [33m195948d[m Merge pull request #14 from Huma-volve/eslam
+[31m|[m [33m|[m[1;36m\[m[1;36m|[m [1;36m|[m 
+[31m|[m [33m|[m * [1;36m|[m   [33m10d444e[m[33m ([m[1;31morigin/eslam[m[33m)[m Add search feature and update related services and controllers
+[31m|[m [33m|[m [35m|[m[33m\[m [1;36m\[m  
+[31m|[m [33m|[m [35m|[m[33m/[m [1;36m/[m  
+[31m|[m [33m|[m[33m/[m[35m|[m [1;36m|[m   
+[31m|[m * [35m|[m [1;36m|[m   [33mf8b790f[m Merge pull request #12 from Huma-volve/reem_mohamed
+[31m|[m [1;31m|[m[1;32m\[m [35m\[m [1;36m\[m  
