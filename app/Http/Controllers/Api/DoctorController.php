@@ -9,6 +9,7 @@ use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorResource;
 use App\Models\Booking;
 use App\Models\Doctor;
+use App\Models\User;
 use App\Repositories\BookingRepository;
 use App\Services\Booking\BookingService;
 use App\Traits\ApiResponseTrait;
@@ -28,8 +29,10 @@ class DoctorController extends Controller
 
     public function showDoctor(Request $request , $id )
     {
+      
         try{
-        $user = Auth::user() ;
+
+        $user = Auth::user();
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
         return $this->successResponse([
@@ -71,7 +74,8 @@ class DoctorController extends Controller
         );
 
 
-        }catch(\Exception $e){
+
+        } catch (\Exception $e) {
             return $this->handleException($e);
         }
 
