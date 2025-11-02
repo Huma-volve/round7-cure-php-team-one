@@ -9,6 +9,7 @@ use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorResource;
 use App\Models\Booking;
 use App\Models\Doctor;
+use App\Models\User;
 use App\Repositories\BookingRepository;
 use App\Services\Booking\BookingService;
 use App\Traits\ApiResponseTrait;
@@ -23,14 +24,16 @@ class DoctorController extends Controller
     public function __construct(
         protected DoctorService $doctorService,
         private BookingService $bookingService,
-        private BookingRepository $bookingRepository
+        private BookingRepository $BookingRepository
     ) {}
 
 
     public function showDoctor(Request $request , $id )
     {
+
         try{
-        $user = Auth::user() ;
+
+        $user = Auth::user();
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
         return $this->successResponse([
@@ -82,9 +85,9 @@ class DoctorController extends Controller
                 return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
             }
 
-            $upcomingBookings = $this->bookingRepository->getDoctorUpcomingBookings($doctor->id);
-            $pendingBookings = $this->bookingRepository->getDoctorPendingBookings($doctor->id);
-            $stats = $this->bookingRepository->getDoctorStats($doctor->id);
+            $upcomingBookings = $this->BookingRepository->getDoctorUpcomingBookings($doctor->id);
+            $pendingBookings = $this->BookingRepository->getDoctorPendingBookings($doctor->id);
+            $stats = $this->BookingRepository->getDoctorStats($doctor->id);
 
             return $this->successResponse([
                 'upcoming' => BookingResource::collection($upcomingBookings),
