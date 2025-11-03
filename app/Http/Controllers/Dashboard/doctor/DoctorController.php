@@ -16,7 +16,7 @@ class DoctorController extends Controller
 
         $patients = Booking::where('doctor_id', $doctor->id)->with('patient.user')->get();
 
-        dd($patients);
+
         return view('admin.doctors.index', compact('patients'));
     }
 }
