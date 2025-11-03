@@ -12,7 +12,7 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Traits\HandlesRoleUpdates;
 
 class ProfileController extends Controller
-{   
+{
     use HandlesRoleUpdates;
     // update
     public function updateProfile(UpdateProfileRequest $request)
@@ -23,7 +23,7 @@ class ProfileController extends Controller
             return response()->json(['status' => false, 'message' => 'User not found'], 404);
         }
 
-        
+
 
         $data = [];
 
@@ -39,12 +39,34 @@ class ProfileController extends Controller
         }
 
         if ($request->filled('password')) {
-            if (!Hash::check($request->current_password, $user->password)) {
-                return response()->json(['status' => false, 'message' => 'Current password is incorrect'], 400);
+
+
+            if (!$request->filled('current_password')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Current password is required to change your password',
+                ], 400);
             }
+
+
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Current password is incorrect',
+                ], 400);
+            }
+
+
             $data['password'] = Hash::make($request->password);
         }
-        
+
+        // if ($request->filled('password')) {
+        //     if (!Hash::check($request->current_password, $user->password)) {
+        //         return response()->json(['status' => false, 'message' => 'Current password is incorrect'], 400);
+        //     }
+        //     $data['password'] = Hash::make($request->password);
+        // }
+
         $user->update($data);
 
         if ($user->hasRole('patient')) {
