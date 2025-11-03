@@ -12,10 +12,25 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\Chat\ChatMessageController;
+use App\Http\Controllers\Api\Chat\DoctorChatController;
+use App\Http\Controllers\Api\Chat\PatientChatController;
+use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\ChatController;
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
+
+Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,8 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-Route::apiResource('reviews',ReviewController::class)->middleware('auth:sanctum');
-Route::apiResource('notifications',NotificationController::class)->middleware('auth:sanctum');
+Route::apiResource('reviews', ReviewController::class)->middleware('auth:sanctum');
+Route::apiResource('notifications', NotificationController::class)->middleware('auth:sanctum');
 
 
 
@@ -95,13 +110,51 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 
 
+
+
+/*first case for the patient */
+/* when patient be login can see all the doctors to chat with them */
+/*he click on button this button to check if it has chat with this doctor before if yes wil get all of the messages
+else wil create new row in table chat and return the id and all things
+*/
+Route::middleware('auth:sanctum')->group(function () {
+    // 🩺 Endpoints حسب الدور
+
+    Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
+    Route::get('/chat/patient', [PatientChatController::class, 'index']);
+
+    // 💌 الرسائل الخاصة بشات معين
+
+    Route::get('/chats', [ChatController::class, 'index']);
+
+    // 💬 عرض قائمة الشاتات العامة
+    Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
+
+    Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
+    // 📨 إرسال الرسائل وإدارة الحالات
+
+    Route::post('/messages/{chat}', [MessageController::class, 'send']); // ✅ تصحيح المسار
+
+    Route::post('/messages/send', [MessageController::class, 'send']);   // ممكن تحتفظ بيها لو بتستخدمها من frontend
+
+    Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+});
+
+
+
+/*second case for the doctor */
+/* if doctor open the page chat he wel see only message are sending to him  */
+
+
+
+
 // Authentication routes in public.php
 
 
 // Load route files
-require __DIR__.'/api/public.php';
-require __DIR__.'/api/shared.php';
-require __DIR__.'/api/patient.php';
-require __DIR__.'/api/doctor.php';
-require __DIR__.'/api/admin.php';
+require __DIR__ . '/api/public.php';
+require __DIR__ . '/api/shared.php';
+require __DIR__ . '/api/patient.php';
+require __DIR__ . '/api/doctor.php';
+require __DIR__ . '/api/admin.php';
 
