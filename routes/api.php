@@ -65,6 +65,7 @@ Route::apiResource('reviews', ReviewController::class)->middleware('auth:sanctum
 Route::apiResource('notifications', NotificationController::class)->middleware('auth:sanctum');
 
 
+
 // روت اختبار RBAC
 Route::get('/test-role', function () {
     $user = User::first();

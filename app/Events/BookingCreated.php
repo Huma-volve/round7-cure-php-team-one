@@ -11,29 +11,37 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class BookingCreated
+class BookingCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $booking;
-    
-    /**
-     * Create a new event instance.
-     */
+      public $booking;
+
     public function __construct(Booking $booking)
     {
-        //
         $this->booking = $booking;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
+      
         return [
-            new PrivateChannel('channel-name'),
+            new Channel('doctor.' . $this->booking->doctor_id),
+        ];
+    }
+
+    public function broadcastAs()
+    {
+        return 'booking.created';
+    }
+
+     public function broadcastWith(): array
+    {
+        return [
+            'id' => $this->booking->id,
+            'doctor_id' => $this->booking->doctor_id,
+            'patient_id' => $this->booking->patient_id,
+            'date_time' => $this->booking->date_time,
+            'status' => $this->booking->status,
         ];
     }
 }

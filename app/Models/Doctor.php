@@ -66,10 +66,20 @@ class Doctor extends Model
 
 }
 
-    // public function getAvailabilityAttribute()
-    // {
-    //     return json_decode($this->availability_json, true);
-    // }
+
+    public function getAvailabilityAttribute()
+    {
+        $value = $this->availability_json;
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (is_null($value)) {
+            return [];
+        }
+        
+        return json_decode($value, true);
+    }
 
 public function getAverageRatingAttribute()
 {
