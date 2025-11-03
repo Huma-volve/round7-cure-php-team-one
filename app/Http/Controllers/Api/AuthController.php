@@ -280,8 +280,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => ['required', 'email'],
             'password' => [
-                'required',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+                'required'
             ],
         ]);
 
