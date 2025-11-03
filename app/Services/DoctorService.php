@@ -18,7 +18,7 @@ class DoctorService  {
     }
 
     public function getNearbyDoctors(User $user, $latitude, $longitude, $search = null , $radius =10){
-        
+
         $doctors = $this->searchService->searchDoctors($latitude, $longitude, $search, $radius , $user);
 
         return $doctors;
@@ -26,7 +26,7 @@ class DoctorService  {
 
 
     public function getDoctorDetails($doctorId, $user = null){
-
+    //    dd('here');
         $doctor = Doctor::with([
             'user',
             'specialty',

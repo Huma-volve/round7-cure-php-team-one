@@ -22,9 +22,13 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+reverb-listener.js
+/resources/views/test-reverb.blade.php
 
 PROJECT_GUIDE.md
 Cure_API.postman_collection.json
+PAYMENTS_DOCUMENTATION.md
+DOCTOR_PANEL_API_DOCUMENTATION.md
 
 # Ignore AuthController
-app/Http/Controllers/Api/AuthController.php
+# app/Http/Controllers/Api/AuthController.php

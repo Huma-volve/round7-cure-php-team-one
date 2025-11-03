@@ -11,6 +11,8 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Repositories\BookingRepository;
 use App\Services\Booking\BookingService;
+use App\Services\Payment\PaymentService;
+use App\DTOs\Payment\CreatePaymentDTO;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +24,8 @@ class PatientController extends Controller
 
     public function __construct(
         private BookingService $bookingService,
-        private BookingRepository $bookingRepository
+        private BookingRepository $bookingRepository,
+        private PaymentService $paymentService,
     ) {}
 
     /**
@@ -44,8 +47,36 @@ class PatientController extends Controller
                 'payment_method' => $request->payment_method,
             ]);
 
+            $responseData = [
+                'booking' => new BookingResource($booking),
+            ];
+
+            // إنشاء نية دفع تلقائياً إن لم تكن الطريقة نقداً
+            if ($request->payment_method !== 'cash') {
+                $currency = (string) config('app.currency', env('PAYMENT_CURRENCY', 'USD'));
+                $payment = $this->paymentService->create(new CreatePaymentDTO(
+                    bookingId: $booking->id,
+                    gateway: $request->payment_method,
+                    currency: $currency,
+                    amount: (string) $booking->price,
+                    description: 'Booking #'.$booking->id.' with Dr. '.$doctor->user?->name,
+                    patientId: Auth::id(),
+                    metadata: ['booking_id' => $booking->id],
+                    returnUrl: $request->input('return_url'),
+                    cancelUrl: $request->input('cancel_url'),
+                ));
+
+                $responseData['payment'] = [
+                    'provider' => $payment->getProvider(),
+                    'payment_id' => $payment->getPaymentId(),
+                    'client_secret' => $payment->getClientSecret(), // Stripe فقط
+                    'approve_url' => $payment->getApproveUrl(),     // PayPal فقط
+                    'status' => $payment->getStatus(),
+                ];
+            }
+
             return $this->createdResponse(
-                new BookingResource($booking),
+                $responseData,
                 'تم حجز الموعد بنجاح'
             );
 
@@ -69,6 +100,7 @@ class PatientController extends Controller
             $bookings = $this->bookingRepository->getPatientBookings($patient->id, [
                 'status' => $request->status,
                 'upcoming_only' => $request->boolean('upcoming_only'),
+                'date' => $request->date,
             ]);
 
             return $this->paginatedResponse(
