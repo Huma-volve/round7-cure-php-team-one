@@ -9,6 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('asset/img/favicon.png') }}">
+
 
     <title>@yield('title')</title>
 
