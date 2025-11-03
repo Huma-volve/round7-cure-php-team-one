@@ -8,10 +8,14 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Traits\HandlesRoleUpdates;
 
 class ProfileController extends Controller
-{   // update
-    public function updateProfile(Request $request)
+{   
+    use HandlesRoleUpdates;
+    // update
+    public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
 
@@ -19,22 +23,15 @@ class ProfileController extends Controller
             return response()->json(['status' => false, 'message' => 'User not found'], 404);
         }
 
-        $request->validate([
-            'name' => ['string', 'max:255'],
-            'password' => ['nullable', Password::defaults()],
-            'current_password' => ['required_with:password'],
-            // 'mobile' => ['nullable', 'min:11', 'numeric', Rule::unique('users', 'mobile')->ignore($user->id)],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048'],
-            'birthdate' => ['nullable', 'date', 'date_format:Y-m-d'],
-            'gender' => ['nullable', 'in:male,female'],
-            'medical_notes' => ['nullable', 'string'],
-        ]);
+        
 
         $data = [];
 
-        if ($request->filled('name')) $data['name'] = $request->name;
-        if ($request->filled('birthdate')) $data['birthdate'] = $request->birthdate;
-        if ($request->filled('gender')) $data['gender'] = $request->gender;
+        foreach (['name', 'birthdate', 'gender'] as $field) {
+            if ($request->filled($field)) {
+                $data[$field] = $request->$field;
+            }
+        }
 
         if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('users', 'public');
@@ -47,16 +44,17 @@ class ProfileController extends Controller
             }
             $data['password'] = Hash::make($request->password);
         }
-
+        
         $user->update($data);
 
         if ($user->hasRole('patient')) {
-            $user->patient()->update([
-                'birthdate' => $request->birthdate ?? $user->birthdate,
-                'gender' => $request->gender ?? $user->gender,
-                'medical_notes' => $request->medical_notes ?? optional($user->patient)->medical_notes,
-            ]);
+            $this->handlePatientUpdate($user, $request);
         }
+
+        if ($user->hasRole('doctor')) {
+            $this->handleDoctorUpdate($user, $request);
+        }
+
 
         return response()->json([
             'status' => true,
@@ -68,7 +66,7 @@ class ProfileController extends Controller
     public function requestMobileChange(Request $request)
     {
         $request->validate([
-            'mobile' => 'required|string|max:20',
+            'mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
         ]);
 
         $user = auth()->user();
@@ -82,7 +80,7 @@ class ProfileController extends Controller
         ]);
 
 
-       \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
+        \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
 
 
         session(['new_mobile' => $request->mobile]);
@@ -96,7 +94,7 @@ class ProfileController extends Controller
     {
         $request->validate([
             'otp' => 'required|numeric',
-            'new_mobile' => 'required|string|max:20',
+            'new_mobile' => 'required|regex:/^01[0-2,5]{1}[0-9]{8}$/',
         ]);
 
         $user = auth()->user();
