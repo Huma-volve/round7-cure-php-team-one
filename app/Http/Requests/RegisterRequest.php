@@ -24,8 +24,8 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', \Illuminate\Validation\Rules\Password::defaults()],
-            'mobile' => ['required','min:11','numeric','unique:users,mobile'],
+            'password' => ['required', \Illuminate\Validation\Rules\Password::defaults(),'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'],
+            'mobile' => ['required','min:11','numeric','unique:users,mobile','regex:/^01[0-2,5]{1}[0-9]{8}$/'],
             'profile_photo' => ['nullable','image','mimes:jpg,png,jpeg,gif,svg','max:2048'],
             'birthdate' => ['required','date','date_format:Y-m-d','before_or_equal:today'],
             'gender' => ['required','in:male,female,other'],
