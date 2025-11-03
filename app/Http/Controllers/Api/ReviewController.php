@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Validation\ValidationException;
-
 use App\Helpers\ApiResponse;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Booking;
 use App\Models\Review;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
 {
@@ -34,7 +35,6 @@ class ReviewController extends Controller
         }
     }
     
-
     /**
      * Store a newly created resource in storage.
      */
@@ -57,6 +57,14 @@ class ReviewController extends Controller
             }
 
             $review = Review::create($data);
+            
+            NotificationService::sendToDoctor(
+                $data['doctor_id'],
+                'New Review Received',
+                "{$data['patient_id']} has left a new review for you.",
+                'review'
+            );
+
             return ApiResponse::success(['review' => $review], "Review created successfully", 201); 
 
         } catch (\Throwable $e) {

@@ -25,6 +25,11 @@ class BookingRepository
             $query->where('date_time', '>=', now());
         }
 
+        if (isset($filters['date'])) {
+            $date = Carbon::parse($filters['date'])->format('Y-m-d');
+            $query->whereDate('date_time', $date);
+        }
+
         return $query->orderBy('date_time', 'desc')->paginate(15);
     }
 
@@ -115,7 +120,7 @@ class BookingRepository
      */
     public function findByIdWithRelations(int $id): ?Booking
     {
-        return Booking::with(['doctor.user', 'patient.user'])
+        return Booking::with(['doctor.user', 'patient.user', 'payment'])
             ->find($id);
     }
 }

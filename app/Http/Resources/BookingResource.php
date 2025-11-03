@@ -24,6 +24,7 @@ class BookingResource extends JsonResource
             'price' => (float) $this->price,
             'doctor' => new DoctorResource($this->whenLoaded('doctor')),
             'patient' => new PatientResource($this->whenLoaded('patient')),
+            'payment' => new PaymentResource($this->whenLoaded('payment')),
             'can_cancel' => $this->isCancellable(),
             'can_reschedule' => $this->isReschedulable(),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
