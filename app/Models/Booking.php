@@ -6,6 +6,7 @@ use App\Constants\BookingStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class Booking extends Model
@@ -53,6 +54,11 @@ class Booking extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function disputes(): HasMany
+    {
+        return $this->hasMany(BookingDispute::class);
     }
 
     /**
