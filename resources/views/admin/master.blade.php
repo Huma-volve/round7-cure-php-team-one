@@ -1,4 +1,4 @@
- @include('admin.layouts.header')
+ @include('admin.layouts.sidebar')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->

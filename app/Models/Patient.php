@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Patient extends Model
 {
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
-    protected $guard_name = 'api';
-    protected $fillable = ['medical_notes', 'user_id','gender','birthdate'];
     
+    protected $guard_name = 'api';
+
+    protected $fillable = ['medical_notes', 'user_id','gender','birthdate'];
+
     protected $casts = [
         'birthdate' => 'date',
     ];
@@ -22,7 +24,7 @@ class Patient extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
      public function reviews()
     {
         return $this->hasMany(Review::class);
@@ -38,6 +40,10 @@ class Patient extends Model
         return $this->hasMany(Booking::class)
             ->whereNotIn('status', ['cancelled'])
             ->orderBy('date_time', 'desc');
+    }
+        public function chats()
+    {
+        return $this->hasMany(Chat::class);
     }
 
 }
