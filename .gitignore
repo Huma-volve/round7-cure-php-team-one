@@ -29,7 +29,4 @@ PROJECT_GUIDE.md
 Cure_API.postman_collection.json
 PAYMENTS_DOCUMENTATION.md
 DOCTOR_PANEL_API_DOCUMENTATION.md
-
-# Ignore AuthController
-# app/Http/Controllers/Api/AuthController.php
-ADMIN_PANEL.md
+LARAVEL_BREEZE_COMPONENTS.md
