@@ -122,26 +122,25 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
-    // 🩺 Endpoints حسب الدور
+  
 
-    Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
-    Route::get('/chat/patient', [PatientChatController::class, 'index']);
+                             
 
-    // 💌 الرسائل الخاصة بشات معين
 
     Route::get('/chats', [ChatController::class, 'index']);
 
-    // 💬 عرض قائمة الشاتات العامة
+
     Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
 
-    Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // 📨 إرسال الرسائل وإدارة الحالات
+//                                FAIL
 
-    Route::post('/messages/{chat}', [MessageController::class, 'send']); // ✅ تصحيح المسار
 
-    Route::post('/messages/send', [MessageController::class, 'send']);   // ممكن تحتفظ بيها لو بتستخدمها من frontend
-
-    Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+    // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
+    // Route::get('/chat/patient', [PatientChatController::class, 'index']);
+    // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
+    // Route::post('/messages/{chat}', [MessageController::class, 'send']); //
+    // Route::post('/messages/send', [MessageController::class, 'send']);   //
+    // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
 });
 
 
