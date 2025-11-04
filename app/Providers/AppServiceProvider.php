@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Booking;
+use App\Models\Review;
 use App\Observers\BookingObserver;
+use App\Observers\ReviewObserver;
 use Illuminate\Support\ServiceProvider;
-use Stripe\StripeClient;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
+use Stripe\StripeClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Booking::observe(BookingObserver::class);
+        Review::observe(ReviewObserver::class);
+
     }
 }
