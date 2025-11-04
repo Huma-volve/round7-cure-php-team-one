@@ -16,7 +16,7 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
-                                <tr> 
+                                <tr>
                                     <th>#</th>
                                     <th>Patient Name</th>
                                     <th>Email</th>
@@ -40,9 +40,11 @@
                                         <td>{{ $booking->patient->birthdate }}</td>
                                         <td>{{ $booking->created_at->format('Y-m-d') }}</td>
                                         <td>{{ ucfirst($booking->status) }}</td>
-                                        <td>
-
-                                        </td>
+                                         <td>
+                                        <a href="{{ route('doctor.patients.show', $booking->patient_id) }}" class="btn btn-sm btn-primary">
+                                            View
+                                        </a>
+                                    </td>
                                     </tr>
                             @endforeach
 
