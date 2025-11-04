@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Chat\ChatMessageController;
 use App\Http\Controllers\Api\Chat\DoctorChatController;
 use App\Http\Controllers\Api\Chat\PatientChatController;
 use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\Api\SpecialtyController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -49,6 +50,7 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+Route::get('/specialties', [SpecialtyController::class, 'index'])->name('specialties.index');
 
 Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
 
@@ -58,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
 
 });
+
+
 
 
 
@@ -118,26 +122,25 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
-    // 🩺 Endpoints حسب الدور
+  
 
-    Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
-    Route::get('/chat/patient', [PatientChatController::class, 'index']);
+                             
 
-    // 💌 الرسائل الخاصة بشات معين
 
     Route::get('/chats', [ChatController::class, 'index']);
 
-    // 💬 عرض قائمة الشاتات العامة
+
     Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
 
-    Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // 📨 إرسال الرسائل وإدارة الحالات
+//                                FAIL
 
-    Route::post('/messages/{chat}', [MessageController::class, 'send']); // ✅ تصحيح المسار
 
-    Route::post('/messages/send', [MessageController::class, 'send']);   // ممكن تحتفظ بيها لو بتستخدمها من frontend
-
-    Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+    // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
+    // Route::get('/chat/patient', [PatientChatController::class, 'index']);
+    // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
+    // Route::post('/messages/{chat}', [MessageController::class, 'send']); //
+    // Route::post('/messages/send', [MessageController::class, 'send']);   //
+    // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
 });
 
 

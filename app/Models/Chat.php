@@ -35,7 +35,7 @@ class Chat extends Model
         return $this->belongsTo(User::class, 'user_two_id');
     }
 
-    public function meta(): HasMany
+    public function meta()
     {
         return $this->hasMany(ChatUserMeta::class);
     }

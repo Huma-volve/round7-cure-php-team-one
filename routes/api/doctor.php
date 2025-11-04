@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Route;
 | Routes for doctor operations - requires 'doctor' role
 |
 */
+Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
+
 Route::middleware(['auth:sanctum', 'role:patient'])
 ->get('/doctor/{id}', [DoctorController::class, 'showDoctor'])->name('doctor.show');
 
