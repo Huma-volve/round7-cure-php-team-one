@@ -26,13 +26,6 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
-
-Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
-
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes - Cure Platform
@@ -122,9 +115,9 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
-  
 
-                             
+
+
 
 
     Route::get('/chats', [ChatController::class, 'index']);
