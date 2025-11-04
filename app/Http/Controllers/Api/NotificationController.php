@@ -58,35 +58,14 @@ class NotificationController extends Controller
                 return ApiResponse::error(null, 'Doctor or patient not found', 404);
             }
 
-            $booking = Booking::create([
-                'doctor_id' => $doctor->id,
-                'patient_id' => $patient->id,
-                'date_time' => $request->date_time,
-                'payment_method' => $request->payment_method,
-                'status' => 'pending',
-                'price' => $doctor->session_price,
-            ]);
-
-            // send to doctor
-            NotificationService::sendToDoctor(
-                $doctor->user,
-                'New Booking',
-                "You have a new booking from {$patient->user->name}",
-                'booking'
-            );
-            // send to user
-            NotificationService::sendToUser(
-                $patient->user,
-                'Booking Created',
-                "Your booking with Dr. {$doctor->user->name} has been created successfully.",
-                'booking'
-            );
-            // send to admin
-            NotificationService::sendToAdmin(
-                'System Log',
-                "A new booking was created by {$patient->user->name}",
-                'system'
-            );
+            // $booking = Booking::create([
+            //     'doctor_id' => $doctor->id,
+            //     'patient_id' => $patient->id,
+            //     'date_time' => $request->date_time,
+            //     'payment_method' => $request->payment_method,
+            //     'status' => 'pending',
+            //     'price' => $doctor->session_price,
+            // ]);
 
             return ApiResponse::success([], 'Booking created successfully and notification sent automatically.');
         } catch (\Throwable $e) {
@@ -102,11 +81,7 @@ class NotificationController extends Controller
     public function markAsRead($id)
     {
         try {
-            $notification = Notification::find($id);
-
-            if (! $notification) {
-                return ApiResponse::error(null, 'Notification not found', 404);
-            }
+            $notification = Notification::findOrFail($id);
 
             $notification->update(['is_read' => true]);
 
@@ -142,31 +117,31 @@ class NotificationController extends Controller
 
 //  move it into BookingController
 
-    public function update(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        $oldStatus = $booking->status;
+    // public function update(Request $request, $id)
+    // {
+    //     $booking = Booking::findOrFail($id);
+    //     $oldStatus = $booking->status;
 
-        $booking->update(['status' => $request->status]);
+    //     $booking->update(['status' => $request->status]);
 
-        if ($request->status === 'cancelled') {
-            NotificationService::sendToUser(
-                $booking->patient->user,
-                'Booking Cancelled',
-                "Your booking with Dr. {$booking->doctor->user->name} has been cancelled.",
-                'booking'
-            );
-        }
+    //     if ($request->status === 'cancelled') {
+    //         NotificationService::sendToUser(
+    //             $booking->patient->user,
+    //             'Booking Cancelled',
+    //             "Your booking with Dr. {$booking->doctor->user->name} has been cancelled.",
+    //             'booking'
+    //         );
+    //     }
 
-        if ($request->status === 'rescheduled') {
-            NotificationService::sendToUser(
-                $booking->patient->user,
-                'Booking Rescheduled',
-                "Your booking with Dr. {$booking->doctor->user->name} has been rescheduled.",
-                'booking'
-            );
-        }
+    //     if ($request->status === 'rescheduled') {
+    //         NotificationService::sendToUser(
+    //             $booking->patient->user,
+    //             'Booking Rescheduled',
+    //             "Your booking with Dr. {$booking->doctor->user->name} has been rescheduled.",
+    //             'booking'
+    //         );
+    //     }
 
-        return ApiResponse::success($booking, 'Booking updated successfully.');
-    }
+    //     return ApiResponse::success($booking, 'Booking updated successfully.');
+    // }
 }
