@@ -2187,110 +2187,6 @@
             "time": "2025-01-27T14:24:01+00:00"
         },
         {
-<<<<<<< Updated upstream
-            "name": "lcobucci/clock",
-            "version": "2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lcobucci/clock.git",
-                "reference": "c7aadcd6fd97ed9e199114269c0be3f335e38876"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/clock/zipball/c7aadcd6fd97ed9e199114269c0be3f335e38876",
-                "reference": "c7aadcd6fd97ed9e199114269c0be3f335e38876",
-                "shasum": ""
-            },
-            "require": {
-                "php": "~8.1.0 || ~8.2.0",
-                "stella-maris/clock": "^0.1.7"
-            },
-            "provide": {
-                "psr/clock-implementation": "1.0"
-            },
-            "require-dev": {
-                "infection/infection": "^0.26",
-                "lcobucci/coding-standard": "^9.0",
-                "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan": "^1.9.4",
-                "phpstan/phpstan-deprecation-rules": "^1.1.1",
-                "phpstan/phpstan-phpunit": "^1.3.2",
-                "phpstan/phpstan-strict-rules": "^1.4.4",
-                "phpunit/phpunit": "^9.5.27"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Lcobucci\\Clock\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Luís Cobucci",
-                    "email": "lcobucci@gmail.com"
-                }
-            ],
-            "description": "Yet another clock abstraction",
-            "support": {
-                "issues": "https://github.com/lcobucci/clock/issues",
-                "source": "https://github.com/lcobucci/clock/tree/2.3.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/lcobucci",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/lcobucci",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2022-12-19T14:38:11+00:00"
-        },
-        {
-            "name": "lcobucci/jwt",
-            "version": "4.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "55564265fddf810504110bd68ca311932324b0e9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/55564265fddf810504110bd68ca311932324b0e9",
-                "reference": "55564265fddf810504110bd68ca311932324b0e9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "ext-openssl": "*",
-                "lcobucci/clock": "^2.0",
-                "php": "^7.4 || ^8.0"
-            },
-            "require-dev": {
-                "infection/infection": "^0.20",
-                "lcobucci/coding-standard": "^6.0",
-                "mikey179/vfsstream": "^1.6",
-                "phpbench/phpbench": "^0.17",
-                "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-deprecation-rules": "^0.12",
-                "phpstan/phpstan-phpunit": "^0.12",
-                "phpstan/phpstan-strict-rules": "^0.12",
-                "phpunit/php-invoker": "^3.1",
-                "phpunit/phpunit": "^9.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.0-dev"
-                }
-            },
-=======
             "name": "lcobucci/jwt",
             "version": "5.6.0",
             "source": {
@@ -2326,7 +2222,6 @@
                 "lcobucci/clock": ">= 3.2"
             },
             "type": "library",
->>>>>>> Stashed changes
             "autoload": {
                 "psr-4": {
                     "Lcobucci\\JWT\\": "src"
@@ -2350,11 +2245,7 @@
             ],
             "support": {
                 "issues": "https://github.com/lcobucci/jwt/issues",
-<<<<<<< Updated upstream
-                "source": "https://github.com/lcobucci/jwt/tree/4.0.4"
-=======
                 "source": "https://github.com/lcobucci/jwt/tree/5.6.0"
->>>>>>> Stashed changes
             },
             "funding": [
                 {
@@ -2366,11 +2257,7 @@
                     "type": "patreon"
                 }
             ],
-<<<<<<< Updated upstream
-            "time": "2021-09-28T19:18:28+00:00"
-=======
             "time": "2025-10-17T11:30:53+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "league/commonmark",
@@ -3550,8 +3437,6 @@
             "time": "2020-10-15T08:29:30+00:00"
         },
         {
-<<<<<<< Updated upstream
-=======
             "name": "nunomaduro/termwind",
             "version": "v2.3.2",
             "source": {
@@ -3758,7 +3643,6 @@
             "time": "2020-10-15T08:29:30+00:00"
         },
         {
->>>>>>> Stashed changes
             "name": "paragonie/sodium_compat",
             "version": "v2.4.0",
             "source": {
@@ -5639,56 +5523,6 @@
             "time": "2025-02-25T21:38:18+00:00"
         },
         {
-<<<<<<< Updated upstream
-            "name": "stella-maris/clock",
-            "version": "0.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stella-maris-solutions/clock.git",
-                "reference": "fa23ce16019289a18bb3446fdecd45befcdd94f8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stella-maris-solutions/clock/zipball/fa23ce16019289a18bb3446fdecd45befcdd94f8",
-                "reference": "fa23ce16019289a18bb3446fdecd45befcdd94f8",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.0|^8.0",
-                "psr/clock": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "StellaMaris\\Clock\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Heigl",
-                    "role": "Maintainer"
-                }
-            ],
-            "description": "A pre-release of the proposed PSR-20 Clock-Interface",
-            "homepage": "https://gitlab.com/stella-maris/clock",
-            "keywords": [
-                "clock",
-                "datetime",
-                "point in time",
-                "psr20"
-            ],
-            "support": {
-                "source": "https://github.com/stella-maris-solutions/clock/tree/0.1.7"
-            },
-            "time": "2022-11-25T16:15:06+00:00"
-        },
-        {
-=======
->>>>>>> Stashed changes
             "name": "stripe/stripe-php",
             "version": "v18.1.0",
             "source": {
@@ -8601,15 +8435,15 @@
                 "guzzlehttp/guzzle": "^7.0",
                 "php": "~8.1 || ~8.2 || ~8.3 || ~8.4",
                 "vonage/client-core": "^4.0"
-<<<<<<< Updated upstream
+
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
-=======
-            },
-            "type": "library",
+            ]
+     },
+           { "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -8695,79 +8529,13 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
->>>>>>> Stashed changes
+ 
             ],
             "authors": [
                 {
                     "name": "James Seconde",
                     "email": "jim.seconde@vonage.com",
                     "role": "PHP Developer Advocate"
-<<<<<<< Updated upstream
-                },
-                {
-                    "name": "Tim Lytle",
-                    "homepage": "https://twitter.com/tjlytle",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Michael Heap",
-                    "homepage": "https://www.twitter.com/mheap",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Lorna Mitchell",
-                    "homepage": "https://lornajane.net/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Chris Tankersley",
-                    "homepage": "https://twitter.com/dragonmantank",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Client for using Vonage's API.",
-            "support": {
-                "email": "devrel@vonage.com",
-                "issues": "https://github.com/Vonage/vonage-php-sdk/issues",
-                "source": "https://github.com/Vonage/vonage-php-sdk/tree/4.2.0"
-            },
-            "time": "2025-06-02T15:46:52+00:00"
-        },
-        {
-            "name": "vonage/client-core",
-            "version": "4.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Vonage/vonage-php-sdk-core.git",
-                "reference": "a7db15d14754ce21b0006452e16dd907577c1e4b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Vonage/vonage-php-sdk-core/zipball/a7db15d14754ce21b0006452e16dd907577c1e4b",
-                "reference": "a7db15d14754ce21b0006452e16dd907577c1e4b",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "laminas/laminas-diactoros": "^3.0",
-                "lcobucci/jwt": "^3.4|^4.0",
-                "php": "~8.0 || ~8.1 || ~8.2",
-                "psr/container": "^1.0 | ^2.0",
-                "psr/http-client-implementation": "^1.0",
-                "psr/log": "^1.1|^2.0|^3.0",
-                "vonage/nexmo-bridge": "^0.1.0"
-            },
-            "require-dev": {
-                "guzzlehttp/guzzle": ">=6",
-                "helmich/phpunit-json-assert": "^3.3",
-                "php-http/mock-client": "^1.4",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8.5|^9.4",
-                "rector/rector": "^0.14.8",
-                "roave/security-advisories": "dev-latest",
-                "softcreatr/jsonpath": "^0.7 || ^0.8",
-=======
                 }
             ],
             "description": "PHP Client for using Vonage's API.",
@@ -8802,7 +8570,6 @@
             "require-dev": {
                 "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^8.5|^9.4",
->>>>>>> Stashed changes
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
@@ -8820,19 +8587,6 @@
                     "name": "James Seconde",
                     "email": "jim.seconde@vonage.com",
                     "role": "PHP Developer Advocate"
-<<<<<<< Updated upstream
-                }
-            ],
-            "description": "PHP Client for using Vonage's API.",
-            "homepage": "https://developer.vonage.com",
-            "support": {
-                "docs": "https://developer.vonage.com",
-                "email": "devrel@vonage.com",
-                "issues": "https://github.com/Vonage/vonage-php-sdk-core/issues",
-                "source": "https://github.com/Vonage/vonage-php-sdk-core"
-            },
-            "time": "2023-10-02T09:26:26+00:00"
-=======
                 },
                 {
                     "name": "Chris Tankersley",
@@ -8845,7 +8599,6 @@
                 "source": "https://github.com/Vonage/vonage-php-jwt/tree/0.5.1"
             },
             "time": "2024-01-19T11:15:22+00:00"
->>>>>>> Stashed changes
         },
         {
             "name": "vonage/nexmo-bridge",
