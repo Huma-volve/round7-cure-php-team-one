@@ -76,17 +76,17 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
         // إنشاء patient أدمن افتراضي
-        $patientUser = User::firstOrCreate(
-            ['email' => 'patient1@example.com'],
-            [
-                'name' => 'patient test',
-                'password' => Hash::make('password'),
-                'mobile' => '01144778598',
-            ]
-        );
+        // $patientUser = User::firstOrCreate(
+        //     ['email' => 'patient1@example.com'],
+        //     [
+        //         'name' => 'patient test',
+        //         'password' => Hash::make('PasswordIs1@'),
+        //         'mobile' => '01144778598',
+        //     ]
+        // );
 
-        if (!$patientUser->hasRole('patient')) {
-            $patientUser->assignRole('patient');
-        }
+        // if (!$patientUser->hasRole('patient')) {
+        //     $patientUser->assignRole('patient');
+        // }
     }
 }
