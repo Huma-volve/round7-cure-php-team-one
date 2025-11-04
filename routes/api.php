@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('api.home');
 Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
 
 Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
@@ -48,7 +48,7 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 */
 
 
-Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+Route::get('/', [HomeController::class, 'index'])->name('api.home.auth')->middleware('auth:sanctum');
 
 Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
 
@@ -156,5 +156,4 @@ require __DIR__ . '/api/public.php';
 require __DIR__ . '/api/shared.php';
 require __DIR__ . '/api/patient.php';
 require __DIR__ . '/api/doctor.php';
-require __DIR__ . '/api/admin.php';
 
