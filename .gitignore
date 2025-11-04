@@ -42,3 +42,4 @@ app/Http/Controllers/Dashboard/doctor/DoctorController.php
 
 # Ignore AuthController
 # app/Http/Controllers/Api/AuthController.php
+ADMIN_PANEL.md

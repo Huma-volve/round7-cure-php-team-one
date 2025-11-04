@@ -16,7 +16,7 @@ class BookingSeeder extends Seeder
     public function run(): void
     {
         // إنشاء طبيب تجريبي
-        $doctorUser = User::create([
+        $doctorUser = User::updateOrCreate([
             'name' => 'د. أحمد محمد',
             'email' => 'doctor@example.com',
             'mobile' => '0551111111',
@@ -27,7 +27,7 @@ class BookingSeeder extends Seeder
         // إنشاء أو جلب التخصص
         $specialty1 = Specialty::firstOrCreate(['name' => 'Cardiology']);
 
-        $doctor = Doctor::create([
+        $doctor = Doctor::updateOrCreate([
             'user_id' => $doctorUser->id,
             'specialty_id' => $specialty1->id,
             'license_number' => 'DOC123456',
@@ -47,7 +47,7 @@ class BookingSeeder extends Seeder
         ]);
 
         // إنشاء طبيب آخر
-        $doctorUser2 = User::create([
+        $doctorUser2 = User::updateOrCreate([
             'name' => 'د. فاطمة علي',
             'email' => 'doctor2@example.com',
             'mobile' => '0552222222',
@@ -58,7 +58,7 @@ class BookingSeeder extends Seeder
         // إنشاء أو جلب التخصص
         $specialty2 = Specialty::firstOrCreate(['name' => 'Pediatrics']);
 
-        $doctor2 = Doctor::create([
+        $doctor2 = Doctor::updateOrCreate([
             'user_id' => $doctorUser2->id,
             'specialty_id' => $specialty2->id,
             'license_number' => 'DOC654321',
@@ -78,7 +78,7 @@ class BookingSeeder extends Seeder
         ]);
 
         // إنشاء مريض تجريبي
-        $patientUser = User::create([
+        $patientUser = User::updateOrCreate([
             'name' => 'محمد عبدالله',
             'email' => 'patient@example.com',
             'mobile' => '0553333333',
@@ -86,7 +86,7 @@ class BookingSeeder extends Seeder
         ]);
         $patientUser->assignRole('patient');
 
-        $patient = Patient::create([
+        $patient = Patient::updateOrCreate([
             'user_id' => $patientUser->id,
             'gender' => 'male',
             'birthdate' => '1990-01-15',
@@ -94,7 +94,7 @@ class BookingSeeder extends Seeder
         ]);
 
         // إنشاء مريض آخر
-        $patientUser2 = User::create([
+        $patientUser2 = User::updateOrCreate([
             'name' => 'سارة أحمد',
             'email' => 'patient2@example.com',
             'mobile' => '0554444444',
@@ -102,7 +102,7 @@ class BookingSeeder extends Seeder
         ]);
         $patientUser2->assignRole('patient');
 
-        $patient2 = Patient::create([
+        $patient2 = Patient::updateOrCreate([
             'user_id' => $patientUser2->id,
             'gender' => 'female',
             'birthdate' => '1995-05-20',
@@ -110,7 +110,7 @@ class BookingSeeder extends Seeder
         ]);
 
         // إنشاء بعض المواعيد التجريبية
-        Booking::create([
+        Booking::updateOrCreate([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
             'date_time' => now()->addDays(3)->setTime(10, 0, 0),
@@ -119,7 +119,7 @@ class BookingSeeder extends Seeder
             'price' => $doctor->session_price,
         ]);
 
-        Booking::create([
+        Booking::updateOrCreate([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient->id,
             'date_time' => now()->addDays(5)->setTime(14, 0, 0),
@@ -128,7 +128,7 @@ class BookingSeeder extends Seeder
             'price' => $doctor->session_price,
         ]);
 
-        Booking::create([
+        Booking::updateOrCreate([
             'doctor_id' => $doctor2->id,
             'patient_id' => $patient2->id,
             'date_time' => now()->addDays(7)->setTime(10, 0, 0),
@@ -138,7 +138,7 @@ class BookingSeeder extends Seeder
         ]);
 
         // موعد في اليوم القادم
-        Booking::create([
+        Booking::updateOrCreate([
             'doctor_id' => $doctor->id,
             'patient_id' => $patient2->id,
             'date_time' => now()->addDay()->setTime(9, 0, 0),
