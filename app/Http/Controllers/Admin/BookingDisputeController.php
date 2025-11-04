@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BookingDispute;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BookingDisputeController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = BookingDispute::with(['booking.patient.user', 'booking.doctor.user']);
 
@@ -20,14 +21,18 @@ class BookingDisputeController extends Controller
             $query->where('type', $request->string('type'));
         }
 
-        $disputes = $query->orderByDesc('id')->paginate(15);
-        return response()->json($disputes);
+        $bookingDisputes = $query->orderByDesc('id')->paginate(15);
+        
+        return view('admin.disputes.index', [
+            'paymentDisputes' => collect([]),
+            'bookingDisputes' => $bookingDisputes,
+        ]);
     }
 
-    public function show(int $id)
+    public function show(int $id): View
     {
         $dispute = BookingDispute::with(['booking.patient.user', 'booking.doctor.user'])->findOrFail($id);
-        return response()->json($dispute);
+        return view('admin.disputes.show', compact('dispute'));
     }
 }
 

@@ -18,10 +18,11 @@ class User extends Authenticatable
 
     /**
      * The name of the guard for the Spatie permissions.
+     * Set to null to allow dynamic guard detection.
      *
-     * @var string
+     * @var string|null
      */
-    protected $guard_name = 'api';
+    protected $guard_name = null;
 
     /**
      * The attributes that are mass assignable.
