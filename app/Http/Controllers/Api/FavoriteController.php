@@ -39,7 +39,7 @@ class FavoriteController extends Controller
     {
         try{
 
-        $user = Auth::user() ?? User::find(4);
+        $user = Auth::user() ;
         $favorites = $this->favoriteService->getFavorites($user);
 
         if (!$favorites) {
