@@ -9,6 +9,7 @@ use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\PaymentResource;
 use App\Http\Requests\RescheduleBookingRequest;
+use App\Http\Resources\DoctorDetailsResource;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\User;
@@ -40,43 +41,12 @@ class DoctorController extends Controller
     {
 
         try{
-
         $user = Auth::user();
         $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
-        return $this->successResponse([
-            'id' => $doctor->id,
-            'doctor' => [
-                'name' => 'Dr ' . ($doctor->user->name ?? ''),
-                'profile_photo' => $doctor->user->profile_photo ?? null,
-            ],
-            'specialty' => ($doctor->specialty)->name,
-            'clinic_address' => $doctor->clinic_address,
-            'location' => [
-                'lat' => (float) $doctor->latitude,
-                'lng' => (float) $doctor->longitude,
-            ],
-            "reviews_summary" => [
-                'average_rating' => (float) $doctor->average_rating ?? 0,
-                'reviews_count' => (int) $doctor->reviews_count ?? 0,
-            ],
-            "reviews" => $doctor->reviews->map(function ($review) {
-                return [
-                    'id' => $review->id,
-                    'rating' => (float) $review->rating,
-                    'comment' => $review->comment,
-                    'user' => [
-                        'id' => $review->patient?->user?->id,
-                        'name' => $review->patient?->user?->name,
-                        'profile_photo' => $review->patient?->user?->profile_photo,
-                        'created_at' => $review->created_at->toDateTimeString(),
-                    ],
-                    'created_at' => $review->created_at->toDateTimeString(),
-                ];
-            }),
-            'session_price' => (float) $doctor->session_price,
-            'availability' => $doctor->availability_json,
-        ], 'تم جلب بيانات الطبيب بنجاح');
+        return $this->successResponse(
+            new DoctorDetailsResource($doctor)
+          , 'تم جلب بيانات الطبيب بنجاح');
 
         } catch (\Exception $e) {
             return $this->handleException($e);
