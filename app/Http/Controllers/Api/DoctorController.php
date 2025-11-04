@@ -31,7 +31,11 @@ class DoctorController extends Controller
         private PaymentRepository $paymentRepository
     ) {}
 
-
+   public function index()
+    {
+        $doctors = $this->doctorService->getAllDoctors();
+        return $this->successResponse($doctors, 'تم جلب قائمة الأطباء بنجاح');
+    }
     public function showDoctor(Request $request , $id )
     {
 
