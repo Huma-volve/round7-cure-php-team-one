@@ -32,7 +32,12 @@ return [
     | لو React على localhost:5173:
     |
     */
-    'allowed_origins' => ['http://localhost:5173'],
+    // للسماح بأي دومين (ويب أو موبايل)
+    // ملاحظة: مع wildcard لا تستخدم الكوكيز (supports_credentials يجب أن تكون false)
+    'allowed_origins' => ['*'],
+    // إن كنت بحاجة للكوكيز/المصادقة عبر المتصفح، بدلاً من هذا استخدم:
+    // 'allowed_origins' => [],
+    // 'allowed_origin_patterns' => ['*'],
 
     /*
     |--------------------------------------------------------------------------
@@ -59,6 +64,7 @@ return [
     | مهم جداً مع Sanctum علشان يسمح بالـ cookies.
     |
     */
-    'supports_credentials' => true,
+    // عند السماح بأي Origin، عطّل الكريدنشلز
+    'supports_credentials' => false,
 
 ];
