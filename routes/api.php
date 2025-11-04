@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Chat\ChatMessageController;
 use App\Http\Controllers\Api\Chat\DoctorChatController;
 use App\Http\Controllers\Api\Chat\PatientChatController;
 use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\Api\SpecialtyController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -49,6 +50,7 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+Route::get('/specialties', [SpecialtyController::class, 'index'])->name('specialties.index');
 
 Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
 
@@ -58,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
 
 });
+
+
 
 
 
