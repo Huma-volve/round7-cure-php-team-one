@@ -1,0 +1,181 @@
+@extends('admin.master')
+@section('title', 'تفاصيل النزاع')
+
+@section('content')
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">تفاصيل النزاع</h1>
+        <a href="{{ route('admin.disputes.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-right"></i> رجوع
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">معلومات النزاع</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>رقم النزاع:</strong></div>
+                        <div class="col-md-8">#{{ $dispute->id }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>النوع:</strong></div>
+                        <div class="col-md-8">{{ $type === 'payment' ? 'نزاع دفع' : 'نزاع حجز' }}</div>
+                    </div>
+                    @if($type === 'payment')
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>السبب:</strong></div>
+                            <div class="col-md-8">{{ $dispute->reason ?? '-' }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>رقم الدفع:</strong></div>
+                            <div class="col-md-8">
+                                @if($dispute->payment)
+                                    <a href="{{ route('admin.payments.show', $dispute->payment->id) }}">#{{ $dispute->payment->id }}</a>
+                                @else
+                                    -
+                                @endif
+                            </div>
+                        </div>
+                    @else
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>النوع:</strong></div>
+                            <div class="col-md-8">{{ $dispute->type ?? '-' }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>رقم الحجز:</strong></div>
+                            <div class="col-md-8">
+                                <a href="{{ route('admin.bookings.show', $dispute->booking_id) }}">#{{ $dispute->booking_id }}</a>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>الحالة:</strong></div>
+                        <div class="col-md-8">
+                            <span class="badge badge-{{ $dispute->status == 'resolved' ? 'success' : ($dispute->status == 'rejected' ? 'danger' : 'warning') }}">
+                                {{ $dispute->status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>تاريخ الإنشاء:</strong></div>
+                        <div class="col-md-8">{{ $dispute->created_at->format('Y-m-d H:i') }}</div>
+                    </div>
+                    @if($dispute->resolution_notes)
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>ملاحظات الحل:</strong></div>
+                        <div class="col-md-8">{{ $dispute->resolution_notes }}</div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            @if($type === 'payment' && $dispute->payment && $dispute->payment->booking)
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">معلومات الحجز</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>الطبيب:</strong></div>
+                        <div class="col-md-8">{{ $dispute->payment->booking->doctor->user->name ?? '-' }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>المريض:</strong></div>
+                        <div class="col-md-8">{{ $dispute->payment->booking->patient->user->name ?? '-' }}</div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if($type === 'booking' && $dispute->booking)
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">معلومات الحجز</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>الطبيب:</strong></div>
+                        <div class="col-md-8">{{ $dispute->booking->doctor->user->name ?? '-' }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>المريض:</strong></div>
+                        <div class="col-md-8">{{ $dispute->booking->patient->user->name ?? '-' }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><strong>تاريخ الحجز:</strong></div>
+                        <div class="col-md-8">{{ $dispute->booking->date_time ? $dispute->booking->date_time->format('Y-m-d H:i') : '-' }}</div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if($notes && $notes->count() > 0)
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">الملاحظات</h6>
+                </div>
+                <div class="card-body">
+                    @foreach($notes as $note)
+                        <div class="mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between">
+                                <strong>ملاحظة #{{ $note->id }}</strong>
+                                <small>{{ \Carbon\Carbon::parse($note->created_at)->format('Y-m-d H:i') }}</small>
+                            </div>
+                            <p class="mb-0 mt-2">{{ $note->note }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+
+        <div class="col-lg-4">
+            @if($dispute->status === 'pending')
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">حل النزاع</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('admin.disputes.resolve', [$type, $dispute->id]) }}">
+                        @csrf
+                        <div class="form-group">
+                            <label for="action">الإجراء</label>
+                            <select name="action" id="action" class="form-control" required>
+                                <option value="resolve">حل النزاع</option>
+                                <option value="reject">رفض النزاع</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resolution_notes">ملاحظات الحل</label>
+                            <textarea name="resolution_notes" id="resolution_notes" class="form-control" rows="4" required placeholder="أدخل ملاحظات الحل..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                    </form>
+                </div>
+            </div>
+            @endif
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">إضافة ملاحظة</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('admin.disputes.addNote', [$type, $dispute->id]) }}">
+                        @csrf
+                        <div class="form-group">
+                            <label for="note">الملاحظة</label>
+                            <textarea name="note" id="note" class="form-control" rows="3" required placeholder="أدخل ملاحظة..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">إضافة</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
