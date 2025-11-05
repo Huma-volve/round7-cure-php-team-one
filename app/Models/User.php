@@ -2,23 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable; 
 
     /**
      * The name of the guard for the Spatie permissions.
+     * Set to null to allow dynamic guard detection.
      *
-     * @var string
+     * @var string|null
      */
-    protected $guard_name = 'api';
+    protected $guard_name = null;
 
     /**
      * The attributes that are mass assignable.
@@ -34,7 +39,20 @@ class User extends Authenticatable
         'profile_photo',
         'location_lat',
         'location_lng',
+        'email_otp',
+        'email_verified_at',
+        'email_otp_expires_at',
+        'email_otp_sent_at',
+        'phone_otp' ,
+        'phone_otp_expires_at',
+        'deleted_at',
     ];
+
+public function favorites()
+{
+    return $this->belongsToMany(Doctor::class, 'favorites' ,'user_id', 'doctor_id')->withTimestamps();
+}
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,7 +73,80 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'email_otp_sent_at' => 'datetime',
+            'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
+            'birthdate' => 'date',
+
         ];
     }
+
+
+
+    /**
+     * Get the patient profile for this user
+     */
+    public function patient(): HasOne
+    {
+        return $this->hasOne(Patient::class);
+    }
+
+    /**
+     * Get the doctor profile for this user
+     */
+    public function doctor(): HasOne
+    {
+        return $this->hasOne(Doctor::class);
+    }
+
+
+
+
+
+
+
+
+
+    /** */
+
+    public function doctorChats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'doctor_id');
+    }
+
+
+    public function patientChats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'patient_id');
+    }
+
+
+
+    // ✅ لو المستخدم طرف أول في الشات
+    public function chatsAsUserOne()
+    {
+        return $this->hasMany(Chat::class, 'user_one_id');
+    }
+
+    // ✅ لو المستخدم طرف ثاني في الشات
+    public function chatsAsUserTwo()
+    {
+        return $this->hasMany(Chat::class, 'user_two_id');
+    }
+
+    // ✅ وده access مريح يجيب كل الشاتات اللي المستخدم طرف فيها
+    public function chats()
+    {
+        return $this->chatsAsUserOne->merge($this->chatsAsUserTwo);
+    }
+
+
+
+
+    public function allChats()
+    {
+        return Chat::where('doctor_id', $this->id)
+                   ->orWhere('patient_id', $this->id);
+    }
+
 }
