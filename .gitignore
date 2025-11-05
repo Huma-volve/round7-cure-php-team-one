@@ -29,16 +29,13 @@ PROJECT_GUIDE.md
 Cure_API.postman_collection.json
 PAYMENTS_DOCUMENTATION.md
 DOCTOR_PANEL_API_DOCUMENTATION.md
-
+LARAVEL_BREEZE_COMPONENTS.md
 
 # Ignore dashboard work
 app/Http/Controllers/Dashboard/doctor/DoctorController.php
-  resources/views/admin/doctors/index.blade.php
- resources/views/admin/doctors/show.blade.php
-  routes/web/doctor.php
-
-
-
+resources/views/admin/doctors/index.blade.php
+resources/views/admin/doctors/show.blade.php
+routes/web/doctor.php
 
 # Ignore AuthController
 # app/Http/Controllers/Api/AuthController.php
