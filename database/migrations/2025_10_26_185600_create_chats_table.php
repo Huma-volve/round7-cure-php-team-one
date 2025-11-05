@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('last_message_id')->nullable();
             $table->timestamp('last_message_at')->nullable();
 
+            $table->softDeletes();
+
             $table->timestamps();
 
             // ضمان عدم تكرار نفس الزوجين في اتجاهين مختلفين

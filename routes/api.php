@@ -20,17 +20,11 @@ use App\Http\Controllers\Api\Chat\ChatMessageController;
 use App\Http\Controllers\Api\Chat\DoctorChatController;
 use App\Http\Controllers\Api\Chat\PatientChatController;
 use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\Api\SpecialtyController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
-
-Route::get('/', [HomeController::class, 'index'])->name('api.home');
-Route::post('/toggle-favorite/{doctorId}', [HomeController::class, 'toggleFavorite'])->name('toggle.favorite');
-
-Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->name('doctors.show');
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -47,17 +41,19 @@ Route::get('/doctors-details/{id}', [DoctorController::class, 'showDoctor'])->na
 |
 */
 
-
-Route::get('/', [HomeController::class, 'index'])->name('api.home.auth')->middleware('auth:sanctum');
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
+Route::get('/specialties', [SpecialtyController::class, 'index'])->name('specialties.index');
 
 Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
     Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
-     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
+    Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
 
 });
+
+
 
 
 
@@ -92,7 +88,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/resend-email-otp', [AuthController::class, 'resendEmailOtp'])->middleware('auth:sanctum');
+Route::post('/resend-verify-otp', [AuthController::class, 'resendEmailOtp'])->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password/send-otp', [AuthController::class, 'sendResetOtp']);
 Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyResetOtp']);
@@ -118,26 +114,40 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
-    // 🩺 Endpoints حسب الدور
 
-    Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
-    Route::get('/chat/patient', [PatientChatController::class, 'index']);
 
-    // 💌 الرسائل الخاصة بشات معين
+    // create New chat
+    Route::post('chats', [ChatController::class, 'createChat']);
+    // get all chat
+    Route::get('chats', [ChatController::class, 'chatList']);
+    //  toggle to add or remove from favorite
+    Route::patch('chats/{chatId}/favorite', [ChatController::class, 'toggleFavorite']);
+    //  toggle to add or remove from archive
+    Route::patch('chats/{chatId}/archive', [ChatController::class, 'toggleArchive']);
+    //  get all chat if you have
+    Route::get('chats/history', [ChatController::class, 'historyList']);
 
-    Route::get('/chats', [ChatController::class, 'index']);
+    Route::delete('/chats/{id}', [ChatController::class, 'destroy']);
+    // get all messages
+    Route::get('/chats/{chatId}/messages', [MessageController::class, 'getMessages']); //
+    Route::post('/chats/send', [MessageController::class, 'send']); //
+    // search with name of the doctor
+    Route::get('/chats/search', [ChatController::class, 'searchChats']);
+    // update message
+    Route::put('/messages/{id}', [MessageController::class, 'update']);
+    // Delete message
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
-    // 💬 عرض قائمة الشاتات العامة
-    Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
 
-    Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // 📨 إرسال الرسائل وإدارة الحالات
+    //                                FAIL
 
-    Route::post('/messages/{chat}', [MessageController::class, 'send']); // ✅ تصحيح المسار
 
-    Route::post('/messages/send', [MessageController::class, 'send']);   // ممكن تحتفظ بيها لو بتستخدمها من frontend
-
-    Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+    // Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
+    // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
+    // Route::get('/chat/patient', [PatientChatController::class, 'index']);
+    // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
+    // Route::post('/messages/send', [MessageController::class, 'send']);   //
+    // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
 });
 
 
