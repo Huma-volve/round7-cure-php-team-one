@@ -39,14 +39,18 @@ class FavoriteController extends Controller
     {
         try{
 
-        $user = Auth::user();
+        $user = Auth::user() ;
         $favorites = $this->favoriteService->getFavorites($user);
 
         if (!$favorites) {
             return ApiResponse::error(null, 'No favorite doctors found.', 404);
         }
 
-        return ApiResponse::success(['favorites' => $favorites]);
+        return ApiResponse::success([
+            'favorites' => $favorites
+
+
+        ]);
 
         }catch (\Exception $e){
             return ApiResponse::error(null, $e->getMessage(), 500);

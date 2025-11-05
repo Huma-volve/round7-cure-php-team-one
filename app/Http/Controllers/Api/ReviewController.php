@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Booking;
+use App\Models\Doctor;
 use App\Models\Review;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -42,7 +43,6 @@ class ReviewController extends Controller
     {
         try {
             $data = $request->validated();
-        
             $bookingExists = Booking::where('id', $data['booking_id'])
                         ->where('patient_id', $data['patient_id'])
                         ->exists();
@@ -51,21 +51,11 @@ class ReviewController extends Controller
                 return ApiResponse::error(null, 'Patient does not have this booking', 403);
             }
 
-            $exists = Review::where('booking_id', $data['booking_id'])->exists();
-            if ($exists) {
+            if (Review::where('booking_id', $data['booking_id'])->exists()) {
                 return ApiResponse::error(null, 'Review for this booking already exists', 409);
             }
-
             $review = Review::create($data);
-            
-            NotificationService::sendToDoctor(
-                $data['doctor_id'],
-                'New Review Received',
-                "{$data['patient_id']} has left a new review for you.",
-                'review'
-            );
-
-            return ApiResponse::success(['review' => $review], "Review created successfully", 201); 
+            return ApiResponse::success(['review' => $review], "Review created successfully", 201);
 
         } catch (\Throwable $e) {
             Log::error('Failed to create review', [
@@ -75,6 +65,7 @@ class ReviewController extends Controller
             return ApiResponse::error(null, 'An unexpected error occurred while creating the review.', 500);
         }
     }
+
 
     /**
      * Display the specified resource.
