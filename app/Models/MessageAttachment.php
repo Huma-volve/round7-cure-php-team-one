@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MessageAttachment extends Model
 {
-    use HasFactory;
+    use HasFactory ,SoftDeletes;
 
     protected $fillable = [
         'message_id',
@@ -15,6 +16,7 @@ class MessageAttachment extends Model
         'url',
         'size',
     ];
+    protected $dates = ['deleted_at'];
 
     public function message()
     {
