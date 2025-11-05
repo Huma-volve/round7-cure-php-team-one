@@ -7,3 +7,7 @@ Broadcast::channel('chat.{chatId}', function ($user, $chatId) {
     // المستخدم لازم يكون طرف في الشات
     return $user->chats()->pluck('id')->contains((int) $chatId);
 });
+
+Broadcast::channel('admin.{id}', function ($user, $adminId) {
+    return (int) $user->id === (int) $adminId;
+});

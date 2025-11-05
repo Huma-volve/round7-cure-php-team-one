@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('location_lat', 10, 8)->nullable();
             $table->decimal('location_lng', 11, 8)->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

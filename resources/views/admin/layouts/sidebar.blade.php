@@ -75,6 +75,24 @@
             </li>
 
             <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Settings</span>
+                </a>
+                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Settings Screens:</h6>
+                        <a class="collapse-item" href="{{route('admin.settings.index')}}">General Settings</a>
+
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.patients.index') }}">
                     <i class="fas fa-user-injured"></i>
                     <span>Patients</span>
