@@ -13,11 +13,16 @@ class EmailVerificationNotificationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard', absolute: false));
+        $user = $request->user();
+        
+        if ($user->hasVerifiedEmail()) {
+            if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+            return redirect()->intended('/');
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
     }
