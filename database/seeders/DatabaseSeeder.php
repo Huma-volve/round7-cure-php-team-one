@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
         $this->call(PatientSeeder::class);
         $this->call(BookingSeeder::class);
         // $this->call(ReviewSeeder::class);
+        
+        // Seed Dashboard data (bookings, payments, disputes, tickets)
+        $this->call(DashboardDataSeeder::class);
 
 
     }
