@@ -24,9 +24,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('backups/create', [BackupController::class, 'create'])->name('backups.create');
 });
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'index'] )->middleware(['auth', 'verified'])->name('dashboard');
+
 
 
 Route::middleware('auth')->group(function () {

@@ -22,7 +22,6 @@ class NotificationService
                 'type' => $type,
             ]);
 
-           
             Event::dispatch(new NotificationSent($notification, "user.{$user->id}"));
 
             return $notification;

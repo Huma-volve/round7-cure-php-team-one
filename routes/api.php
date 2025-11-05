@@ -61,13 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-
-
-
-
 Route::apiResource('reviews', ReviewController::class)->middleware('auth:sanctum');
 Route::apiResource('notifications', NotificationController::class)->middleware('auth:sanctum');
-
 
 
 // روت اختبار RBAC
@@ -111,9 +106,6 @@ Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileL
 Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
 Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
-
-
-
 
 
 /*first case for the patient */
