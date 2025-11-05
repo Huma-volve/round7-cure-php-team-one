@@ -75,6 +75,7 @@ public function favorites()
             'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
             'birthdate' => 'date',
+
         ];
     }
 
