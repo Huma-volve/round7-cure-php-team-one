@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Review;
 use App\Observers\BookingObserver;
 use App\Observers\ReviewObserver;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Stripe\StripeClient;
@@ -41,7 +42,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Use Bootstrap 4 pagination view
+        Paginator::defaultView('pagination::bootstrap-4');
+        Paginator::defaultSimpleView('pagination::simple-bootstrap-4');
+        
         Booking::observe(BookingObserver::class);
         Review::observe(ReviewObserver::class);
 

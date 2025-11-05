@@ -1,4 +1,4 @@
-        <!-- Footer -->
+<!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
@@ -7,7 +7,6 @@
                 </div>
             </footer>
             <!-- End of Footer -->
-
         </div>
         <!-- End of Content Wrapper -->
 
@@ -33,7 +32,10 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -48,10 +50,11 @@
     <script src="{{ asset('asset/js/sb-admin-2.min.js') }}"></script>
     <!-- Page level plugins -->
     <script src="{{ asset('asset/vendor/chart.js/Chart.min.js') }}"></script>
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('asset/js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('asset/js/demo/chart-pie-demo.js') }}"></script>
+    <!-- Page level custom scripts - Removed demo scripts as we use custom charts in dashboard -->
+    
+    @stack('scripts')
 
 </body>
 
 </html>
+

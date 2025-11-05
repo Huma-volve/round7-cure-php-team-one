@@ -41,7 +41,6 @@ Broadcast::routes(['middleware' => ['auth:sanctum']]);
 |
 */
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
 Route::get('/specialties', [SpecialtyController::class, 'index'])->name('specialties.index');
 
@@ -167,5 +166,4 @@ require __DIR__ . '/api/public.php';
 require __DIR__ . '/api/shared.php';
 require __DIR__ . '/api/patient.php';
 require __DIR__ . '/api/doctor.php';
-require __DIR__ . '/api/admin.php';
 
