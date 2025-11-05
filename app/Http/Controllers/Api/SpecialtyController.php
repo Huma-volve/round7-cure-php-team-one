@@ -10,8 +10,11 @@ class SpecialtyController extends Controller
 {
     public function index()
     {
-        $specialties = Specialty::select('id', 'name')->get();
-        return response()->json(['specialties' => $specialties], 200);
+        $specialties = Specialty::select('id', 'name','image')->get();
+
+        return response()->json([
+            'specialties' => $specialties
+            ], 200);
 
     }
 }
