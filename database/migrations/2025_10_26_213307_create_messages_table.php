@@ -16,21 +16,21 @@ return new class extends Migration
 
             $table->foreignId('chat_id')->constrained('chats')->cascadeOnDelete();
             $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
 
             // نوع الرسالة: text, image, video, file, audio
             $table->enum('type', ['text','image','video','file','audio'])->default('text');
 
             // نص الرسالة إن وجد
             $table->text('body')->nullable();
-
+            
             // attachment info (لو في ملف)
             $table->string('attachment_path')->nullable(); // path in storage (disk 'public')
             $table->string('attachment_mime')->nullable();
             $table->unsignedBigInteger('attachment_size')->nullable(); // bytes
-
-            // حالة الرسالة العامة (نستخدم message_reads لقراءة per-user)
-            $table->enum('status', ['sent','delivered','read'])->default('sent');
-
+            
+            $table->text('read_at')->nullable();
+            
             // مفيد للترتيب والبحث
             $table->timestamps();
 
