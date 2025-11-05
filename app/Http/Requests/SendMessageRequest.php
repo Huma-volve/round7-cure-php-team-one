@@ -17,21 +17,23 @@ class SendMessageRequest extends FormRequest
     public function rules()
     {
         return [
-            'chat_id' => ['required', 'exists:chats,id'],
+            'chat_id' => 'required', 'exists:chats,id',
             'type' => 'required|string|in:text,attachment',
             'body' => 'nullable|string',
             'attachment' => 'nullable|file|max:51200', // 50MB
         ];
     }
 
-    protected function prepareForValidation()
-    {
-     $this->merge([
-    'chat_id' => $this->route('chat') instanceof \App\Models\Chat
-        ? $this->route('chat')->id
-        : $this->route('chat'),
-]);
+ protected function prepareForValidation()
+{
+    if ($this->route('chat')) {
+        $this->merge([
+            'chat_id' => $this->route('chat') instanceof \App\Models\Chat
+                ? $this->route('chat')->id
+                : $this->route('chat'),
+        ]);
     }
+}
 
     public function withValidator($validator)
     {
@@ -39,7 +41,7 @@ class SendMessageRequest extends FormRequest
             
             $user = $this->user();
             $chatId = $this->input('chat_id');
-
+          
             // التحقق من وجود المحادثة فعلاً
             // $chat = Chat::find($chatId);
             \Log::info('Chat ID:', ['chat_id' => $chatId]);

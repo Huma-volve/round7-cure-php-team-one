@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Chat extends Model
 {
-    use HasFactory;
+    use HasFactory , SoftDeletes;
 
     protected $fillable = [
         'user_one_id',
@@ -19,6 +20,8 @@ class Chat extends Model
         'last_message_id',
         'last_message_at',
     ];
+
+        protected $dates = ['deleted_at'];
 
     public function messages()
     {
@@ -35,7 +38,7 @@ class Chat extends Model
         return $this->belongsTo(User::class, 'user_two_id');
     }
 
-    public function meta(): HasMany
+    public function meta()
     {
         return $this->hasMany(ChatUserMeta::class);
     }
