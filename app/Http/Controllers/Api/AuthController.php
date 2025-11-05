@@ -269,10 +269,15 @@ use Illuminate\Validation\Rules\Password;
 //     }
 // }
 
-
-
 class AuthController extends Controller
 {
+
+    /**
+     * Display a listing of the resource.
+     */
+
+    
+
 
     // login
     public function login(Request $request)
@@ -313,6 +318,7 @@ class AuthController extends Controller
         }
         // $otp = rand(1000, 9999);
         $otp = 1234;
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -321,6 +327,7 @@ class AuthController extends Controller
             'birthdate' => $request->birthdate,
             'gender' => $request->gender,
             'email_verified_at' => null,
+
             'email_otp' => $otp,
             // 'email_otp' => 1234,
             'email_otp_expires_at' => now()->addMinutes(3),
@@ -341,7 +348,12 @@ class AuthController extends Controller
         try {
 
 
+
             \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
+
+            // Mail::to($user->email)->send(new SendOtpMail($otp));
+
+
 
             $token = $user->createToken('auth_token')->plainTextToken;
             return response()->json([
@@ -350,7 +362,9 @@ class AuthController extends Controller
                 'data' => new UserResource($user),
                 'token' => $token
             ]);
+
         } catch (\Exception $e) {
+
             return response()->json([
                 'status' => false,
                 'message' => 'Could not register or send email',
@@ -392,6 +406,7 @@ class AuthController extends Controller
         ]);
     }
     public function resendEmailOtp(Request $request)
+
     {
         $request->validate([
             'email' => 'required|email',
@@ -428,12 +443,15 @@ class AuthController extends Controller
             'email_otp' => $otp,
             // 'email_otp' => 1234,
             'email_otp_expires_at' => now()->addMinutes(3),
+
             'email_otp_sent_at' => now(),
         ]);
 
         // Mail::to($user->email)->send(new SendOtpMail($otp));
         // \App\Services\VonageService::sendSms($user->mobile, "Your OTP code is: $otp");
-        \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
+
+        //\App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
+
 
 
         return response()->json([
@@ -441,7 +459,9 @@ class AuthController extends Controller
             'message' => 'A new OTP has been sent to your email.'
         ]);
     }
+
     public function sendResetOtp(Request $request)
+
     {
         $request->validate([
             'email' => 'required|email',
@@ -452,6 +472,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found'], 404);
         }
+
 
 
         if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_expires_at) < 30) {
@@ -468,11 +489,13 @@ class AuthController extends Controller
         ]);
 
         // Mail::to($user->email)->send(new SendOtpMail($otp));
+
         \App\Services\VonageService::sendSms('+201029737809', "Your OTP code is: $otp");
 
         return response()->json([
             'status' => true,
             'message' => 'OTP sent to your phone. Please check your inbox.'
+
         ]);
     }
     public function verifyResetOtp(Request $request)
@@ -497,6 +520,7 @@ class AuthController extends Controller
             'message' => 'OTP verified successfully. You can now reset your password.'
         ]);
     }
+
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -507,6 +531,7 @@ class AuthController extends Controller
                 'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
             ],
+
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -515,9 +540,11 @@ class AuthController extends Controller
             return response()->json(['status' => false, 'message' => 'User not found'], 404);
         }
 
+
         // if ($user->email_otp !== $request->otp || now()->isAfter($user->email_otp_expires_at)) {
         //     return response()->json(['status' => false, 'message' => 'Invalid or expired OTP'], 400);
         // }
+
 
         $user->update([
             'password' => Hash::make($request->password),
@@ -531,6 +558,7 @@ class AuthController extends Controller
             'message' => 'Password reset successfully.'
         ]);
     }
+
     // login with phone number
     public function sendOtpFormobileLogin(Request $request)
     {
@@ -649,3 +677,4 @@ class AuthController extends Controller
         ]);
     }
 }
+
