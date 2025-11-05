@@ -21,6 +21,7 @@ class Doctor extends Model
         'longitude',
         'session_price',
         'availability_json',
+        'status',
     ];
 
    protected $appends = ['average_rating', 'reviews_count' ];

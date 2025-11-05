@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,14 +15,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable; 
 
     /**
      * The name of the guard for the Spatie permissions.
+     * Set to null to allow dynamic guard detection.
      *
-     * @var string
+     * @var string|null
      */
-    protected $guard_name = 'api';
+    protected $guard_name = null;
 
     /**
      * The attributes that are mass assignable.
