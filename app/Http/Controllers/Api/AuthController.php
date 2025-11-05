@@ -272,9 +272,7 @@ use Illuminate\Validation\Rules\Password;
 class AuthController extends Controller
 {
 
-    /**
-     * Display a listing of the resource.
-     */
+    
 
     
 
