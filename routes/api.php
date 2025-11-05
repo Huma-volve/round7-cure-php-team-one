@@ -57,7 +57,7 @@ Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
     Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
-     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
+    Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
 
 });
 
@@ -122,23 +122,37 @@ Route::post('/google-login', [AuthController::class, 'googleLogin']);
 else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
-  
 
-                             
+    // create New chat
+    Route::post('chats', [ChatController::class, 'createChat']);
+    // get all chat
+    Route::get('chats', [ChatController::class, 'chatList']);
+    //  toggle to add or remove from favorite
+    Route::patch('chats/{chatId}/favorite', [ChatController::class, 'toggleFavorite']);
+    //  toggle to add or remove from archive
+    Route::patch('chats/{chatId}/archive', [ChatController::class, 'toggleArchive']);
+    //  get all chat if you have
+    Route::get('chats/history', [ChatController::class, 'historyList']);
+
+    Route::delete('/chats/{id}', [ChatController::class, 'destroy']);
+    // get all messages
+    Route::get('/chats/{chatId}/messages', [MessageController::class, 'getMessages']); //
+    Route::post('/chats/send', [MessageController::class, 'send']); //
+    // search with name of the doctor
+    Route::get('/chats/search', [ChatController::class, 'searchChats']);
+    // update message
+    Route::put('/messages/{id}', [MessageController::class, 'update']);
+    // Delete message
+    Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
 
-    Route::get('/chats', [ChatController::class, 'index']);
+    //                                FAIL
 
 
-    Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
-
-//                                FAIL
-
-
+    // Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
     // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
     // Route::get('/chat/patient', [PatientChatController::class, 'index']);
     // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // Route::post('/messages/{chat}', [MessageController::class, 'send']); //
     // Route::post('/messages/send', [MessageController::class, 'send']);   //
     // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
 });
