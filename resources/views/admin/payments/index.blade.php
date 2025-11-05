@@ -3,29 +3,39 @@
 @section('content')
 <div class="container-fluid">
   <h1 class="h3 mb-3">المدفوعات</h1>
-  <div class="row g-2 mb-3">
+  <form method="GET" action="{{ route('admin.payments.index') }}" class="row g-2 mb-3">
     <div class="col-md-2">
-      <select id="status" class="form-select">
+      <select name="status" class="form-select">
         <option value="">كل الحالات</option>
-        <option value="pending">قيد الانتظار</option>
-        <option value="success">ناجحة</option>
-        <option value="failed">فاشلة</option>
+        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>قيد الانتظار</option>
+        <option value="success" {{ request('status') == 'success' ? 'selected' : '' }}>ناجحة</option>
+        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>فاشلة</option>
       </select>
     </div>
     <div class="col-md-2">
-      <select id="gateway" class="form-select">
+      <select name="gateway" class="form-select">
         <option value="">كل البوابات</option>
-        <option value="cash">Cash</option>
-        <option value="stripe">Stripe</option>
-        <option value="paypal">PayPal</option>
+        <option value="cash" {{ request('gateway') == 'cash' ? 'selected' : '' }}>Cash</option>
+        <option value="stripe" {{ request('gateway') == 'stripe' ? 'selected' : '' }}>Stripe</option>
+        <option value="paypal" {{ request('gateway') == 'paypal' ? 'selected' : '' }}>PayPal</option>
       </select>
     </div>
-    <div class="col-md-2"><input type="date" id="date_from" class="form-control"></div>
-    <div class="col-md-2"><input type="date" id="date_to" class="form-control"></div>
-    <div class="col-md-2"><input type="number" step="0.01" id="min_amount" class="form-control" placeholder="أدنى مبلغ"></div>
-    <div class="col-md-2"><input type="number" step="0.01" id="max_amount" class="form-control" placeholder="أعلى مبلغ"></div>
-  </div>
-  <div class="mb-3"><button class="btn btn-primary" onclick="loadPayments()">تصفية</button></div>
+    <div class="col-md-2">
+      <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+    </div>
+    <div class="col-md-2">
+      <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+    </div>
+    <div class="col-md-2">
+      <input type="number" step="0.01" name="min_amount" class="form-control" placeholder="أدنى مبلغ" value="{{ request('min_amount') }}">
+    </div>
+    <div class="col-md-2">
+      <input type="number" step="0.01" name="max_amount" class="form-control" placeholder="أعلى مبلغ" value="{{ request('max_amount') }}">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">تصفية</button>
+    </div>
+  </form>
   <div class="table-responsive">
     <table class="table table-striped">
       <thead>
@@ -37,43 +47,40 @@
           <th>البوابة</th>
           <th>المبلغ</th>
           <th>الحالة</th>
+          <th>الإجراءات</th>
         </tr>
       </thead>
-      <tbody id="payments-body"></tbody>
+      <tbody>
+        @forelse($payments as $payment)
+          <tr>
+            <td>{{ ($payments->currentPage() - 1) * $payments->perPage() + $loop->iteration }}</td>
+            <td>
+              <a href="{{ route('admin.bookings.show', $payment->booking_id) }}">#{{ $payment->booking_id }}</a>
+            </td>
+            <td>{{ $payment->booking->patient->user->name ?? '-' }}</td>
+            <td>{{ $payment->booking->doctor->user->name ?? '-' }}</td>
+            <td>{{ $payment->gateway }}</td>
+            <td>{{ $payment->amount }} {{ $payment->currency ?? 'EGP' }}</td>
+            <td>
+              <span class="badge badge-{{ $payment->status == 'success' ? 'success' : ($payment->status == 'failed' ? 'danger' : 'warning') }}">
+                {{ $payment->status }}
+              </span>
+            </td>
+            <td>
+              <a href="{{ route('admin.payments.show', $payment->id) }}" class="btn btn-sm btn-info">
+                <i class="fas fa-eye"></i> عرض
+              </a>
+            </td>
+          </tr>
+        @empty
+          <tr>
+            <td colspan="8" class="text-center">لا توجد نتائج</td>
+          </tr>
+        @endforelse
+      </tbody>
     </table>
   </div>
+  {{ $payments->appends(request()->query())->links() }}
 </div>
 @endsection
-
-@push('scripts')
-<script>
-async function loadPayments() {
-  const p = new URLSearchParams();
-  const status = document.getElementById('status').value;
-  const gateway = document.getElementById('gateway').value;
-  const df = document.getElementById('date_from').value;
-  const dt = document.getElementById('date_to').value;
-  const min = document.getElementById('min_amount').value;
-  const max = document.getElementById('max_amount').value;
-  if (status) p.append('status', status);
-  if (gateway) p.append('gateway', gateway);
-  if (df) p.append('date_from', df);
-  if (dt) p.append('date_to', dt);
-  if (min) p.append('min_amount', min);
-  if (max) p.append('max_amount', max);
-  const res = await fetch('/api/admin/payments?' + p.toString(), { credentials: 'same-origin' });
-  const data = await res.json();
-  const tbody = document.getElementById('payments-body');
-  tbody.innerHTML = '';
-  (data.data || []).forEach(pay => {
-    const tr = document.createElement('tr');
-    const patient = pay.booking?.patient?.user?.name || '-';
-    const doctor = pay.booking?.doctor?.user?.name || '-';
-    tr.innerHTML = `<td>${pay.id}</td><td>${pay.booking_id}</td><td>${patient}</td><td>${doctor}</td><td>${pay.gateway}</td><td>${pay.amount}</td><td>${pay.status}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-loadPayments();
-</script>
-@endpush
 
