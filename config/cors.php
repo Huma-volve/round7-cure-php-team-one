@@ -34,7 +34,14 @@ return [
     */
     // للسماح بأي دومين (ويب أو موبايل)
     // ملاحظة: مع wildcard لا تستخدم الكوكيز (supports_credentials يجب أن تكون false)
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+              'https://round7-cure-react.huma-volve.com',
+        'capacitor://localhost',                    
+        'http://localhost',                        
+        'http://127.0.0.1',
+        'https://round7-cure.huma-volve.com',
+        '*'
+    ],
     // إن كنت بحاجة للكوكيز/المصادقة عبر المتصفح، بدلاً من هذا استخدم:
     // 'allowed_origins' => [],
     // 'allowed_origin_patterns' => ['*'],
