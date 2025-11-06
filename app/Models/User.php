@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,19 +11,21 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Scout\Searchable;
+
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
+
     use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable;
 
     /**
      * The name of the guard for the Spatie permissions.
+     * Set to null to allow dynamic guard detection.
      *
-     * @var string
+     * @var string|null
      */
-    protected $guard_name = 'api';
+    protected $guard_name = null;
 
     /**
      * The attributes that are mass assignable.
@@ -84,6 +87,7 @@ public function favorites()
             'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
             'birthdate' => 'date',
+
         ];
     }
 

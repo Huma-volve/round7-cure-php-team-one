@@ -3,26 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-
-use App\Services\DoctorService;
-use App\Http\Resources\BookingResource;
-use App\Http\Resources\DoctorResource;
-use App\Http\Resources\PaymentResource;
 use App\Http\Requests\RescheduleBookingRequest;
+use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorDetailsResource;
 use App\Http\Resources\PatientDetailsResource;
 use App\Http\Resources\PatientResource;
 use App\Http\Resources\UserResource;
 use App\Models\Booking;
-use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Review;
 use App\Models\User;
+use App\Http\Resources\DoctorResource;
+use App\Http\Resources\PaymentResource;
+use App\Models\Doctor;
 use App\Repositories\BookingRepository;
-use App\Repositories\PaymentRepository;
 use App\Services\Booking\BookingService;
 use App\Services\SearchService;
+use App\Services\DoctorService;
 use App\Traits\ApiResponseTrait;
 use Google\Service\Resource;
 use Illuminate\Http\JsonResponse;
@@ -31,14 +29,13 @@ use Illuminate\Support\Facades\Auth;
 
 class DoctorController extends Controller
 {
-     use ApiResponseTrait;
+    use ApiResponseTrait;
 
     public function __construct(
         protected DoctorService $doctorService,
         protected SearchService $searchService,
         private BookingService $bookingService,
-        private BookingRepository $bookingRepository,
-        private PaymentRepository $paymentRepository
+        private BookingRepository $bookingRepository
     ) {}
 
     public function  searchDoctorPatients(Request $request)
@@ -54,29 +51,37 @@ class DoctorController extends Controller
 
     } // End Search Patients
 
-   public function index()
+    /**
+     * عرض قائمة الأطباء
+     */
+    public function index(): JsonResponse
+
     {
         $doctors = $this->doctorService->getAllDoctors();
         return $this->successResponse($doctors, 'تم جلب قائمة الأطباء بنجاح');
     }
-    public function showDoctor(Request $request , $id )
+
+    /**
+     * عرض تفاصيل طبيب
+     */
+    public function showDoctor(Request $request, $id): JsonResponse
     {
+        try {
+            $user = Auth::user();
+            $doctor = $this->doctorService->getDoctorDetails($id, $user);
 
-        try{
-        $user = Auth::user();
-        $doctor = $this->doctorService->getDoctorDetails($id, $user);
-
-        return $this->successResponse(
-            new DoctorDetailsResource($doctor)
-          , 'تم جلب بيانات الطبيب بنجاح');
-
+            return $this->successResponse(
+                new DoctorDetailsResource($doctor),
+                'تم جلب بيانات الطبيب بنجاح'
+            );
         } catch (\Exception $e) {
             return $this->handleException($e);
         }
-    } // End Show
+    }
 
-
-
+    /**
+     * لوحة تحكم الطبيب
+     */
     public function dashboard(Request $request): JsonResponse
     {
         try {
@@ -106,6 +111,7 @@ class DoctorController extends Controller
                 'stats' => $stats,
                 ''
             ], 'تم جلب بيانات لوحة التحكم بنجاح');
+
 
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -141,8 +147,7 @@ class DoctorController extends Controller
                return   $this->handleException($e);
             }
          }
-
-                       // عرض ارباح الطبيب
+                     // عرض ارباح الطبيب
            public function earnings()
         {
            try{
@@ -394,7 +399,6 @@ class DoctorController extends Controller
                 'available_slots' => $slots,
                 'availability' => $doctor->availability_json,
             ], 'تم جلب الأوقات المتاحة بنجاح');
-
         } catch (\Exception $e) {
             return $this->handleException($e);
         }
@@ -405,7 +409,7 @@ class DoctorController extends Controller
      */
     private function handleException(\Exception $e): JsonResponse
     {
-        $statusCode = $e->getCode() && $e->getCode() >= 400 && $e->getCode() < 600
+        $statusCode = ($e->getCode() >= 400 && $e->getCode() < 600)
             ? $e->getCode()
             : 500;
 
@@ -417,11 +421,3 @@ class DoctorController extends Controller
         };
     }
 }
-
-
-
-
-
-
-
-
