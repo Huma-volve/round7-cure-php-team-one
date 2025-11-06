@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable;
 
     /**
      * The name of the guard for the Spatie permissions.
@@ -45,6 +46,14 @@ class User extends Authenticatable
         'phone_otp_expires_at',
         'deleted_at',
     ];
+
+    public function toSearchableArray(): array{
+        return [
+            'name'  => $this->name,
+            'email' => $this->email,
+            'mobile'=> $this->mobile,
+        ];
+    }
 
 public function favorites()
 {

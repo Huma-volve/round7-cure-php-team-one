@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Services\FavoriteService;
 use Hamcrest\Core\Set;
+use PhpParser\Comment\Doc;
 
 class DoctorService  {
 
@@ -26,33 +29,33 @@ class DoctorService  {
         return $doctors;
     } //end getAllDoctors
 
-    public function getNearbyDoctors(User $user, $latitude, $longitude, $search = null , $radius =10){
+    public function searchDoctorsNearby(User $user, $latitude, $longitude, $search = null , $radius =10){
 
-        $doctors = $this->searchService->searchDoctors($latitude, $longitude, $search, $radius , $user);
+        $doctors = $this->searchService->searchDoctorsNearby($latitude, $longitude, $search, $radius , $user);
 
         return $doctors;
     } //end getNearbyDoctors
 
 
     public function getDoctorDetails($doctorId, $user = null){
-    //    dd('here');
+     try{
+
         $doctor = Doctor::with([
             'user',
             'specialty',
             'reviews.patient.user'
         ] )->findOrFail($doctorId);
 
-        // $patient = Booking::where('doctor_id', $doctorId)
-        //     ->where('patient_id', $user?->patient?->id)
-        //     ->where('status', 'completed')
-        //     ->first();
-
         $doctor->patient_count = $doctor->bookings()->count();
-
         $doctor->average_rating = $doctor->getAverageRatingAttribute();
         $doctor->reviews_count = $doctor->getReviewsCountAttribute();
 
         return $doctor ;
+     }catch(\Exception $e){
+        throw $e;
+
+     }
+
     } //end getDoctorDetails
 
 

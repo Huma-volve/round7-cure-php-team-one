@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
+
 class Patient extends Model
 {
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
-    
+    use HasFactory, Notifiable, HasApiTokens, HasRoles ,Searchable;
+
     protected $guard_name = 'api';
 
     protected $fillable = ['medical_notes', 'user_id','gender','birthdate'];
@@ -20,6 +22,15 @@ class Patient extends Model
     protected $casts = [
         'birthdate' => 'date',
     ];
+
+    public function toSearchableArray(): array{
+        return [
+            'user_id'  => $this->user_id,
+            'medical_notes'  => $this->medical_notes,
+            'gender' => $this->gender,
+            'birthdate'=> $this->birthdate,
+        ];
+    }
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\SearchHistory;
 use App\Services\FavoriteService;
+use Clue\Redis\Protocol\Model\Request;
 
 class SearchService {
     protected $favoriteService;
@@ -16,7 +19,8 @@ class SearchService {
     }
 
 
-  public function searchDoctors($latitude, $longitude, $search = null, $radius = 10 , User $user){
+
+  public function searchDoctorsNearby($latitude, $longitude, $search = null, $radius = 10 , User $user){
 
         $query = Doctor::with('specialty', 'user');
 
@@ -24,7 +28,6 @@ class SearchService {
             $ids = Doctor::search($search )->get()->pluck('id');
             $query->whereIn('id', $ids);
         }
-
 
 
         if (!is_null($latitude) && !is_null($longitude)) {
@@ -61,11 +64,45 @@ class SearchService {
             'searched_at'    => now(),
             // other fields...
         ]);
+      }
+    }
 
+  public function getSearchHistory(User $user){
+
+        return SearchHistory::where('user_id', $user->id)
+            ->orderBy('searched_at', 'desc')
+            ->get();
+    } // end getSearchHistory
+
+  public function clearSearchHistory(User $user){
+
+        return SearchHistory::where('user_id', $user->id)->delete();
+    } // end clearSearchHistory
+
+
+    public function searchDoctorPatients( $doctorId, $searchTerm = null){
+
+     $query = Patient::whereHas('bookings', function ($q) use ($doctorId) {
+            $q->where('doctor_id', $doctorId);
+        })->with(['user', 'bookings' => function ($q) use ($doctorId) {
+            $q->where('doctor_id', $doctorId);
+        }]);
+
+
+        if (!empty($searchTerm)) {
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                 $q->where('name', 'like', "%{$searchTerm}%")
+                ->orWhere('mobile', 'like', "%{$searchTerm}%");
+            });
         }
 
+       $patients = $query->distinct()->take(10)->get();
 
-    }
+       return $patients;
+
+    } //end searchDoctorPatients
+
+
 
 }
 
