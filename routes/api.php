@@ -139,15 +139,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
 
-    //                                FAIL
-
-
-    // Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
-    // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
-    // Route::get('/chat/patient', [PatientChatController::class, 'index']);
-    // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // Route::post('/messages/send', [MessageController::class, 'send']);   //
-    // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+     
 });
 
 
