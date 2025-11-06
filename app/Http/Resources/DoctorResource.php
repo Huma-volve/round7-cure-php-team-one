@@ -27,6 +27,7 @@ class DoctorResource extends JsonResource
             'average_rating' => $this->average_rating ?? 0,
             'reviews_count' => $this->reviews_count ?? 0,
             'availability' => $this->availability ?? $this->availability_json,
+            'consultation_type' => $this->consultation_type ?? [],
             'user' => $this->when($this->relationLoaded('user'), function () {
                 return [
                     'id' => $this->user->id ?? null,

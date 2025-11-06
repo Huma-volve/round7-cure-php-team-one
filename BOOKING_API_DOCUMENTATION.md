@@ -112,6 +112,7 @@ Accept: application/json
         "lng": 46.6753
       },
       "session_price": 200.00,
+      "consultation_type": ["in_clinic", "home_visit"],
       "user": {
         "name": "د. أحمد محمد",
         "email": "doctor@example.com",
@@ -122,6 +123,7 @@ Accept: application/json
         "monday": ["09:00", "10:00", "11:00"],
         "tuesday": ["09:00", "14:00", "15:00"]
       },
+      "consultation_type": ["in_clinic", "home_visit"],
       "average_rating": 4.5,
       "reviews_count": 10
     },
@@ -244,6 +246,7 @@ GET /api/patient/bookings?status=confirmed&date=2025-11-15
           },
           "license_number": "DOC123456",
           "session_price": 200.00,
+          "consultation_type": ["in_clinic", "home_visit"],
           "user": {
             "name": "د. أحمد محمد",
             "email": "doctor@example.com"
@@ -318,6 +321,7 @@ GET /api/patient/bookings/1
         "lng": 46.6753
       },
       "session_price": 200.00,
+      "consultation_type": ["in_clinic", "home_visit"],
       "user": {
         "name": "د. أحمد محمد",
         "email": "doctor@example.com",
@@ -327,7 +331,8 @@ GET /api/patient/bookings/1
       "availability": {
         "monday": ["09:00", "10:00", "11:00"],
         "tuesday": ["09:00", "14:00", "15:00"]
-      }
+      },
+      "consultation_type": ["in_clinic", "home_visit"]
     },
     "patient": {
       "id": 1,

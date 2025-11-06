@@ -51,6 +51,15 @@ class DashboardDataSeeder extends Seeder
 
             $specialty = [$specialty1, $specialty2, $specialty3, $specialty4][$index % 4];
             
+            // تحديد consultation_type بشكل متنوع
+            $consultationTypes = [
+                ['in_clinic', 'home_visit'], // الاثنين معاً
+                ['in_clinic'], // في العيادة فقط
+                ['home_visit'], // زيارة منزلية فقط
+                ['in_clinic', 'home_visit'], // الاثنين معاً
+                ['in_clinic'], // في العيادة فقط
+            ];
+            
             $doctor = Doctor::firstOrCreate(
                 ['user_id' => $doctorUser->id],
                 [
@@ -61,6 +70,7 @@ class DashboardDataSeeder extends Seeder
                     'longitude' => 46.6753 + ($index * 0.1),
                     'session_price' => (150 + ($index * 50)),
                     'availability_json' => [],
+                    'consultation_type' => $consultationTypes[$index % count($consultationTypes)],
                 ]
             );
             

@@ -61,6 +61,7 @@ class HomeController extends Controller
                 'average_rating' => $doctor->average_rating ?? 0,
                 'reviews_count'  => $doctor->reviews_count ?? 0,
                 'availability'   => $doctor->availability_json,
+                'consultation_type' => $doctor->consultation_type ?? [],
                 'is_favorite'    => $doctor->is_favorite,
                 'image'          => $doctor->user->profile_photo,
                 'distance_km'    => round($doctor->distance, 2),

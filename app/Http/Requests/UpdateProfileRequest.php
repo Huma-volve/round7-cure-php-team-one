@@ -45,6 +45,8 @@ class UpdateProfileRequest extends FormRequest
                 'clinic_location' => ['nullable', 'string', 'max:255'],
                 'session_price' => ['nullable', 'numeric', 'min:0'],
                 'availability_json' => ['nullable', 'json'],
+                'consultation_type' => ['nullable', 'array'],
+                'consultation_type.*' => ['in:in_clinic,home_visit'],
                 'experience' => ['nullable', 'integer', 'min:0'],
                 'about_me' => ['nullable', 'string', 'max:5000'],
                 'latitude' => ['nullable', 'numeric', 'between:-90,90'],

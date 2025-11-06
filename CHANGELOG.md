@@ -759,6 +759,51 @@ Password: password
 
 ---
 
+### 🗓️ [2025-11-06] - Consultation Type Feature
+
+#### ✨ New Feature:
+- ✅ إضافة حقل `consultation_type` للدكاترة
+- ✅ يدعم اختيار: `in_clinic` (في العيادة) و/أو `home_visit` (زيارة منزلية)
+- ✅ استخدام `SET` column type في قاعدة البيانات لدعم قيم متعددة
+- ✅ إضافة validation في API requests
+- ✅ تحديث جميع API responses لتشمل `consultation_type`
+- ✅ تحديث Admin Panel لإضافة/تعديل `consultation_type`
+- ✅ تحديث Seeders لإضافة بيانات تجريبية
+
+#### 📂 Files Modified:
+- ✅ `database/migrations/2025_11_06_210222_add_consultation_type_to_doctors_table.php`
+- ✅ `app/Models/Doctor.php` - Added accessor/mutator for SET column
+- ✅ `app/Http/Resources/DoctorResource.php` - Added consultation_type field
+- ✅ `app/Http/Controllers/Admin/DoctorController.php` - Handle consultation_type
+- ✅ `app/Http/Requests/Admin/StoreDoctorRequest.php` - Validation
+- ✅ `app/Http/Requests/Admin/UpdateDoctorRequest.php` - Validation
+- ✅ `app/Http/Requests/UpdateProfileRequest.php` - API validation
+- ✅ `app/Traits/HandlesRoleUpdates.php` - Update doctor profile
+- ✅ `resources/views/admin/doctors/create.blade.php` - Checkboxes
+- ✅ `resources/views/admin/doctors/edit.blade.php` - Checkboxes
+- ✅ `resources/views/admin/doctors/show.blade.php` - Display field
+- ✅ `database/seeders/DoctorSeeder.php` - Sample data
+- ✅ `database/seeders/DashboardDataSeeder.php` - Sample data
+- ✅ `Cure_API.postman_collection.json` - Updated examples
+
+#### 📝 Documentation Updated:
+- ✅ `api.md` - Updated examples
+- ✅ `BOOKING_API_DOCUMENTATION.md` - Added consultation_type in responses
+
+#### 🎯 API Response Format:
+```json
+{
+  "consultation_type": ["in_clinic", "home_visit"]
+}
+```
+
+#### 📋 Values:
+- `"in_clinic"` - استشارة في العيادة
+- `"home_visit"` - زيارة منزلية
+- يمكن اختيار الاثنين معاً أو أحدهما فقط
+
+---
+
 ### 🗓️ [2025-10-26] - Routes Refactoring
 
 #### ✨ Routes Improvements:

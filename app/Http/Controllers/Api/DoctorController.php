@@ -29,6 +29,7 @@ class DoctorController extends Controller
      * عرض قائمة الأطباء
      */
     public function index(): JsonResponse
+
     {
         $doctors = $this->doctorService->getAllDoctors();
         return $this->successResponse($doctors, 'تم جلب قائمة الأطباء بنجاح');

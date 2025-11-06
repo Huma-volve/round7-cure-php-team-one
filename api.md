@@ -126,6 +126,7 @@ Query Parameters:
                 "average_rating": 5,
                 "reviews_count": 1,
                 "availability": "{\"sun\":\"4-9\",\"wed\":\"3-7\"}",
+                "consultation_type": ["in_clinic", "home_visit"],
                 "is_favorite": false,
                 "image": null,
                 "distance_km": 0.68
@@ -153,7 +154,8 @@ Response Example:
         "name": "Ahmed",
         "specialty": "Dermatology",
         "license_number": "LIC-002",
-        "clinic_address": "Heliopolis, Cairo"
+        "clinic_address": "Heliopolis, Cairo",
+        "consultation_type": ["in_clinic", "home_visit"]
     }
 }
 

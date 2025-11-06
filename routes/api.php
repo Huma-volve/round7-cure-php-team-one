@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Chat\DoctorChatController;
 use App\Http\Controllers\Api\Chat\PatientChatController;
 use App\Http\Controllers\Api\Chat\MessageController;
 use App\Http\Controllers\Api\SpecialtyController;
+use App\Http\Controllers\Api\ServerMaintenanceController;
 use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -82,6 +83,15 @@ Route::get('/test-role', function () {
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
+    });
+
+    // Server Maintenance Routes
+    Route::prefix('admin/server')->name('admin.server.')->group(function () {
+        Route::post('/composer-update', [ServerMaintenanceController::class, 'composerUpdate']);
+        Route::post('/composer-dumpautoload', [ServerMaintenanceController::class, 'composerDumpAutoload']);
+        Route::post('/optimize-clear', [ServerMaintenanceController::class, 'optimizeClear']);
+        Route::post('/migrate-fresh-seed', [ServerMaintenanceController::class, 'migrateFreshSeed']);
+        Route::post('/run-all', [ServerMaintenanceController::class, 'runAll']);
     });
 });
 // Authentication Routes
