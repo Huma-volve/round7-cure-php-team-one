@@ -31,6 +31,7 @@ return [
     | ملاحظة: عند استخدام '*' لا يمكن استخدام supports_credentials = true
     |
     */
+
     'allowed_origins' => ['*'],
 
     /*
