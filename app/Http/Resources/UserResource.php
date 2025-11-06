@@ -19,22 +19,14 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'mobile' => $this->mobile,
-
-
             'birthdate' => optional($this->birthdate)->format('Y-m-d'),
-
-
             'profile_photo' => $this->profile_photo ? asset($this->profile_photo) : null,
             'role' => $this->getRoleNames()->first(),
             'doctor' => $this->when($this->hasRole('doctor'), new DoctorResource($this->doctor)),
             'patient' => $this->when($this->hasRole('patient'), [
-
-            'birthdate' => optional(optional($this->patient)->birthdate)->format('Y-m-d'),
-
-            'gender' => optional($this->patient)->gender,
-
-            'medical_notes' => optional($this->patient)->medical_notes,
-            
+                'birthdate' => optional(optional($this->patient)->birthdate)->format('Y-m-d'),
+                'gender' => optional($this->patient)->gender,
+                'medical_notes' => optional($this->patient)->medical_notes,
             ]),
         ];
     }
