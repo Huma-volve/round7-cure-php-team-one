@@ -58,15 +58,6 @@ class NotificationController extends Controller
                 return ApiResponse::error(null, 'Doctor or patient not found', 404);
             }
 
-            // $booking = Booking::create([
-            //     'doctor_id' => $doctor->id,
-            //     'patient_id' => $patient->id,
-            //     'date_time' => $request->date_time,
-            //     'payment_method' => $request->payment_method,
-            //     'status' => 'pending',
-            //     'price' => $doctor->session_price,
-            // ]);
-
             return ApiResponse::success([], 'Booking created successfully and notification sent automatically.');
         } catch (\Throwable $e) {
             Log::error('NotificationController@store failed', [
@@ -115,33 +106,4 @@ class NotificationController extends Controller
         }
     }
 
-//  move it into BookingController
-
-    // public function update(Request $request, $id)
-    // {
-    //     $booking = Booking::findOrFail($id);
-    //     $oldStatus = $booking->status;
-
-    //     $booking->update(['status' => $request->status]);
-
-    //     if ($request->status === 'cancelled') {
-    //         NotificationService::sendToUser(
-    //             $booking->patient->user,
-    //             'Booking Cancelled',
-    //             "Your booking with Dr. {$booking->doctor->user->name} has been cancelled.",
-    //             'booking'
-    //         );
-    //     }
-
-    //     if ($request->status === 'rescheduled') {
-    //         NotificationService::sendToUser(
-    //             $booking->patient->user,
-    //             'Booking Rescheduled',
-    //             "Your booking with Dr. {$booking->doctor->user->name} has been rescheduled.",
-    //             'booking'
-    //         );
-    //     }
-
-    //     return ApiResponse::success($booking, 'Booking updated successfully.');
-    // }
 }

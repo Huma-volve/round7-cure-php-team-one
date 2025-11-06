@@ -3,26 +3,28 @@
 
 
 
-use App\Models\User;
-use PhpParser\Comment\Doc;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Contracts\Role;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\DoctorController;
-use App\Http\Controllers\Api\FavoriteController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\SearchController;
-use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\Chat\ChatMessageController;
 use App\Http\Controllers\Api\Chat\DoctorChatController;
-use App\Http\Controllers\Api\Chat\PatientChatController;
 use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\Api\Chat\PatientChatController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\DoctorNotificationController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SpecialtyController;
 use App\Http\Controllers\ChatController;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Route;
+use PhpParser\Comment\Doc;
+use Spatie\Permission\Contracts\Role;
+
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
@@ -53,13 +55,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-
-
-
-
 Route::apiResource('reviews', ReviewController::class)->middleware('auth:sanctum');
 Route::apiResource('notifications', NotificationController::class)->middleware('auth:sanctum');
 
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/doctor/notifications', [DoctorNotificationController::class, 'index']);
+    Route::get('/doctor/notifications/unread', [DoctorNotificationController::class, 'unread']);
+    Route::post('/doctor/notifications/{id}/read', [DoctorNotificationController::class, 'markAsRead']);
+    Route::post('/doctor/notifications/read-all', [DoctorNotificationController::class, 'markAllAsRead']);
+});
 
 
 // روت اختبار RBAC
@@ -105,9 +110,6 @@ Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 
-
-
-
 /*first case for the patient */
 /* when patient be login can see all the doctors to chat with them */
 /*he click on button this button to check if it has chat with this doctor before if yes wil get all of the messages
@@ -139,15 +141,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
 
-    //                                FAIL
-
-
-    // Route::get('/chats/{chat}/messages', [MessageController::class, 'index']);
-    // Route::get('/chat/doctor', [DoctorChatController::class, 'index']);
-    // Route::get('/chat/patient', [PatientChatController::class, 'index']);
-    // Route::post('/chats/{chat}/messages', [MessageController::class, 'store']);
-    // Route::post('/messages/send', [MessageController::class, 'send']);   //
-    // Route::post('/messages/mark-read', [MessageController::class, 'markRead']);
+     
 });
 
 

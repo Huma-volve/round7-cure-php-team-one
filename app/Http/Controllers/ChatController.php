@@ -19,52 +19,48 @@ use Str;
 
 class ChatController extends Controller
 {
-    public function createChat(Request $request)
-    {
-        $user = auth()->user();
-        $receiverId = $request->input('receiver_id');
+ public function createChat(Request $request)
+{
+    $user = auth()->user();
+    $receiverId = $request->input('receiver_id');
 
-        if ($user->id == $receiverId) {
-            return response()->json(['error' => 'You cannot create a chat with yourself'], 400);
-        }
-
-        $chat = Chat::where(function ($query) use ($user, $receiverId) {
-            $query->where('user_one_id', $user->id)
-                ->where('user_two_id', $receiverId);
-        })
-            ->orWhere(function ($query) use ($user, $receiverId) {
-                $query->where('user_one_id', $receiverId)
-                    ->where('user_two_id', $user->id);
-            })
-            ->first();
-
-        if ($chat) {
-            $chat->load(['userOne', 'userTwo', 'meta' => fn($q) => $q->where('user_id', $user->id)]);
-            return response()->json(['chat' => $chat, 'message' => 'Chat already exists']);
-        }
-
-        // ✅ إنشاء الشات
-        $chat = Chat::create([
-            'user_one_id' => $user->id,
-            'user_two_id' => $receiverId,
-            'last_message_at' => now(),
-        ]);
-
-        // ✅ إنشاء meta record لكل مستخدم
-        ChatUserMeta::create([
-            'chat_id' => $chat->id,
-            'user_id' => $user->id,
-        ]);
-
-        ChatUserMeta::create([
-            'chat_id' => $chat->id,
-            'user_id' => $receiverId,
-        ]);
-
-        $chat->load(['userOne', 'userTwo', 'meta' => fn($q) => $q->where('user_id', $user->id)]);
-
-        return response()->json(['chat' => $chat, 'message' => 'Chat created successfully']);
+    if ($user->id == $receiverId) {
+        return response()->json(['error' => 'You cannot create a chat with yourself'], 400);
     }
+
+    // ✅ تأكد إن ترتيب IDs ثابت دائماً
+    $ids = collect([$user->id, $receiverId])->sort()->values();
+    [$userOneId, $userTwoId] = $ids;
+
+    // ✅ استخدم firstOrCreate لضمان عدم التكرار
+    $chat = Chat::firstOrCreate(
+        [
+            'user_one_id' => $userOneId,
+            'user_two_id' => $userTwoId,
+        ],
+        [
+            'last_message_at' => now(),
+        ]
+    );
+
+    // ✅ إنشاء أو التأكد من وجود meta record لكل مستخدم
+    ChatUserMeta::firstOrCreate([
+        'chat_id' => $chat->id,
+        'user_id' => $user->id,
+    ]);
+
+    ChatUserMeta::firstOrCreate([
+        'chat_id' => $chat->id,
+        'user_id' => $receiverId,
+    ]);
+
+    $chat->load(['userOne', 'userTwo', 'meta' => fn($q) => $q->where('user_id', $user->id)]);
+
+    return response()->json([
+        'chat' => $chat,
+        'message' => $chat->wasRecentlyCreated ? 'Chat created successfully' : 'Chat already exists',
+    ]);
+}
 
 
 

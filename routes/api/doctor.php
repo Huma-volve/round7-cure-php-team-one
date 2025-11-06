@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
         [DoctorController::class, 'searchDoctorPatients'])->name('doctor.patients.search');
 
     Route::middleware(['auth:sanctum', 'role:doctor'])
-        ->get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
+    ->get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 
     Route::middleware(['auth:sanctum', 'role:doctor'])
     ->get('/doctor/patient/{patientId}',

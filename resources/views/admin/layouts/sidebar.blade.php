@@ -86,6 +86,7 @@
                 </a>
             </li>
 
+
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.bookings.index') }}">
                     <i class="fas fa-calendar-check"></i>
@@ -113,6 +114,8 @@
                     <span>Tickets</span>
                 </a>
             </li>
+
+
 
 
 
