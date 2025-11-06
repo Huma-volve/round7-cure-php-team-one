@@ -13,9 +13,6 @@ Route::get('/', function () {
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Settings
     Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::put('settings', [AdminSettingController::class, 'update'])->name('settings.update');
@@ -23,11 +20,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
     Route::post('backups/create', [BackupController::class, 'create'])->name('backups.create');
 });
-
-
-Route::get('/dashboard', [DashboardController::class, 'index'] )->middleware(['auth', 'verified'])->name('dashboard');
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -38,5 +30,4 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/admin/doctor.php';
 require __DIR__.'/auth.php';
-require __DIR__.'/web/doctor.php';
 require __DIR__.'/admin/web.php';
