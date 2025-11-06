@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable; 
+
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes , Searchable;
 
     /**
      * The name of the guard for the Spatie permissions.
@@ -36,6 +38,7 @@ class User extends Authenticatable
         'mobile',
         'password',
         'birthdate',
+        'gender',
         'profile_photo',
         'location_lat',
         'location_lng',
@@ -47,6 +50,15 @@ class User extends Authenticatable
         'phone_otp_expires_at',
         'deleted_at',
     ];
+
+    public function toSearchableArray(): array{
+        return [
+            'id'    => $this->id ,
+            'name'  => $this->name,
+            'email' => $this->email,
+            'mobile'=> $this->mobile,
+        ];
+    }
 
 public function favorites()
 {
