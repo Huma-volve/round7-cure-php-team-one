@@ -30,7 +30,7 @@ class SettingController extends Controller
         }
 
         return redirect()->back()->with('success', 'Settings updated successfully');
-        
+
         }catch(\Exception $e){
             return redirect()->back()->with('error', 'There was an error uploading the logo: ' . $e->getMessage());
         }

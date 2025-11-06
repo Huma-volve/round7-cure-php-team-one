@@ -37,11 +37,11 @@ class AdminDashboardController extends Controller
             ->sum('amount');
 
         // Dispute Statistics
-        $openDisputes = PaymentDispute::where('status', 'pending')->count() + 
+        $openDisputes = PaymentDispute::where('status', 'pending')->count() +
                        BookingDispute::where('status', 'pending')->count();
-        $resolvedDisputes = PaymentDispute::where('status', 'resolved')->count() + 
+        $resolvedDisputes = PaymentDispute::where('status', 'resolved')->count() +
                            BookingDispute::where('status', 'resolved')->count();
-        $rejectedDisputes = PaymentDispute::where('status', 'rejected')->count() + 
+        $rejectedDisputes = PaymentDispute::where('status', 'rejected')->count() +
                            BookingDispute::where('status', 'rejected')->count();
 
         // Chart Data - Bookings by Month (last 6 months)
@@ -87,7 +87,7 @@ class AdminDashboardController extends Controller
             ->orderBy('date_time', 'asc')
             ->take(5)
             ->get();
-
+  
         return view('admin.dashboard', compact(
             'totalUsers', 'totalPatients', 'totalDoctors',
             'totalBookings', 'confirmedBookings', 'pendingBookings', 'cancelledBookings',

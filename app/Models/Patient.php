@@ -25,10 +25,10 @@ class Patient extends Model
 
     public function toSearchableArray(): array{
         return [
+            'id'   => $this->id,
             'user_id'  => $this->user_id,
             'medical_notes'  => $this->medical_notes,
-            'gender' => $this->gender,
-            'birthdate'=> $this->birthdate,
+            'birthdate'=> $this->birthdate
         ];
     }
     public function user()

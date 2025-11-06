@@ -17,6 +17,7 @@ class Doctor extends Model
         'specialty_id',
         'license_number',
         'clinic_address',
+        'consultation',
         'latitude',
         'longitude',
         'session_price',
@@ -42,6 +43,7 @@ class Doctor extends Model
             'name' => $this->user->name,
             'specialty' => $this->specialty->name,
             'clinic_address' => $this->clinic_address,
+            'consultation'   =>  $this->consultation,
         ];
     }
 
@@ -78,7 +80,7 @@ class Doctor extends Model
         if (is_null($value)) {
             return [];
         }
-        
+
         return json_decode($value, true);
     }
 

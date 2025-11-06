@@ -38,6 +38,7 @@ class User extends Authenticatable
         'mobile',
         'password',
         'birthdate',
+        'gender',
         'profile_photo',
         'location_lat',
         'location_lng',
@@ -52,6 +53,7 @@ class User extends Authenticatable
 
     public function toSearchableArray(): array{
         return [
+            'id'    => $this->id ,
             'name'  => $this->name,
             'email' => $this->email,
             'mobile'=> $this->mobile,

@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\SettingController as AdminSettingController;
-use App\Http\Controllers\Dashboard\BackupController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\SettingController;
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,18 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
-    Route::put('settings', [AdminSettingController::class, 'update'])->name('settings.update');
-
-});
-
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+  
 
 
 Route::middleware('auth')->group(function () {
