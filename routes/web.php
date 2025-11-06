@@ -13,9 +13,6 @@ Route::get('/', function () {
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Settings
     Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
     Route::put('settings', [AdminSettingController::class, 'update'])->name('settings.update');
@@ -23,11 +20,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('backups', [BackupController::class, 'index'])->name('backups.index');
     Route::post('backups/create', [BackupController::class, 'create'])->name('backups.create');
 });
-
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

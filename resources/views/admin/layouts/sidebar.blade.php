@@ -99,34 +99,6 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.bookings.index') }}">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Bookings</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.payments.index') }}">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Payments</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.disputes.index') }}">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Disputes</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.tickets.index') }}">
-                    <i class="fas fa-ticket-alt"></i>
-                    <span>Tickets</span>
-                </a>
-            </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
