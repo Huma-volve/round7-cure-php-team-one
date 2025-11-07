@@ -132,8 +132,14 @@ return [
     | with this API key in the X-API-Key header will be allowed to access
     | maintenance endpoints.
     |
+    | Note: The API key is stored in the database (settings table) and can be
+    | generated using: POST /api/admin/server/generate-api-key
+    |
+    | This config value is kept for backward compatibility but is not used.
+    | The middleware reads directly from the database.
+    |
     */
 
-    'maintenance_api_key' => env('MAINTENANCE_API_KEY', null),
+    'maintenance_api_key' => null,
 
 ];

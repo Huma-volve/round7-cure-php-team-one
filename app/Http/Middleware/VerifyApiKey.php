@@ -16,13 +16,15 @@ class VerifyApiKey
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Get API key from database (settings table) first, then fallback to config/env
+        // Get API key from database (settings table) only
         try {
-            $expectedApiKey = Setting::getValue('maintenance_api_key') 
-                           ?? config('app.maintenance_api_key');
+            $expectedApiKey = Setting::getValue('maintenance_api_key');
         } catch (\Exception $e) {
-            // If database is not available, use config/env
-            $expectedApiKey = config('app.maintenance_api_key');
+            // If database is not available, return error
+            return response()->json([
+                'status' => false,
+                'message' => 'Database connection error. Cannot verify API key.',
+            ], 500);
         }
 
         if (!$expectedApiKey) {
