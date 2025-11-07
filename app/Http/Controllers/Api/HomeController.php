@@ -46,7 +46,7 @@ class HomeController extends Controller
     $lng = $request->longitude ??   $user->location_lng ?? 31.2357  ;
 
     $specialties = Specialty::select('id' , 'name')->get();
-    $doctors = $this->doctorService->getNearbyDoctors($user, $lat, $lng, $request->input('search'));
+    $doctors = $this->doctorService->searchDoctorsNearby($user, $lat, $lng, $request->input('search'));
 
     $doctors->each(function($doctor) use ($user) {
         $doctor->is_favorite = $this->favoriteService->isFavorite($user, $doctor);
@@ -61,6 +61,7 @@ class HomeController extends Controller
                 'average_rating' => $doctor->average_rating ?? 0,
                 'reviews_count'  => $doctor->reviews_count ?? 0,
                 'availability'   => $doctor->availability_json,
+                'consultation'   => $doctor->consultation ?? 'clinic',
                 'is_favorite'    => $doctor->is_favorite,
                 'image'          => $doctor->user->profile_photo,
                 'distance_km'    => round($doctor->distance, 2),
