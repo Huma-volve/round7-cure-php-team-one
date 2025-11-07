@@ -112,6 +112,7 @@ Accept: application/json
         "lng": 46.6753
       },
       "session_price": 200.00,
+      "consultation": "both",
       "user": {
         "name": "د. أحمد محمد",
         "email": "doctor@example.com",
@@ -244,6 +245,7 @@ GET /api/patient/bookings?status=confirmed&date=2025-11-15
           },
           "license_number": "DOC123456",
           "session_price": 200.00,
+          "consultation": "both",
           "user": {
             "name": "د. أحمد محمد",
             "email": "doctor@example.com"
@@ -318,6 +320,7 @@ GET /api/patient/bookings/1
         "lng": 46.6753
       },
       "session_price": 200.00,
+      "consultation": "both",
       "user": {
         "name": "د. أحمد محمد",
         "email": "doctor@example.com",

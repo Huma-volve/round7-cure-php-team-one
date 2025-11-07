@@ -117,6 +117,7 @@
                 "average_rating": 0,
                 "reviews_count": 0,
                 "availability": "{\"sun\":\"4-9\",\"wed\":\"3-7\"}",
+                "consultation": "clinic",
                 "is_favorite": true,
                 "image": null,
                 "distance_km": 0.68
@@ -175,6 +176,7 @@
                 "longitude": "31.23000000",
                 "session_price": "350.00",
                 "availability_json": "{\"sun\":\"4-9\",\"wed\":\"3-7\"}",
+                "consultation": "clinic",
                 "experience": null,
                 "about_me": null,
                 "average_rating": 0,
@@ -405,6 +407,7 @@
                 "longitude": "31.23000000",
                 "session_price": "350.00",
                 "availability_json": "{\"sun\":\"4-9\",\"wed\":\"3-7\"}",
+                "consultation": "clinic",
                 "experience": null,
                 "about_me": null,
                 "average_rating": 0,
@@ -626,6 +629,7 @@
             "session_price": 200,
             "average_rating": 3.5,
             "reviews_count": 2,
+            "consultation": "both",
             "availability": {
                 "monday": [
                     "09:00",
@@ -672,6 +676,7 @@
         "patient_count": 7,
         "about_me": null,
         "session_price": 200,
+        "consultation": "both",
         "availability": {
             "monday": [
                 "09:00",
