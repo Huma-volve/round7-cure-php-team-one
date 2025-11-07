@@ -35,10 +35,10 @@ class BookingResource extends JsonResource
     private function getStatusLabel(): string
     {
         return match($this->status) {
-            'pending' => 'معلق',
-            'confirmed' => 'مؤكد',
-            'cancelled' => 'ملغي',
-            'rescheduled' => 'إعادة جدولة',
+            'pending' => __('messages.status.pending'),
+            'confirmed' => __('messages.status.confirmed'),
+            'cancelled' => __('messages.status.cancelled'),
+            'rescheduled' => __('messages.status.rescheduled'),
             default => $this->status,
         };
     }

@@ -106,6 +106,18 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="consultation">نوع الاستشارة <span class="text-danger">*</span></label>
+                    <select name="consultation" id="consultation" class="form-control @error('consultation') is-invalid @enderror" required>
+                        <option value="clinic" {{ old('consultation', $doctor->consultation ?? 'clinic') == 'clinic' ? 'selected' : '' }}>في العيادة (Clinic)</option>
+                        <option value="home" {{ old('consultation', $doctor->consultation ?? '') == 'home' ? 'selected' : '' }}>زيارة منزلية (Home)</option>
+                        <option value="both" {{ old('consultation', $doctor->consultation ?? '') == 'both' ? 'selected' : '' }}>الاثنان معاً (Both)</option>
+                    </select>
+                    @error('consultation')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">

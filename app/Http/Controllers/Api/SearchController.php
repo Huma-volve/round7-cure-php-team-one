@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchRequest;
+use App\Http\Resources\DoctorResource;
 use App\Models\User;
 use App\Services\SearchService;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class SearchController extends Controller
         }
 
         return response()->json([
-            'data' => $doctors
+            'data' => DoctorResource::collection($doctors)
         ]);
     } // end storeSearch
 
