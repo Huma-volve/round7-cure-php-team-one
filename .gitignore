@@ -40,3 +40,6 @@ routes/web/doctor.php
 # Ignore AuthController
 # app/Http/Controllers/Api/AuthController.php
 ADMIN_PANEL.md
+
+/storage/tntsearch/
+

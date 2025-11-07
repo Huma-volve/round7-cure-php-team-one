@@ -9,7 +9,7 @@ trait HandlesRoleUpdates
     {
         $data = [];
 
-        foreach (['birthdate', 'gender', 'medical_notes'] as $field) {
+        foreach (['birthdate', 'medical_notes'] as $field) {
             if ($request->filled($field)) {
                 $data[$field] = $request->$field;
             }

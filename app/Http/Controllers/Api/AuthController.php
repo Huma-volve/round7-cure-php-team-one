@@ -81,7 +81,6 @@ class AuthController extends Controller
         $patient = $user->patient()->create([
             'medical_notes' => $request->medical_notes,
             'birthdate' => $request->birthdate,
-            'gender' => $request->gender,
 
         ]);
 

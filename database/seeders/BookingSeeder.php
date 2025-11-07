@@ -88,7 +88,6 @@ class BookingSeeder extends Seeder
 
         $patient = Patient::updateOrCreate([
             'user_id' => $patientUser->id,
-            'gender' => 'male',
             'birthdate' => '1990-01-15',
             'medical_notes' => 'لا توجد ملاحظات طبية',
         ]);
@@ -104,7 +103,6 @@ class BookingSeeder extends Seeder
 
         $patient2 = Patient::updateOrCreate([
             'user_id' => $patientUser2->id,
-            'gender' => 'female',
             'birthdate' => '1995-05-20',
             'medical_notes' => null,
         ]);

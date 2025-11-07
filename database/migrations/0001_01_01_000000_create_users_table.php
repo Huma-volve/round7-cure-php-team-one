@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->date('birthdate')->nullable();
             $table->string('profile_photo')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->decimal('location_lat', 10, 8)->nullable();
             $table->decimal('location_lng', 11, 8)->nullable();
             $table->timestamp('email_verified_at')->nullable();

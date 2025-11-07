@@ -19,13 +19,22 @@ class DoctorController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Doctor::with(['user', 'specialty']);
+        $query = Doctor::withTrashed()
+            ->with([
+                'user' => function ($q) {
+                    $q->withTrashed();
+                },
+                'specialty'
+            ]);
 
         if ($request->filled('q')) {
             $q = $request->string('q');
             $query->whereHas('user', function ($w) use ($q) {
-                $w->where('name', 'like', "%{$q}%")
-                  ->orWhere('email', 'like', "%{$q}%");
+                $w->withTrashed()
+                    ->where(function ($sub) use ($q) {
+                        $sub->where('name', 'like', "%{$q}%")
+                            ->orWhere('email', 'like', "%{$q}%");
+                    });
             });
         }
 
@@ -132,7 +141,10 @@ class DoctorController extends Controller
         $doctor = Doctor::findOrFail($id);
         
         // Delete user (this will cascade delete doctor due to foreign key)
-        $doctor->user->delete();
+        $doctor->delete();
+
+
+        $doctor->user?->delete();
 
         return redirect()
             ->route('admin.doctors.index')

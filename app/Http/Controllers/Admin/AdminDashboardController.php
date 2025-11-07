@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Booking;
+use App\Models\BookingDispute;
+use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\PaymentDispute;
-use App\Models\BookingDispute;
-use Illuminate\View\View;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class AdminDashboardController extends Controller
 {
@@ -37,11 +39,11 @@ class AdminDashboardController extends Controller
             ->sum('amount');
 
         // Dispute Statistics
-        $openDisputes = PaymentDispute::where('status', 'pending')->count() + 
+        $openDisputes = PaymentDispute::where('status', 'pending')->count() +
                        BookingDispute::where('status', 'pending')->count();
-        $resolvedDisputes = PaymentDispute::where('status', 'resolved')->count() + 
+        $resolvedDisputes = PaymentDispute::where('status', 'resolved')->count() +
                            BookingDispute::where('status', 'resolved')->count();
-        $rejectedDisputes = PaymentDispute::where('status', 'rejected')->count() + 
+        $rejectedDisputes = PaymentDispute::where('status', 'rejected')->count() +
                            BookingDispute::where('status', 'rejected')->count();
 
         // Chart Data - Bookings by Month (last 6 months)
@@ -88,6 +90,20 @@ class AdminDashboardController extends Controller
             ->take(5)
             ->get();
 
+
+
+
+        $user_id = Auth::id();
+        $notifications = Notification::with('user')
+         ->where('user_id', $user_id)
+         ->orderBy('created_at','desc')
+         ->get();
+
+        $unreadCount = Notification::where('user_id', $user_id)
+        ->where('is_read', false)
+        ->count();
+
+
         return view('admin.dashboard', compact(
             'totalUsers', 'totalPatients', 'totalDoctors',
             'totalBookings', 'confirmedBookings', 'pendingBookings', 'cancelledBookings',
@@ -95,7 +111,7 @@ class AdminDashboardController extends Controller
             'openDisputes', 'resolvedDisputes', 'rejectedDisputes',
             'bookingsByMonth', 'paymentsByMonth',
             'bookingStatusData', 'paymentGatewayData',
-            'upcomingBookings'
+            'upcomingBookings','notifications','unreadCount'
         ));
     }
 }

@@ -17,7 +17,6 @@ class PatientFactory extends Factory
         return [
             'user_id' => User::factory(),
             'birthdate' => $this->faker->date(),
-            'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             'medical_notes' => $this->faker->paragraph(),
         ];
     }

@@ -2,21 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
 {
-    use HasFactory , Searchable;
+    use HasFactory , Searchable, SoftDeletes;
 
     protected $fillable = [
         'user_id',
         'specialty_id',
         'license_number',
         'clinic_address',
+        'consultation',
         'latitude',
         'longitude',
         'session_price',
@@ -26,7 +28,7 @@ class Doctor extends Model
 
    protected $appends = ['average_rating', 'reviews_count' ];
    protected $hidden = [ 'created_at', 'updated_at'];
-
+   protected $dates = ['deleted_at']; 
 
     protected $casts = [
         'availability_json' => 'array',
@@ -42,12 +44,13 @@ class Doctor extends Model
             'name' => $this->user->name,
             'specialty' => $this->specialty->name,
             'clinic_address' => $this->clinic_address,
+            'consultation'   =>  $this->consultation,
         ];
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function specialty()
@@ -78,7 +81,7 @@ class Doctor extends Model
         if (is_null($value)) {
             return [];
         }
-        
+
         return json_decode($value, true);
     }
 
