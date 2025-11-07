@@ -41,10 +41,19 @@ http://localhost:8000/api
 Authorization: Bearer {your-token}
 Content-Type: application/json
 Accept: application/json
+Accept-Language: ar|en
 ```
 
 ### How to Get Token
 استخدم Laravel Sanctum للـ authentication.
+
+### Localization
+يمكنك تحديد اللغة المطلوبة للاستجابة باستخدام header `Accept-Language`:
+- `Accept-Language: ar` - للاستجابة بالعربية
+- `Accept-Language: en` - للاستجابة بالإنجليزية (الافتراضي)
+- إذا لم يتم تحديد اللغة، سيتم استخدام الإنجليزية كافتراضي
+
+**ملاحظة:** جميع رسائل الاستجابة (success messages, error messages, validation messages, status labels) ستكون مترجمة حسب اللغة المحددة.
 
 ---
 

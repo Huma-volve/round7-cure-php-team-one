@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Maintenance API Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used to protect server maintenance endpoints. Only requests
+    | with this API key in the X-API-Key header will be allowed to access
+    | maintenance endpoints.
+    |
+    */
+
+    'maintenance_api_key' => env('MAINTENANCE_API_KEY', null),
+
 ];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
@@ -176,6 +177,68 @@ class ServerMaintenanceController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Error running migrations',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Generate a new maintenance API key
+     */
+    public function generateApiKey(Request $request)
+    {
+        try {
+            // Generate a secure random API key (64 characters)
+            $apiKey = bin2hex(random_bytes(32));
+
+            // Save to database
+            Setting::setValue('maintenance_api_key', $apiKey);
+
+            Log::info('Maintenance API key generated via API', [
+                'user_id' => auth()->id(),
+                'key_generated' => true
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Maintenance API key generated and saved successfully',
+                'api_key' => $apiKey,
+                'warning' => 'Save this key securely! You will need it to access maintenance endpoints.',
+                'usage' => [
+                    'header' => 'X-API-Key',
+                    'value' => $apiKey
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Generate API key error', ['error' => $e->getMessage()]);
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Error generating API key',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get current maintenance API key (without showing the actual key)
+     */
+    public function getApiKeyStatus(Request $request)
+    {
+        try {
+            $apiKey = Setting::getValue('maintenance_api_key');
+
+            return response()->json([
+                'status' => true,
+                'configured' => !empty($apiKey),
+                'message' => $apiKey 
+                    ? 'Maintenance API key is configured' 
+                    : 'Maintenance API key is not configured. Use /admin/server/generate-api-key to generate one.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error checking API key status',
                 'error' => $e->getMessage(),
             ], 500);
         }

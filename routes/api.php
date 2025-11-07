@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SpecialtyController;
+use App\Http\Controllers\Api\ServerMaintenanceController;
 use App\Http\Controllers\ChatController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -89,6 +90,27 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         return response()->json(['ok' => true, 'area' => 'admin only']);
     });
 });
+
+// Server Maintenance Routes
+Route::middleware(['auth:sanctum', 'role:admin'])
+    ->prefix('admin/server')
+    ->name('admin.server.')
+    ->controller(ServerMaintenanceController::class)
+    ->group(function () {
+        // Generate API key endpoint (protected by admin role only, no API key required)
+        Route::post('/generate-api-key', 'generateApiKey')->name('generate-api-key');
+        Route::get('/api-key-status', 'getApiKeyStatus')->name('api-key-status');
+        
+        // All other maintenance endpoints (protected by API key + Admin Role)
+        Route::middleware('api.key')->group(function () {
+            Route::post('/composer-update', 'composerUpdate')->name('composer-update');
+            Route::post('/composer-dumpautoload', 'composerDumpAutoload')->name('composer-dumpautoload');
+            Route::post('/optimize-clear', 'optimizeClear')->name('optimize-clear');
+            Route::post('/migrate-fresh-seed', 'migrateFreshSeed')->name('migrate-fresh-seed');
+            Route::post('/run-all', 'runAll')->name('run-all');
+        });
+    });
+
 // Authentication Routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verifyEmailOtp', [AuthController::class, 'verifyEmailOtp'])->middleware('auth:sanctum');

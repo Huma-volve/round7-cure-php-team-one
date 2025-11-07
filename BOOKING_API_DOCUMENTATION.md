@@ -11,7 +11,13 @@ http://your-domain.com/api
 Authorization: Bearer {your-token}
 Content-Type: application/json
 Accept: application/json
+Accept-Language: ar|en
 ```
+
+**ملاحظة:** يمكنك تحديد اللغة المطلوبة للاستجابة باستخدام header `Accept-Language`:
+- `Accept-Language: ar` - للاستجابة بالعربية (الافتراضي)
+- `Accept-Language: en` - للاستجابة بالإنجليزية
+- إذا لم يتم تحديد اللغة، سيتم استخدام الإنجليزية كافتراضي
 
 ---
 

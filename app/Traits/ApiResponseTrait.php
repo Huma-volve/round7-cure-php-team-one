@@ -11,13 +11,13 @@ trait ApiResponseTrait
      */
     protected function successResponse(
         mixed $data = null,
-        string $message = 'تمت العملية بنجاح',
+        string $message = null,
         int $statusCode = 200
     ): JsonResponse {
         $response = [
             'success' => true,
             'status' => $statusCode,
-            'message' => $message,
+            'message' => $message ? __($message) : __('messages.success'),
         ];
 
         if ($data !== null) {
@@ -31,14 +31,14 @@ trait ApiResponseTrait
      * Return error response
      */
     protected function errorResponse(
-        string $message = 'حدث خطأ',
+        string $message = null,
         int $statusCode = 500,
         mixed $errors = null
     ): JsonResponse {
         $response = [
             'success' => false,
             'status' => $statusCode,
-            'message' => $message,
+            'message' => $message ? __($message) : __('messages.error'),
         ];
 
         if ($errors !== null) {
@@ -53,27 +53,27 @@ trait ApiResponseTrait
      */
     protected function validationErrorResponse(
         array $errors,
-        string $message = 'البيانات المرسلة غير صحيحة'
+        string $message = null
     ): JsonResponse {
-        return $this->errorResponse($message, 422, $errors);
+        return $this->errorResponse($message ?: 'messages.validation_error', 422, $errors);
     }
 
     /**
      * Return unauthorized response
      */
     protected function unauthorizedResponse(
-        string $message = 'غير مصرح لك بالوصول'
+        string $message = null
     ): JsonResponse {
-        return $this->errorResponse($message, 403);
+        return $this->errorResponse($message ?: 'messages.unauthorized', 403);
     }
 
     /**
      * Return not found response
      */
     protected function notFoundResponse(
-        string $message = 'لم يتم العثور على البيانات'
+        string $message = null
     ): JsonResponse {
-        return $this->errorResponse($message, 404);
+        return $this->errorResponse($message ?: 'messages.not_found', 404);
     }
 
     /**
@@ -86,7 +86,7 @@ trait ApiResponseTrait
         $response = [
             'success' => false,
             'status' => 409,
-            'message' => $message,
+            'message' => __($message),
         ];
 
         if ($additionalData !== null) {
@@ -100,13 +100,13 @@ trait ApiResponseTrait
      * Return server error response
      */
     protected function serverErrorResponse(
-        string $message = 'حدث خطأ في السيرفر',
+        string $message = null,
         string $error = null
     ): JsonResponse {
         $response = [
             'success' => false,
             'status' => 500,
-            'message' => $message,
+            'message' => $message ? __($message) : __('messages.server_error'),
         ];
 
         if ($error && app()->environment('local')) {
@@ -121,7 +121,7 @@ trait ApiResponseTrait
      */
     protected function paginatedResponse(
         mixed $data,
-        string $message = 'تم جلب البيانات بنجاح'
+        string $message = null
     ): JsonResponse {
         return $this->successResponse($data, $message);
     }
@@ -131,7 +131,7 @@ trait ApiResponseTrait
      */
     protected function createdResponse(
         mixed $data = null,
-        string $message = 'تم الإنشاء بنجاح'
+        string $message = null
     ): JsonResponse {
         return $this->successResponse($data, $message, 201);
     }

@@ -37,7 +37,7 @@ class DoctorBookingController extends Controller
 
             return $this->paginatedResponse(
                 BookingResource::collection($bookings)->response()->getData(true),
-                'تم جلب المواعيد بنجاح'
+                'messages.booking.fetched'
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -53,18 +53,18 @@ class DoctorBookingController extends Controller
             $booking = $this->bookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
-                return $this->notFoundResponse('الموعد غير موجود');
+                return $this->notFoundResponse('messages.booking.not_found');
             }
 
             $doctor = $this->getAuthenticatedDoctor();
 
             if (!$this->canAccessBooking($booking, $doctor)) {
-                return $this->unauthorizedResponse('غير مصرح لك بعرض هذا الموعد');
+                return $this->unauthorizedResponse('messages.booking.unauthorized');
             }
 
             return $this->successResponse(
                 new BookingResource($booking),
-                'تم جلب تفاصيل الموعد بنجاح'
+                'messages.booking.details_fetched'
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -80,20 +80,20 @@ class DoctorBookingController extends Controller
             $booking = $this->bookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
-                return $this->notFoundResponse('الموعد غير موجود');
+                return $this->notFoundResponse('messages.booking.not_found');
             }
 
             $doctor = $this->getAuthenticatedDoctor();
 
             if (!$this->canAccessBooking($booking, $doctor)) {
-                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+                return $this->unauthorizedResponse('messages.booking.not_yours');
             }
 
             $booking = $this->bookingService->confirmBooking($booking);
 
             return $this->successResponse(
                 new BookingResource($booking),
-                'تم تأكيد الموعد بنجاح'
+                'messages.booking.confirmed'
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -109,20 +109,20 @@ class DoctorBookingController extends Controller
             $booking = $this->bookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
-                return $this->notFoundResponse('الموعد غير موجود');
+                return $this->notFoundResponse('messages.booking.not_found');
             }
 
             $doctor = $this->getAuthenticatedDoctor();
 
             if (!$this->canAccessBooking($booking, $doctor)) {
-                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+                return $this->unauthorizedResponse('messages.booking.not_yours');
             }
 
             $booking = $this->bookingService->cancelBooking($booking);
 
             return $this->successResponse(
                 new BookingResource($booking->load(['doctor.user', 'patient.user'])),
-                'تم إلغاء الموعد بنجاح'
+                'messages.booking.cancelled'
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -138,20 +138,20 @@ class DoctorBookingController extends Controller
             $booking = $this->bookingRepository->findByIdWithRelations($id);
 
             if (!$booking) {
-                return $this->notFoundResponse('الموعد غير موجود');
+                return $this->notFoundResponse('messages.booking.not_found');
             }
 
             $doctor = $this->getAuthenticatedDoctor();
 
             if (!$this->canAccessBooking($booking, $doctor)) {
-                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+                return $this->unauthorizedResponse('messages.booking.not_yours');
             }
 
             $booking = $this->bookingService->rescheduleBooking($booking, $request->date_time);
 
             return $this->successResponse(
                 new BookingResource($booking->load(['doctor.user', 'patient.user'])),
-                'تم إعادة جدولة الموعد بنجاح'
+                'messages.booking.rescheduled'
             );
         } catch (\Exception $e) {
             return $this->handleException($e);
@@ -166,7 +166,7 @@ class DoctorBookingController extends Controller
         $doctor = Auth::user()->doctor;
 
         if (!$doctor) {
-            throw new \Exception('لم يتم العثور على بيانات الطبيب', 404);
+            throw new \Exception(__('messages.doctor.not_found'), 404);
         }
 
         return $doctor;
@@ -193,7 +193,7 @@ class DoctorBookingController extends Controller
             409 => $this->conflictResponse($e->getMessage()),
             404 => $this->notFoundResponse($e->getMessage()),
             403 => $this->unauthorizedResponse($e->getMessage()),
-            default => $this->serverErrorResponse('حدث خطأ أثناء العملية', $e->getMessage())
+            default => $this->serverErrorResponse('messages.operation_error', $e->getMessage())
         };
     }
 }
