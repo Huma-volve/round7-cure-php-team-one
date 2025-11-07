@@ -47,6 +47,20 @@
                         <div class="col-md-8">{{ $doctor->session_price }} EGP</div>
                     </div>
                     <div class="row mb-3">
+                        <div class="col-md-4"><strong>نوع الاستشارة:</strong></div>
+                        <div class="col-md-8">
+                            @if($doctor->consultation == 'clinic')
+                                <span class="badge badge-info">في العيادة (Clinic)</span>
+                            @elseif($doctor->consultation == 'home')
+                                <span class="badge badge-info">زيارة منزلية (Home)</span>
+                            @elseif($doctor->consultation == 'both')
+                                <span class="badge badge-info">الاثنان معاً (Both)</span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-md-4"><strong>عنوان العيادة:</strong></div>
                         <div class="col-md-8">{{ $doctor->clinic_address ?? '-' }}</div>
                     </div>

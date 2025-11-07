@@ -27,6 +27,7 @@ class UpdateDoctorRequest extends FormRequest
             'longitude' => 'nullable|numeric',
             'session_price' => 'required|numeric|min:0',
             'availability_json' => 'nullable|array',
+            'consultation' => 'nullable|in:home,clinic,both',
         ];
     }
 
