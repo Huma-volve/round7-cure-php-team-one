@@ -39,7 +39,3 @@ routes/web/doctor.php
 
 # Ignore AuthController
 # app/Http/Controllers/Api/AuthController.php
-ADMIN_PANEL.md
-SERVER_MAINTENANCE_API.md
-CONSULTATION_TYPE_API_DOCUMENTATION.md
-ADMIN_PANEL_DOCUMENTATION.md
