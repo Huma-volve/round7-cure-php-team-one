@@ -25,8 +25,6 @@ class StoreDoctorRequest extends FormRequest
             'longitude' => 'nullable|numeric',
             'session_price' => 'required|numeric|min:0',
             'availability_json' => 'nullable|array',
-            'consultation_type' => 'nullable|array',
-            'consultation_type.*' => 'in:in_clinic,home_visit',
         ];
     }
 
@@ -43,8 +41,6 @@ class StoreDoctorRequest extends FormRequest
             'license_number.required' => 'رقم الترخيص مطلوب',
             'license_number.unique' => 'رقم الترخيص مستخدم بالفعل',
             'session_price.required' => 'سعر الجلسة مطلوب',
-            'consultation_type.array' => 'نوع الاستشارة يجب أن يكون مصفوفة',
-            'consultation_type.*.in' => 'نوع الاستشارة يجب أن يكون إما في العيادة أو زيارة منزلية',
         ];
     }
 }

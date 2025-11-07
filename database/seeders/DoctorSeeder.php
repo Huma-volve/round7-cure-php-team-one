@@ -30,7 +30,6 @@ class DoctorSeeder extends Seeder
                 'longitude' => 31.2370,
                 'session_price' => 400.00,
                 'availability_json' => json_encode(['day' => 'mon', 'from' => '15:00', 'to' => '20:00']),
-                'consultation_type' => ['in_clinic', 'home_visit'], // الاثنين معاً
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Dermatology')->first()->id,
@@ -40,7 +39,6 @@ class DoctorSeeder extends Seeder
                 'longitude' => 31.2300,
                 'session_price' => 350.00,
                 'availability_json' => json_encode(['sun' => '4-9', 'wed' => '3-7']),
-                'consultation_type' => ['in_clinic'], // في العيادة فقط
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Pediatrics')->first()->id,
@@ -50,7 +48,6 @@ class DoctorSeeder extends Seeder
                 'longitude' => 29.9187,
                 'session_price' => 300.00,
                 'availability_json' => json_encode(['tue' => '2-6', 'thu' => '4-9']),
-                'consultation_type' => ['home_visit'], // زيارة منزلية فقط
             ],
         ];
         foreach ($users as $index => $user) {

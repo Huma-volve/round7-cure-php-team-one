@@ -77,7 +77,6 @@ class DoctorController extends Controller
             'longitude' => $request->longitude,
             'session_price' => $request->session_price,
             'availability_json' => $request->availability_json ?? [],
-            'consultation_type' => $request->consultation_type ?? [],
             'status' => 'active',
         ]);
 
@@ -121,7 +120,6 @@ class DoctorController extends Controller
             'longitude' => $request->longitude,
             'session_price' => $request->session_price,
             'availability_json' => $request->availability_json ?? $doctor->availability_json,
-            'consultation_type' => $request->consultation_type ?? $doctor->consultation_type,
         ]);
 
         return redirect()

@@ -21,7 +21,6 @@ class Doctor extends Model
         'longitude',
         'session_price',
         'availability_json',
-        'consultation_type',
         'status',
     ];
 
@@ -114,39 +113,6 @@ public function getReviewsCountAttribute()
        public function chats()
     {
         return $this->hasMany(Chat::class);
-    }
-
-    /**
-     * Get consultation_type as array
-     */
-    public function getConsultationTypeAttribute($value)
-    {
-        if (is_null($value) || $value === '') {
-            return [];
-        }
-        
-        // SET returns comma-separated string, convert to array
-        if (is_string($value)) {
-            return explode(',', $value);
-        }
-        
-        return is_array($value) ? $value : [];
-    }
-
-    /**
-     * Set consultation_type from array to comma-separated string for SET column
-     */
-    public function setConsultationTypeAttribute($value)
-    {
-        if (is_array($value)) {
-            // Filter out empty values and convert to comma-separated string
-            $filtered = array_filter($value, function($item) {
-                return !empty($item) && in_array($item, ['in_clinic', 'home_visit']);
-            });
-            $this->attributes['consultation_type'] = !empty($filtered) ? implode(',', $filtered) : null;
-        } else {
-            $this->attributes['consultation_type'] = $value;
-        }
     }
 
 }

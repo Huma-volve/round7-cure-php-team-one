@@ -33,8 +33,7 @@ trait HandlesRoleUpdates
                 'experience',
                 'about_me',
                 'latitude',
-                'longitude',
-                'consultation_type'
+                'longitude'
             ] as $field
         ) {
             if ($request->filled($field)) {

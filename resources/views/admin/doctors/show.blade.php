@@ -47,20 +47,6 @@
                         <div class="col-md-8">{{ $doctor->session_price }} EGP</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>نوع الاستشارة:</strong></div>
-                        <div class="col-md-8">
-                            @if($doctor->consultation_type && count($doctor->consultation_type) > 0)
-                                @foreach($doctor->consultation_type as $type)
-                                    <span class="badge badge-info mr-2">
-                                        {{ $type == 'in_clinic' ? 'في العيادة (In-clinic)' : 'زيارة منزلية (Home Visit)' }}
-                                    </span>
-                                @endforeach
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col-md-4"><strong>عنوان العيادة:</strong></div>
                         <div class="col-md-8">{{ $doctor->clinic_address ?? '-' }}</div>
                     </div>

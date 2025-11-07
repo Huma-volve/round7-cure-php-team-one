@@ -120,34 +120,6 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>نوع الاستشارة</label>
-                    <div class="mt-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="consultation_type[]" 
-                                   id="consultation_type_in_clinic" value="in_clinic" 
-                                   {{ in_array('in_clinic', old('consultation_type', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="consultation_type_in_clinic">
-                                في العيادة (In-clinic)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="consultation_type[]" 
-                                   id="consultation_type_home_visit" value="home_visit" 
-                                   {{ in_array('home_visit', old('consultation_type', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="consultation_type_home_visit">
-                                زيارة منزلية (Home Visit)
-                            </label>
-                        </div>
-                    </div>
-                    @error('consultation_type')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                    @error('consultation_type.*')
-                        <div class="text-danger small">{{ $message }}</div>
-                    @enderror
-                </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
