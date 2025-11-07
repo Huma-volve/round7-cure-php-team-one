@@ -19,12 +19,13 @@ class SearchController extends Controller
         $this->searchService = $searchService;
     }
 
+
     public function storeSearch(SearchRequest $request)
     {
 
          $search = $request->input('search_query');
-         
-        $doctors = $this->searchService->searchDoctors(
+
+        $doctors = $this->searchService->searchDoctorsNearby(
             $request->input('latitude'),
             $request->input('longitude'),
             $search,
@@ -39,7 +40,31 @@ class SearchController extends Controller
         return response()->json([
             'data' => DoctorResource::collection($doctors)
         ]);
-    }
+    } // end storeSearch
+
+
+    public function getSearchHistory(Request $request)
+    {
+        $user = $request->user();
+
+        $history = $user->getSearchHistory()->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'data' => $history
+        ]);
+    } // end getSearchHistory
+
+       public function clearSearchHistory(Request $request)
+    {
+        $user = $request->user();
+        
+        $user->getSearchHistory()->delete();
+
+        return response()->json([
+            'message' => 'Search history cleared successfully.'
+        ]);
+    } // end clearSearchHistory
+
 
 
 }

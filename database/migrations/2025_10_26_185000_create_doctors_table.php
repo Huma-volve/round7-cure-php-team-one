@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('specialty_id')->constrained('specialties')->cascadeOnDelete();
             $table->string('license_number', 100)->unique();
             $table->string('clinic_address')->nullable();
+            $table->enum('consultation', ['home', 'clinic', 'both'])->default('clinic');
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->decimal('session_price', 8, 2);

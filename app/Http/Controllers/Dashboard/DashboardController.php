@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Patient;
-use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class DashboardController extends Controller
             //     : 0,
             // 'pending_requests' => Booking::where('status', 'pending')->count(),
         ];
-
+          
         return view('admin.dashboard', compact('stats'));
     }
 }
