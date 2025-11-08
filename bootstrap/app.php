@@ -5,11 +5,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\Request;
-use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\SetLocaleMiddleware;
 use App\Http\Middleware\VerifyApiKey;
 use Spatie\Permission\Middleware\RoleMiddleware;
-use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 
@@ -21,18 +19,23 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
-    
+
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
             'api.key' => VerifyApiKey::class,
+
         ]);
 
         // Apply locale middleware to API routes
         $middleware->api(prepend: [
             SetLocaleMiddleware::class,
         ]);
+
+       $middleware->appendToGroup('web', [
+            App\Http\Middleware\SetLocale::class,
+       ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
@@ -44,7 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
             }
 
-            return null; 
+            return null;
         });
     })
     ->create();
