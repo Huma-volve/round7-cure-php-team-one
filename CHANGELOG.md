@@ -41,10 +41,19 @@ http://localhost:8000/api
 Authorization: Bearer {your-token}
 Content-Type: application/json
 Accept: application/json
+Accept-Language: ar|en
 ```
 
 ### How to Get Token
 استخدم Laravel Sanctum للـ authentication.
+
+### Localization
+يمكنك تحديد اللغة المطلوبة للاستجابة باستخدام header `Accept-Language`:
+- `Accept-Language: ar` - للاستجابة بالعربية
+- `Accept-Language: en` - للاستجابة بالإنجليزية (الافتراضي)
+- إذا لم يتم تحديد اللغة، سيتم استخدام الإنجليزية كافتراضي
+
+**ملاحظة:** جميع رسائل الاستجابة (success messages, error messages, validation messages, status labels) ستكون مترجمة حسب اللغة المحددة.
 
 ---
 
@@ -756,6 +765,52 @@ Password: password
 - ✅ `routes/api/admin.php`
 - ✅ `routes/api/shared.php`
 - ✅ `routes/api/public.php`
+
+---
+
+### 🗓️ [2025-11-06] - Consultation Field Feature
+
+#### ✨ New Feature:
+- ✅ إضافة حقل `consultation` للدكاترة
+- ✅ يدعم اختيار: `home` (زيارة منزلية) أو `clinic` (في العيادة) أو `both` (الاثنان معاً)
+- ✅ استخدام `ENUM` column type في قاعدة البيانات
+- ✅ إضافة validation في Admin و API requests
+- ✅ تحديث جميع API responses لتشمل `consultation`
+- ✅ تحديث Admin Panel لإضافة/تعديل `consultation`
+- ✅ تحديث جميع Seeders لإضافة بيانات تجريبية
+
+#### 📂 Files Modified:
+- ✅ `database/migrations/2025_10_26_185000_create_doctors_table.php` - ENUM column
+- ✅ `app/Models/Doctor.php` - Added to fillable and searchable
+- ✅ `app/Http/Resources/DoctorResource.php` - Added consultation field
+- ✅ `app/Http/Controllers/Admin/DoctorController.php` - Handle consultation
+- ✅ `app/Http/Requests/Admin/StoreDoctorRequest.php` - Validation
+- ✅ `app/Http/Requests/Admin/UpdateDoctorRequest.php` - Validation
+- ✅ `app/Http/Requests/UpdateProfileRequest.php` - API validation
+- ✅ `app/Traits/HandlesRoleUpdates.php` - Update doctor profile
+- ✅ `resources/views/admin/doctors/create.blade.php` - Select dropdown
+- ✅ `resources/views/admin/doctors/edit.blade.php` - Select dropdown
+- ✅ `resources/views/admin/doctors/show.blade.php` - Display field
+- ✅ `database/seeders/DoctorSeeder.php` - Sample data
+- ✅ `database/seeders/DashboardDataSeeder.php` - Sample data
+- ✅ `database/seeders/BookingSeeder.php` - Sample data
+- ✅ `app/Http/Controllers/Api/HomeController.php` - Added to response
+
+#### 📝 Documentation Updated:
+- ✅ `api.md` - Updated examples
+- ✅ `BOOKING_API_DOCUMENTATION.md` - Added consultation in responses
+
+#### 🎯 API Response Format:
+```json
+{
+  "consultation": "both"
+}
+```
+
+#### 📋 Values:
+- `"home"` - زيارة منزلية فقط
+- `"clinic"` - في العيادة فقط (القيمة الافتراضية)
+- `"both"` - الاثنان معاً
 
 ---
 

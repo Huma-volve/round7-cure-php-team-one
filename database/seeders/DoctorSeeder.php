@@ -29,6 +29,7 @@ class DoctorSeeder extends Seeder
                 'latitude' => 30.0520,
                 'longitude' => 31.2370,
                 'session_price' => 400.00,
+
                         'availability_json' => [
                 'monday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
                 'tuesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
@@ -38,6 +39,8 @@ class DoctorSeeder extends Seeder
                 'saturday' => ['10:00', '11:00'],
                 'sunday' => [],
             ],
+                'consultation' => 'both',
+
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Dermatology')->first()->id,
@@ -46,6 +49,7 @@ class DoctorSeeder extends Seeder
                 'latitude' => 30.0480,
                 'longitude' => 31.2300,
                 'session_price' => 350.00,
+
                 'availability_json' =>[
                 'monday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
                 'tuesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
@@ -55,7 +59,12 @@ class DoctorSeeder extends Seeder
                 'saturday' => ['10:00', '11:00'],
                 'sunday' => [],
             ],
+
+
+                'consultation' => 'clinic',
+
             ],
+
             [
                 'specialty_id' => $specialties->where('name', 'Pediatrics')->first()->id,
                 'license_number' => 'LIC-003',
@@ -71,9 +80,13 @@ class DoctorSeeder extends Seeder
                 'friday' =>['10:00', '11:00'],
                 'saturday' => ['10:00', '1:00'],
                 'sunday' => [],
+                ],
+                'consultation' => 'home',
             ],
-            ],
-        ];
+        ] ;
+
+
+
         foreach ($users as $index => $user) {
             Doctor::create(array_merge(['user_id' => $user->id], $doctorsData[$index]));
         $user->assignRole('doctor');

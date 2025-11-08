@@ -54,7 +54,7 @@ class BookingService
             ->first();
         
         if ($conflictingBooking) {
-            throw new \Exception('هذا الوقت غير متاح، يرجى اختيار وقت آخر', 409);
+            throw new \Exception(__('messages.booking.conflict'), 409);
         }
     }
 
@@ -75,10 +75,10 @@ class BookingService
 
         if (isset($availability[$dayOfWeek])) {
             if (!in_array($time, $availability[$dayOfWeek])) {
-                throw new \Exception('الطبيب غير متاح في هذا الوقت', 409);
+                throw new \Exception(__('messages.booking.unavailable'), 409);
             }
         } else {
-            throw new \Exception('الطبيب غير متاح في هذا اليوم', 409);
+            throw new \Exception(__('messages.booking.unavailable'), 409);
         }
     }
 
@@ -88,7 +88,7 @@ class BookingService
     public function rescheduleBooking(Booking $booking, string $newDateTime): Booking
     {
         if (!$booking->isReschedulable()) {
-            throw new \Exception('لا يمكن إعادة جدولة هذا الموعد', 400);
+            throw new \Exception(__('messages.booking.unavailable'), 400);
         }
 
         // التحقق من تعارض
@@ -99,7 +99,7 @@ class BookingService
             ->first();
         
         if ($conflictingBooking) {
-            throw new \Exception('هذا الوقت غير متاح، يرجى اختيار وقت آخر', 409);
+            throw new \Exception(__('messages.booking.conflict'), 409);
         }
 
         DB::beginTransaction();
@@ -125,7 +125,7 @@ class BookingService
     public function cancelBooking(Booking $booking): Booking
     {
         if (!$booking->isCancellable() && $booking->status !== Booking::STATUS_PENDING) {
-            throw new \Exception('لا يمكن إلغاء هذا الموعد (أقل من 24 ساعة أو مؤكد)', 400);
+            throw new \Exception(__('messages.booking.unavailable'), 400);
         }
 
         DB::beginTransaction();

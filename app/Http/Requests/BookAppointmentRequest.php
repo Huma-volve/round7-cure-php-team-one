@@ -37,12 +37,12 @@ class BookAppointmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'doctor_id.required' => 'يجب اختيار طبيب',
-            'doctor_id.exists' => 'الطبيب المحدد غير موجود',
-            'date_time.required' => 'يجب تحديد تاريخ ووقت الموعد',
-            'date_time.after' => 'لا يمكن حجز موعد في الماضي',
-            'payment_method.required' => 'يجب اختيار طريقة الدفع',
-            'payment_method.in' => 'طريقة الدفع غير صحيحة',
+            'doctor_id.required' => __('validation.doctor_id.required'),
+            'doctor_id.exists' => __('validation.doctor_id.exists'),
+            'date_time.required' => __('validation.date_time.required'),
+            'date_time.after' => __('validation.date_time.after'),
+            'payment_method.required' => __('validation.payment_method.required'),
+            'payment_method.in' => __('validation.payment_method.in'),
         ];
     }
 }

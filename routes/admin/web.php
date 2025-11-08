@@ -9,7 +9,8 @@ use App\Http\Controllers\Admin\DisputeController;
 use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\PatientController;
-use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SettingController;
+
 
 
 /*
@@ -81,8 +82,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
  // Settings
-
-            Route::get('settings' , [SettingsController::class , 'index'])->name('settings.index');
-            Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+             Route::get('/settings' , [SettingController::class , 'index'])->name('settings.index');
+             Route::get('/settings' , [SettingController::class , 'update']);
     });
 

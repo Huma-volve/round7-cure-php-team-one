@@ -131,7 +131,7 @@
                 <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Settings Screens:</h6>
-                        <a class="collapse-item" href="{{route('admin.settings.index')}}">General Settings</a>
+                        <a class="collapse-item" href="{{ route('admin.settings.index') }}">General Settings</a>
 
                     </div>
                 </div>

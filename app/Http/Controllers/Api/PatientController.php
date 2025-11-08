@@ -37,7 +37,7 @@ class PatientController extends Controller
             $patient = Auth::user()->patient;
             
             if (!$patient) {
-                return $this->notFoundResponse('لم يتم العثور على بيانات المريض');
+                return $this->notFoundResponse('messages.patient.not_found');
             }
 
             $doctor = Doctor::findOrFail($request->doctor_id);
@@ -77,7 +77,7 @@ class PatientController extends Controller
 
             return $this->createdResponse(
                 $responseData,
-                'تم حجز الموعد بنجاح'
+                'messages.booking.created'
             );
 
         } catch (\Exception $e) {
@@ -94,7 +94,7 @@ class PatientController extends Controller
             $patient = Auth::user()->patient;
             
             if (!$patient) {
-                return $this->notFoundResponse('لم يتم العثور على بيانات المريض');
+                return $this->notFoundResponse('messages.patient.not_found');
             }
 
             $bookings = $this->bookingRepository->getPatientBookings($patient->id, [
@@ -105,7 +105,7 @@ class PatientController extends Controller
 
             return $this->paginatedResponse(
                 BookingResource::collection($bookings)->response()->getData(true),
-                'تم جلب المواعيد بنجاح'
+                'messages.booking.fetched'
             );
 
         } catch (\Exception $e) {
@@ -122,18 +122,18 @@ class PatientController extends Controller
             $booking = $this->bookingRepository->findByIdWithRelations($id);
             
             if (!$booking) {
-                return $this->notFoundResponse('الموعد غير موجود');
+                return $this->notFoundResponse('messages.booking.not_found');
             }
 
             $patient = Auth::user()->patient;
             
             if ($booking->patient_id != $patient->id && !Auth::user()->hasRole('admin')) {
-                return $this->unauthorizedResponse('غير مصرح لك بعرض هذا الموعد');
+                return $this->unauthorizedResponse('messages.booking.unauthorized');
             }
 
             return $this->successResponse(
                 new BookingResource($booking),
-                'تم جلب تفاصيل الموعد بنجاح'
+                'messages.booking.details_fetched'
             );
 
         } catch (\Exception $e) {
@@ -151,14 +151,14 @@ class PatientController extends Controller
             $patient = Auth::user()->patient;
 
             if ($booking->patient_id != $patient->id) {
-                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+                return $this->unauthorizedResponse('messages.booking.not_yours');
             }
 
             $booking = $this->bookingService->rescheduleBooking($booking, $request->date_time);
 
             return $this->successResponse(
                 new BookingResource($booking),
-                'تم إعادة جدولة الموعد بنجاح'
+                'messages.booking.rescheduled'
             );
 
         } catch (\Exception $e) {
@@ -176,14 +176,14 @@ class PatientController extends Controller
             $patient = Auth::user()->patient;
 
             if ($booking->patient_id != $patient->id) {
-                return $this->unauthorizedResponse('هذا الموعد ليس لك');
+                return $this->unauthorizedResponse('messages.booking.not_yours');
             }
 
             $booking = $this->bookingService->cancelBooking($booking);
 
             return $this->successResponse(
                 new BookingResource($booking),
-                'تم إلغاء الموعد بنجاح'
+                'messages.booking.cancelled'
             );
 
         } catch (\Exception $e) {
@@ -204,7 +204,7 @@ class PatientController extends Controller
             409 => $this->conflictResponse($e->getMessage()),
             404 => $this->notFoundResponse($e->getMessage()),
             403 => $this->unauthorizedResponse($e->getMessage()),
-            default => $this->serverErrorResponse('حدث خطأ أثناء العملية', $e->getMessage())
+            default => $this->serverErrorResponse('messages.operation_error', $e->getMessage())
         };
     }
 }

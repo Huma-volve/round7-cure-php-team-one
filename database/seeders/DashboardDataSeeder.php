@@ -51,12 +51,16 @@ class DashboardDataSeeder extends Seeder
 
             $specialty = [$specialty1, $specialty2, $specialty3, $specialty4][$index % 4];
 
+            // تحديد consultation بشكل متنوع
+            $consultationTypes = ['both', 'clinic', 'home', 'both', 'clinic'];
+            
             $doctor = Doctor::firstOrCreate(
                 ['user_id' => $doctorUser->id],
                 [
                     'specialty_id' => $specialty->id,
                     'license_number' => 'DOC' . ($index + 100),
                     'clinic_address' => 'عنوان العيادة ' . ($index + 1),
+                    'consultation' => $consultationTypes[$index % count($consultationTypes)],
                     'latitude' => 24.7136 + ($index * 0.1),
                     'longitude' => 46.6753 + ($index * 0.1),
                     'session_price' => (150 + ($index * 50)),

@@ -33,8 +33,8 @@ class RescheduleBookingRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date_time.required' => 'يجب تحديد تاريخ ووقت الموعد الجديد',
-            'date_time.after' => 'لا يمكن تحديد موعد في الماضي',
+            'date_time.required' => __('validation.date_time.required'),
+            'date_time.after' => __('validation.date_time.after'),
         ];
     }
 }

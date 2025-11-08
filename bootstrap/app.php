@@ -6,6 +6,8 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Http\Request;
 use App\Http\Middleware\CheckPermission;
+use App\Http\Middleware\SetLocaleMiddleware;
+use App\Http\Middleware\VerifyApiKey;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -24,9 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'api.key' => VerifyApiKey::class,
         ]);
 
-
+        // Apply locale middleware to API routes
+        $middleware->api(prepend: [
+            SetLocaleMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {

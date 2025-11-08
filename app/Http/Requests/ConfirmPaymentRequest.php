@@ -16,4 +16,14 @@ class ConfirmPaymentRequest extends FormRequest
             'payment_id' => ['required', 'string'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'gateway.required' => __('validation.gateway.required'),
+            'gateway.in' => __('validation.gateway.in'),
+            'payment_id.required' => __('validation.payment_id.required'),
+            'payment_id.string' => __('validation.payment_id.string'),
+        ];
+    }
 }

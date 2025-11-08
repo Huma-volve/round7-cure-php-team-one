@@ -56,6 +56,7 @@ class SearchController extends Controller
 
         return response()->json([
             'data' => DoctorResource::collection($doctors)
+
         ]) ;
 
     } // end storeSearch

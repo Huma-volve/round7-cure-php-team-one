@@ -46,7 +46,7 @@ class PaymentController extends Controller
             'status' => $resp->isSuccessful() ? 'pending' : 'failed',
         ]);
 
-        return $this->createdResponse(new PaymentResource($payment), 'تم إنشاء عملية الدفع');
+        return $this->createdResponse(new PaymentResource($payment), 'messages.payment.created');
     }
 
     public function confirm(ConfirmPaymentRequest $request): JsonResponse
@@ -56,11 +56,11 @@ class PaymentController extends Controller
             'status' => $resp->getStatus(),
             'provider' => $resp->getProvider(),
             'payment_id' => $resp->getPaymentId(),
-        ], 'تم تأكيد عملية الدفع');
+        ], 'messages.payment.confirmed');
     }
 
     public function show(Payment $payment): JsonResponse
     {
-        return $this->successResponse(new PaymentResource($payment), 'تم جلب تفاصيل الدفع');
+        return $this->successResponse(new PaymentResource($payment), 'messages.payment.fetched');
     }
 }
