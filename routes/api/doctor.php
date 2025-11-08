@@ -13,22 +13,27 @@ use Illuminate\Support\Facades\Route;
 | Routes for doctor operations - requires 'doctor' role
 |
 */
-    Route::middleware(['auth:sanctum', 'role:doctor'])
-        ->get('/doctor/patients/search',
-        [DoctorController::class, 'searchDoctorPatients'])->name('doctor.patients.search');
+   Route::middleware('auth:sanctum')->prefix('doctors')->name('doctors.')->group(function () {
 
-    Route::middleware(['auth:sanctum', 'role:doctor'])
-    ->get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
+    //  كل المستخدمين يقدروا يشوفوا قائمة الدكاترة
+    Route::get('/', [DoctorController::class, 'index'])->name('index');
 
-    Route::middleware(['auth:sanctum', 'role:doctor'])
-    ->get('/doctor/patient/{patientId}',
-    [DoctorController::class, 'showPatient'])->name('patient.show');
+    //  تفاصيل دكتور معين (للمرضى فقط)
+    Route::get('/{doctor}', [DoctorController::class, 'showDoctor'])
+        ->name('show');
 
-    Route::middleware(['auth:sanctum'])
-    ->get('/doctor/earnings', [DoctorController::class , 'earnings'])->name('doctor.earnings');
+    //  الأرباح الخاصة بالدكتور (للدكتور فقط)
+    Route::middleware('role:doctor')->get('doctor/earnings', [DoctorController::class, 'earnings'])
+        ->name('earnings');
 
-    Route::middleware(['auth:sanctum', 'role:patient'])
-    ->get('/doctor/{id}', [DoctorController::class, 'showDoctor'])->name('doctor.show');
+    //  بحث داخل مرضى الدكتور (للدكتور فقط)
+    Route::middleware('role:doctor')->get('/patients/search', [DoctorController::class, 'searchPatients'])
+        ->name('patients.search');
+
+    //  عرض مريض محدد عند دكتور معين
+    Route::middleware('role:doctor')->get('/patients/{patient}', [DoctorController::class, 'showPatient'])
+        ->name('patients.show');
+});
 
 Route::middleware(['auth:sanctum', 'role:doctor'])
     ->prefix('doctor')

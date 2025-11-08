@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SearchRequest;
+use App\Http\Resources\DoctorResource;
+use App\Http\Resources\SearchResource;
 use App\Models\User;
 use App\Services\SearchService;
 use Illuminate\Http\Request;
@@ -13,13 +15,28 @@ class SearchController extends Controller
 {
     protected $searchService;
 
+
     public function __construct(SearchService $searchService )
     {
         $this->searchService = $searchService;
     }
 
+        public function index(Request $request)
+    {
 
-    public function storeSearch(SearchRequest $request)
+        $user = $request->user();
+
+        $history = $this->searchService->SearchHistory($user);
+
+         return response()->json([
+            'data' =>  SearchResource::collection($history)
+        ]) ;
+
+    } // end getSearchHistory
+
+
+
+    public function store(SearchRequest $request)
     {
 
          $search = $request->input('search_query');
@@ -32,38 +49,56 @@ class SearchController extends Controller
             $request->user()
         );
 
+
          if($search  && $doctors->isNotEmpty()){
             $this->searchService->storeSearchHistory($request->user(), $request->all());
         }
 
         return response()->json([
-            'data' => $doctors
-        ]);
+            'data' => DoctorResource::collection($doctors)
+        ]) ;
+
     } // end storeSearch
 
 
-    public function getSearchHistory(Request $request)
-    {
-        $user = $request->user();
 
-        $history = $user->getSearchHistory()->orderBy('created_at', 'desc')->get();
+    public function destroy($id){
+
+   try{
+        $deleted = $this->searchService->distorySearch($id);
+
+        if (! $deleted) {
+            return response()->json([
+                'success' => false,
+                'message' => 'السجل غير موجود',
+            ], 404);
+        }
 
         return response()->json([
-            'data' => $history
+            'success' => true,
+            'message' => 'تم حذف السجل بنجاح',
         ]);
-    } // end getSearchHistory
 
-       public function clearSearchHistory(Request $request)
+   }catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'حدث خطأ أثناء حذف السجل',
+        ], 500);
+
+    }
+
+} // End destroy
+
+       public function clear(Request $request)
     {
         $user = $request->user();
-        
-        $user->getSearchHistory()->delete();
+
+       $this->searchService->clearSearchHistory($user);
 
         return response()->json([
             'message' => 'Search history cleared successfully.'
         ]);
     } // end clearSearchHistory
-
 
 
 }

@@ -29,7 +29,15 @@ class DoctorSeeder extends Seeder
                 'latitude' => 30.0520,
                 'longitude' => 31.2370,
                 'session_price' => 400.00,
-                'availability_json' => json_encode(['day' => 'mon', 'from' => '15:00', 'to' => '20:00']),
+                        'availability_json' => [
+                'monday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'tuesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'wednesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'thursday' => ['09:00', '10:00', '11:00'],
+                'friday' => [],
+                'saturday' => ['10:00', '11:00'],
+                'sunday' => [],
+            ],
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Dermatology')->first()->id,
@@ -38,7 +46,15 @@ class DoctorSeeder extends Seeder
                 'latitude' => 30.0480,
                 'longitude' => 31.2300,
                 'session_price' => 350.00,
-                'availability_json' => json_encode(['sun' => '4-9', 'wed' => '3-7']),
+                'availability_json' =>[
+                'monday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'tuesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'wednesday' => ['09:00', '10:00'],
+                'thursday' => ['09:00', '10:00', '11:00'],
+                'friday' => [],
+                'saturday' => ['10:00', '11:00'],
+                'sunday' => [],
+            ],
             ],
             [
                 'specialty_id' => $specialties->where('name', 'Pediatrics')->first()->id,
@@ -47,14 +63,22 @@ class DoctorSeeder extends Seeder
                 'latitude' => 31.2001,
                 'longitude' => 29.9187,
                 'session_price' => 300.00,
-                'availability_json' => json_encode(['tue' => '2-6', 'thu' => '4-9']),
+                'availability_json' => [
+                'monday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'tuesday' => ['09:00', '10:00', '11:00', '14:00', '15:00'],
+                'wednesday' => [],
+                'thursday' => ['09:00', '10:00', '11:00'],
+                'friday' =>['10:00', '11:00'],
+                'saturday' => ['10:00', '1:00'],
+                'sunday' => [],
+            ],
             ],
         ];
         foreach ($users as $index => $user) {
             Doctor::create(array_merge(['user_id' => $user->id], $doctorsData[$index]));
         $user->assignRole('doctor');
         }
-        
+
 
 
     }

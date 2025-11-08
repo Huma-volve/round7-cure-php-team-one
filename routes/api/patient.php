@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware(['auth:sanctum', 'role:patient'])
     ->prefix('patient')
     ->name('patient.')
     ->controller(PatientController::class)
     ->group(function () {
-        
+
         // Bookings Management
         Route::prefix('bookings')->name('bookings.')->group(function () {
             Route::post('/', 'bookAppointment')->name('store');

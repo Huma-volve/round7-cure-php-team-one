@@ -33,20 +33,13 @@ class HomeController extends Controller
 
   try{
 
-    $request->validate([
-        'latitude' => 'required|numeric',
-        'longitude' => 'required|numeric',
-    ]);
-
     $user = Auth::user();
-
-    // dd( $user );
 
     $lat = $request->latitude  ??    $user->location_lat ?? 30.0444     ; // Cairo center
     $lng = $request->longitude ??   $user->location_lng ?? 31.2357  ;
 
     $specialties = Specialty::select('id' , 'name')->get();
-    $doctors = $this->doctorService->getNearbyDoctors($user, $lat, $lng, $request->input('search'));
+    $doctors = $this->doctorService->searchDoctorsNearby($user, $lat, $lng, $request->input('search'));
 
     $doctors->each(function($doctor) use ($user) {
         $doctor->is_favorite = $this->favoriteService->isFavorite($user, $doctor);

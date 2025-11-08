@@ -46,7 +46,18 @@ Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth:sanctum');
 Route::get('/specialties', [SpecialtyController::class, 'index'])->name('specialties.index');
 
-Route::post('/store-search-history', [SearchController::class, 'storeSearch'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')
+    ->prefix('search')
+    ->name('search.')
+    ->controller(SearchController::class)
+    ->group(function () {
+
+        Route::get('/history', 'index')->name('history');             
+        Route::post('/history', 'store')->name('store');
+        Route::delete('/history/{id}', 'destroy')->name('destroy');
+        Route::delete('/history', 'clear')->name('clear');
+    });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/favorites/toggle/{doctor}', [FavoriteController::class, 'toggleFavorite']);
@@ -141,7 +152,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/messages/{id}', [MessageController::class, 'destroy']);
 
 
-     
+
 });
 
 
