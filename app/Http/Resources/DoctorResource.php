@@ -35,7 +35,9 @@ class DoctorResource extends JsonResource
                     'email' => $this->user->email ?? null,
                     'mobile' => $this->user->mobile ?? null,
                     'profile_photo' => $this->user->profile_photo ?? null,
+                    'gender'   => $this->user->gender ?? null,
                 ];
+                
             }),
         ];
     }
