@@ -3,26 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RescheduleBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\DoctorDetailsResource;
 use App\Http\Resources\PatientDetailsResource;
-use App\Http\Resources\PatientResource;
-use App\Http\Resources\UserResource;
 use App\Models\Booking;
 use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Review;
-use App\Models\User;
 use App\Http\Resources\DoctorResource;
-use App\Http\Resources\PaymentResource;
+use App\Http\Resources\PatientResource;
 use App\Models\Doctor;
 use App\Repositories\BookingRepository;
 use App\Services\Booking\BookingService;
 use App\Services\SearchService;
 use App\Services\DoctorService;
 use App\Traits\ApiResponseTrait;
-use Google\Service\Resource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,14 +33,14 @@ class DoctorController extends Controller
         private BookingRepository $bookingRepository
     ) {}
 
-    public function  searchDoctorPatients(Request $request)
+    public function  searchPatients(Request $request)
     {
         $doctorId = $request->user()->doctor->id;
         $searchTerm = $request->input('search');
         $patients = $this->searchService->searchDoctorPatients( $doctorId, $searchTerm );
 
         return response()->json([
-            'data' => $patients,
+            'data' => PatientResource::collection($patients),
             'message' => 'تم جلب نتائج البحث بنجاح'
         ], 200) ;
 
@@ -58,7 +53,20 @@ class DoctorController extends Controller
 
     {
         $doctors = $this->doctorService->getAllDoctors();
-        return $this->successResponse($doctors, 'تم جلب قائمة الأطباء بنجاح');
+
+        if(!$doctors){
+            return response()->json([
+               'status' => false ,
+               'message' => 'Not Found Doctors '
+            ],404);
+        }
+
+        return response()->json(
+        [
+               'message' =>  'The list of doctors was successfully retrieved.',
+               'data'  => DoctorResource::collection($doctors) ,
+
+        ], 200);
     }
 
     /**
@@ -91,9 +99,9 @@ class DoctorController extends Controller
                 return $this->notFoundResponse('لم يتم العثور على بيانات الطبيب');
             }
 
-            $upcomingBookings = $this->bookingRepository->getDoctorUpcomingBookings($doctor->id);
-            $pendingBookings = $this->bookingRepository->getDoctorPendingBookings($doctor->id);
-            $stats = $this->bookingRepository->getDoctorStats($doctor->id);
+            $upcomingBookings  = $this->bookingRepository->getDoctorUpcomingBookings($doctor->id);
+            $pendingBookings   = $this->bookingRepository->getDoctorPendingBookings($doctor->id);
+            $stats             = $this->bookingRepository->getDoctorStats($doctor->id);
 
             $totalBookings = Booking::where('doctor_id', $doctor)->count();
             $totalEarnings = Payment::whereHas('booking', fn($q) => $q->where('doctor_id', $doctor))
@@ -123,17 +131,8 @@ class DoctorController extends Controller
     public function showPatient($patientId)
     {
     try{
-        $doctorId = Auth::user()->doctor->id;
 
-        $patient = Patient::with([
-            'user:id,name,mobile,birthdate',
-            'bookings' => function($q) use ($doctorId) {
-                $q->where('doctor_id', $doctorId)
-                ->with('payment', 'review');
-            }
-        ])->whereHas('bookings', function($q) use ($doctorId) {
-            $q->where('doctor_id', $doctorId);
-        })->find($patientId);
+         $patient = $this->doctorService->showPatient($patientId);
 
         if(!$patient){
             return  $this->notFoundResponse('لم يتم العثور على بيانات المريض');
@@ -143,20 +142,18 @@ class DoctorController extends Controller
             new PatientDetailsResource($patient)
         ]);
 
-    }catch(\Exception $e){
+    }
+    catch(\Exception $e){
     return   $this->handleException($e);
     }
 }
                      // عرض ارباح الطبيب
         public function earnings()
             {
+
             try{
-            $doctorId = Auth::user()->doctor ;
-            $totalEarnings = Booking::where('doctor_id', $doctorId)
-                ->where('status', 'confirmed')
-                ->with('payment')
-                ->get()
-                ->sum(fn($booking) => $booking->payment->amount ?? 0);
+
+            $totalEarnings = $this->doctorService->earnings();
 
             return response()->json([
                 'total_earnings' => $totalEarnings,
