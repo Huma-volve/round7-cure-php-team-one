@@ -17,7 +17,7 @@ class Patient extends Model
 
     protected $guard_name = 'api';
 
-    protected $fillable = ['medical_notes', 'user_id','gender','birthdate'];
+    protected $fillable = ['medical_notes', 'user_id','birthdate'];
 
     protected $casts = [
         'birthdate' => 'date',
