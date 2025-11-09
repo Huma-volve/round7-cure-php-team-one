@@ -26,7 +26,6 @@ class DoctorService
 
     public function getAllDoctors()
     {
-
         $doctors = Doctor::with('user', 'specialty')->paginate(6);
         //paginate  or get  9 in productoin
 
@@ -83,7 +82,7 @@ class DoctorService
     public function earnings()
     {
         $doctorId = Auth::user()->doctor->id;
-        
+
         $totalEarnings = Booking::where('doctor_id', $doctorId)
             ->where('status', 'confirmed')
             ->with('payment')

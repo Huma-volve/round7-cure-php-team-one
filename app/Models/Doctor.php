@@ -28,7 +28,7 @@ class Doctor extends Model
 
    protected $appends = ['average_rating', 'reviews_count' ];
    protected $hidden = [ 'created_at', 'updated_at'];
-   protected $dates = ['deleted_at']; 
+   protected $dates = ['deleted_at'];
 
     protected $casts = [
         'availability_json' => 'array',
@@ -42,7 +42,7 @@ class Doctor extends Model
         return [
             'id' => $this->id,
             'name' => $this->user->name,
-            'specialty' => $this->specialty->name,
+            'specialty_id' => $this->specialty->name,
             'clinic_address' => $this->clinic_address,
             'consultation'   =>  $this->consultation,
         ];

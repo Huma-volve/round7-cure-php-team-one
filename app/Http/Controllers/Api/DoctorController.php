@@ -21,6 +21,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Comment\Doc;
 
 class DoctorController extends Controller
 {
@@ -49,7 +50,7 @@ class DoctorController extends Controller
     /**
      * عرض قائمة الأطباء
      */
-    public function index(): JsonResponse
+    public function index()
 
     {
         $doctors = $this->doctorService->getAllDoctors();
@@ -61,12 +62,15 @@ class DoctorController extends Controller
             ],404);
         }
 
-        return response()->json(
-        [
-               'message' =>  'The list of doctors was successfully retrieved.',
-               'data'  => DoctorResource::collection($doctors) ,
+     return response()->json([
+        
+    'status' => true,
+    'message' => 'The list of doctors was successfully retrieved.',
+    'data' => DoctorResource::collection($doctors)->response()->getData(true)['data'],
+    'meta' => DoctorResource::collection($doctors)->response()->getData(true)['meta'] ?? null,
+    'links' => DoctorResource::collection($doctors)->response()->getData(true)['links'] ?? null,
+    ]);
 
-        ], 200);
     }
 
     /**
