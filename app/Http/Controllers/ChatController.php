@@ -340,28 +340,30 @@ class ChatController extends Controller
 
 
 
-    public function destroy($id)
-    {
-        $user = auth()->user();
+public function destroy($id)
+{
+    $user = auth()->user();
 
-        $chat = Chat::where('id', $id)
-            ->where(function ($q) use ($user) {
-                $q->where('user_one_id', $user->id)
-                    ->orWhere('user_two_id', $user->id);
-            })
-            ->firstOrFail();
+    $chat = Chat::where('id', $id)
+        ->where(function ($q) use ($user) {
+            $q->where('user_one_id', $user->id)
+                ->orWhere('user_two_id', $user->id);
+        })
+        ->firstOrFail();
 
-        // soft delete messages
-        $chat->messages()->delete();
+    // حذف الرسائل نهائيًا
+    $chat->messages()->forceDelete();
 
-        // soft delete chat_user_meta
-        $chat->meta()->delete();
+    // حذف الميتا نهائيًا
+    $chat->meta()->forceDelete();
 
-        // soft delete chat itself
-        $chat->delete();
+    // حذف الشات نفسه نهائيًا
+    $chat->forceDelete();
 
-        return response()->json([
-            'message' => 'Chat deleted successfully'
-        ]);
-    }
+    return response()->json([
+        'message' => 'Chat deleted permanently'
+    ]);
+}
+
+
 }

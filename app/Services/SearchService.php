@@ -67,12 +67,26 @@ class SearchService {
       }
     }
 
-  public function getSearchHistory(User $user){
+  public function SearchHistory(User $user){
 
-        return SearchHistory::where('user_id', $user->id)
+        return SearchHistory::with('user')->where('user_id', $user->id)
             ->orderBy('searched_at', 'desc')
             ->get();
     } // end getSearchHistory
+
+  public function  distorySearch($id){
+
+      $history =  SearchHistory::find($id);
+
+      if(!$history){
+        return false ;
+      }
+
+         $history->delete();
+        return true;
+  }
+
+
 
   public function clearSearchHistory(User $user){
 
@@ -80,27 +94,46 @@ class SearchService {
     } // end clearSearchHistory
 
 
-    public function searchDoctorPatients( $doctorId, $searchTerm = null){
 
-     $query = Patient::whereHas('bookings', function ($q) use ($doctorId) {
+
+
+
+
+
+
+
+
+
+     /*/
+                      يبحث الدكتور على المرضى خاصتة
+     */
+public function searchDoctorPatients($doctorId, $searchTerm = null)
+{
+    $query = Patient::whereHas('bookings', function ($q) use ($doctorId) {
             $q->where('doctor_id', $doctorId);
-        })->with(['user', 'bookings' => function ($q) use ($doctorId) {
-            $q->where('doctor_id', $doctorId);
-        }]);
+        })
+        ->with([
+            'user',
+            'bookings' => function ($q) use ($doctorId) {
+                $q->where('doctor_id', $doctorId);
+            }
+        ]);
 
 
-        if (!empty($searchTerm)) {
-            $query->whereHas('user', function ($q) use ($searchTerm) {
-                 $q->where('name', 'like', "%{$searchTerm}%")
-                ->orWhere('mobile', 'like', "%{$searchTerm}%");
-            });
+    if (!empty($searchTerm)) {
+        $userIds = User::search($searchTerm)->get()->pluck('id');
+
+        if ($userIds->isNotEmpty()) {
+            $query->whereIn('user_id', $userIds);
+        } else {
+
+            return collect();
         }
+    }
 
-       $patients = $query->distinct()->take(10)->get();
 
-       return $patients;
-
-    } //end searchDoctorPatients
+    return $query->distinct()->take(6)->get();
+}
 
 
 

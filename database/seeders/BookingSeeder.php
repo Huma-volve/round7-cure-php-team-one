@@ -77,6 +77,7 @@ class BookingSeeder extends Seeder
                 'saturday' => ['10:00', '11:00', '12:00'],
                 'sunday' => [],
             ],
+            'status' => 'active',
         ]);
 
         // إنشاء مريض تجريبي
@@ -85,6 +86,7 @@ class BookingSeeder extends Seeder
             'email' => 'patient@example.com',
             'mobile' => '0553333333',
             'password' => Hash::make('password'),
+            'gender' => 'male',
         ]);
         $patientUser->assignRole('patient');
 
@@ -100,6 +102,7 @@ class BookingSeeder extends Seeder
             'email' => 'patient2@example.com',
             'mobile' => '0554444444',
             'password' => Hash::make('password'),
+            'gender' => 'female',
         ]);
         $patientUser2->assignRole('patient');
 

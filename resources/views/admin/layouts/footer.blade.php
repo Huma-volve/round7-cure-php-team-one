@@ -43,7 +43,7 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('asset/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>    
+    <script src="{{ asset('asset/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- Core plugin JavaScript-->
     <script src="{{ asset('asset/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <!-- Custom scripts for all pages-->
@@ -51,7 +51,8 @@
     <!-- Page level plugins -->
     <script src="{{ asset('asset/vendor/chart.js/Chart.min.js') }}"></script>
     <!-- Page level custom scripts - Removed demo scripts as we use custom charts in dashboard -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     @stack('scripts')
 
 </body>

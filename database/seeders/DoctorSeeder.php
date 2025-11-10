@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DoctorSeeder extends Seeder
 {
@@ -17,47 +18,20 @@ class DoctorSeeder extends Seeder
     public function run(): void
     {
 
- $users = User::where('id', '!=', 1)->take(3)->get();
- $specialties = Specialty::all();
+     $doctorRole = Role::firstOrCreate(['name' => 'doctor']);
 
 
-        $doctorsData = [
-            [
-                'specialty_id' => $specialties->where('name', 'Cardiology')->first()->id,
-                'license_number' => 'LIC-001',
-                'clinic_address' => 'Nasr City, Cairo',
-                'latitude' => 30.0520,
-                'longitude' => 31.2370,
-                'session_price' => 400.00,
-                'availability_json' => json_encode(['day' => 'mon', 'from' => '15:00', 'to' => '20:00']),
-                'consultation' => 'both',
-            ],
-            [
-                'specialty_id' => $specialties->where('name', 'Dermatology')->first()->id,
-                'license_number' => 'LIC-002',
-                'clinic_address' => 'Heliopolis, Cairo',
-                'latitude' => 30.0480,
-                'longitude' => 31.2300,
-                'session_price' => 350.00,
-                'availability_json' => json_encode(['sun' => '4-9', 'wed' => '3-7']),
-                'consultation' => 'clinic',
-            ],
-            [
-                'specialty_id' => $specialties->where('name', 'Pediatrics')->first()->id,
-                'license_number' => 'LIC-003',
-                'clinic_address' => 'Maadi, Alex',
-                'latitude' => 31.2001,
-                'longitude' => 29.9187,
-                'session_price' => 300.00,
-                'availability_json' => json_encode(['tue' => '2-6', 'thu' => '4-9']),
-                'consultation' => 'home',
-            ],
-        ];
-        foreach ($users as $index => $user) {
-            Doctor::create(array_merge(['user_id' => $user->id], $doctorsData[$index]));
-        $user->assignRole('doctor');
-        }
-        
+
+       User::factory()
+            ->count(10)
+            ->create()
+            ->each(function ($user) use ($doctorRole) {
+                $user->assignRole($doctorRole);
+
+                Doctor::factory()->create([
+                    'user_id' => $user->id,
+                ]);
+            });
 
 
     }
