@@ -38,48 +38,19 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion   " id="accordionSidebar">
+        @php($isArabic = app()->getLocale() === 'ar')
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion {{ $isArabic ? 'rtl-sidebar' : '' }}" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">SB Admin {{app()->getlocale()}}<sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        @if(app()->getLocale() == 'ar')
-            <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" class="me-2 rounded">
-            العربية
-        @else
-            <img src="https://flagcdn.com/w20/us.png" alt="English" class="me-2 rounded">
-            English
-        @endif
-    </a>
-
-    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3" aria-labelledby="languageDropdown">
-        <li>
-            <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'ar' ? 'active fw-bold' : '' }}"
-               href="{{ route('change.language', 'ar') }}">
-                <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" class="me-2 rounded">
-                العربية
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'en' ? 'active fw-bold' : '' }}"
-               href="{{ route('change.language', 'en') }}">
-                <img src="https://flagcdn.com/w20/us.png" alt="English" class="me-2 rounded">
-                English
-            </a>
-        </li>
-    </ul>
-</li>
-
-
         <li class="nav-item active  ms-auto">
         <a class="nav-link" href="{{ route('admin.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
@@ -154,8 +125,7 @@
         </a>
         <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">{{ __('sidebar.Settings Screens:') }}</h6>
-            </div>
+            <h6 class="collapse-header">{{ __('sidebar.Settings Screens:') }}</h6>            </div>
         </div>
     </li>
 
@@ -164,3 +134,29 @@
     </div>
 
         </ul>
+
+@if($isArabic)
+    <style>
+        #accordionSidebar.rtl-sidebar .nav-link {
+            direction: rtl;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        #accordionSidebar.rtl-sidebar .nav-link i {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        #accordionSidebar.rtl-sidebar .nav-link span {
+            text-align: right;
+        }
+
+        #accordionSidebar.rtl-sidebar .sidebar-heading {
+            text-align: right;
+        }
+    </style>
+@endif

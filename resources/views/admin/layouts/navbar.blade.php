@@ -1,4 +1,4 @@
-     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow {{ app()->getLocale()=='ar' ? 'rtl-navbar' : '' }}">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -29,6 +29,37 @@
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+                        </li>
+
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            @php
+                                $currentLocale = app()->getLocale();
+                                $currentLanguage = $currentLocale === 'ar' ? 'العربية' : 'English';
+                                $currentFlag = $currentLocale === 'ar'
+                                    ? 'https://flagcdn.com/w20/sa.png'
+                                    : 'https://flagcdn.com/w20/us.png';
+                                $currentShort = strtoupper($currentLocale);
+                            @endphp
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="languageDropdown"
+                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="{{ $currentFlag }}" alt="{{ $currentLanguage }}" class="rounded" width="20" height="20">
+                                <span class="text-gray-600 small d-none d-sm-inline">{{ $currentLanguage }}</span>
+                                <span class="text-gray-600 small d-inline d-sm-none">{{ $currentShort }}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="languageDropdown">
+                                <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'ar' ? 'active font-weight-bold' : '' }}"
+                                   href="{{ route('change.language', 'ar') }}">
+                                    <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" class="mr-2 rounded" width="20" height="20">
+                                    <span class="ms-1">العربية</span>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'en' ? 'active font-weight-bold' : '' }}"
+                                   href="{{ route('change.language', 'en') }}">
+                                    <img src="https://flagcdn.com/w20/us.png" alt="English" class="mr-2 rounded" width="20" height="20">
+                                    <span class="ms-1">English</span>
+                                </a>
                             </div>
                         </li>
 
@@ -132,3 +163,27 @@
                     </ul>
 
                 </nav>
+@if(app()->getLocale()=='ar')
+<style>
+    /* Make topbar friendly for RTL */
+    .rtl-navbar { direction: rtl; }
+    .rtl-navbar .navbar-nav.ml-auto {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+    .rtl-navbar .dropdown-menu {
+        text-align: right;
+        direction: rtl;
+        right: auto;
+        left: 0; /* keep it attached visually to the trigger in RTL */
+    }
+    .rtl-navbar .dropdown-item .mr-2 {
+        margin-right: 0 !important;
+        margin-left: .5rem !important;
+    }
+    .rtl-navbar #userDropdown .mr-2 {
+        margin-right: 0 !important;
+        margin-left: .5rem !important;
+    }
+</style>
+@endif
