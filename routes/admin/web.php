@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\NotificationController;
 
 
 /*
@@ -80,9 +82,20 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::put('/patients/{id}', [PatientController::class, 'update'])->name('patients.update');
         Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
- // Settings
+        // Settings
+        Route::get('settings' , [SettingsController::class , 'index'])->name('settings.index');
+        Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
 
-            Route::get('settings' , [SettingsController::class , 'index'])->name('settings.index');
-            Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+        // Account (Profile, Settings, Activity Log)
+        Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
+        Route::post('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
+        Route::get('/account/settings', [AccountController::class, 'settings'])->name('account.settings');
+        Route::put('/account/settings/password', [AccountController::class, 'updatePassword'])->name('account.settings.password');
+        Route::put('/account/settings/language', [AccountController::class, 'updateLanguage'])->name('account.settings.language');
+        Route::get('/account/activity-log', [AccountController::class, 'activityLog'])->name('account.activity-log');
+
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
     });
 

@@ -40,6 +40,8 @@ class User extends Authenticatable
         'birthdate',
         'gender',
         'profile_photo',
+        'profile_image_path',
+        'preferred_locale',
         'location_lat',
         'location_lng',
         'email_otp',
@@ -89,6 +91,7 @@ public function favorites()
             'email_otp_expires_at' => 'datetime',
             'password' => 'hashed',
             'birthdate' => 'date',
+            'preferred_locale' => 'string',
 
         ];
     }
