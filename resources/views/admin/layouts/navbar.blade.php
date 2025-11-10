@@ -1,26 +1,9 @@
-     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow {{ app()->getLocale()=='ar' ? 'rtl-navbar' : '' }}">
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
-                    <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
-
-
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -49,13 +32,44 @@
                             </div>
                         </li>
 
+                        <!-- Language Dropdown -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            @php
+                                $currentLocale = app()->getLocale();
+                                $currentLanguage = $currentLocale === 'ar' ? 'العربية' : 'English';
+                                $currentFlag = $currentLocale === 'ar'
+                                    ? 'https://flagcdn.com/w20/sa.png'
+                                    : 'https://flagcdn.com/w20/us.png';
+                                $currentShort = strtoupper($currentLocale);
+                            @endphp
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="languageDropdown"
+                               role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="{{ $currentFlag }}" alt="{{ $currentLanguage }}" class="rounded" width="20" height="20">
+                                <span class="text-gray-600 small d-none d-sm-inline">{{ $currentLanguage }}</span>
+                                <span class="text-gray-600 small d-inline d-sm-none">{{ $currentShort }}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="languageDropdown">
+                                <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'ar' ? 'active font-weight-bold' : '' }}"
+                                   href="{{ route('change.language', 'ar') }}">
+                                    <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" class="mr-2 rounded" width="20" height="20">
+                                    <span class="ms-1">العربية</span>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'en' ? 'active font-weight-bold' : '' }}"
+                                   href="{{ route('change.language', 'en') }}">
+                                    <img src="https://flagcdn.com/w20/us.png" alt="English" class="mr-2 rounded" width="20" height="20">
+                                    <span class="ms-1">English</span>
+                                </a>
+                            </div>
+                        </li>
+
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{ $unreadCount ?? 0  }}+</span>
+                                <span class="badge badge-danger badge-counter">{{ $unreadCount ?? 0 }}</span>
                             </a>
                             <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -81,7 +95,7 @@
                                 <a class="dropdown-item text-center small text-gray-500">No notifications found</a>
                             @endforelse
 
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                <a class="dropdown-item text-center small text-gray-500" href="{{ route('admin.notifications.index') }}">Show All Alerts</a>
                             </div>
                         </li>
 
@@ -90,61 +104,26 @@
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
-                                <span class="badge badge-danger badge-counter">7</span>
+                                <!-- Counter - Tickets -->
+                                <span class="badge badge-danger badge-counter">{{ $ticketsCount ?? 0 }}</span>
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
-                                    Message Center
+                                    Tickets Center
                                 </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.tickets.index') }}">
                                     <div class="dropdown-list-image mr-3">
                                         <div class="status-indicator bg-success"></div>
                                         <i class="fas fa-user-circle fa-2x text-gray-300"></i>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
+                                        <div class="text-truncate">You have {{ $ticketsCount ?? 0 }} open/pending tickets.</div>
+                                        <div class="small text-gray-500">Go to tickets to view details</div>
                                     </div>
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <div class="status-indicator"></div>
-                                        <i class="fas fa-user-circle fa-2x text-gray-300"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <div class="status-indicator bg-warning"></div>
-                                        <i class="fas fa-user-circle fa-2x text-gray-300"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                                <a class="dropdown-item text-center small text-gray-500" href="{{ route('admin.tickets.index') }}">Read More Messages</a>
                             </div>
                         </li>
 
@@ -156,21 +135,20 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="{{ $avatarUrl ?? asset('img/undraw_profile.svg') }}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('admin.account.profile') }}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('admin.account.settings') }}">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('admin.account.activity-log') }}">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Activity Log
                                 </a>
@@ -185,3 +163,27 @@
                     </ul>
 
                 </nav>
+@if(app()->getLocale()=='ar')
+<style>
+    /* Make topbar friendly for RTL */
+    .rtl-navbar { direction: rtl; }
+    .rtl-navbar .navbar-nav.ml-auto {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+    .rtl-navbar .dropdown-menu {
+        text-align: right;
+        direction: rtl;
+        right: auto;
+        left: 0; /* keep it attached visually to the trigger in RTL */
+    }
+    .rtl-navbar .dropdown-item .mr-2 {
+        margin-right: 0 !important;
+        margin-left: .5rem !important;
+    }
+    .rtl-navbar #userDropdown .mr-2 {
+        margin-right: 0 !important;
+        margin-left: .5rem !important;
+    }
+</style>
+@endif

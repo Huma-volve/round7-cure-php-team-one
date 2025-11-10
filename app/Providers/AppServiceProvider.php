@@ -3,11 +3,15 @@
 namespace App\Providers;
 
 use App\Models\Booking;
+use App\Models\Notification;
+use App\Models\Ticket;
 use App\Models\Review;
 use App\Observers\BookingObserver;
 use App\Observers\ReviewObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Stripe\StripeClient;
 
@@ -49,5 +53,33 @@ class AppServiceProvider extends ServiceProvider
         Booking::observe(BookingObserver::class);
         Review::observe(ReviewObserver::class);
 
+        // Share navbar data for admin layout
+        View::composer('admin.layouts.navbar', function ($view) {
+            $user = Auth::user();
+            $unreadCount = 0;
+            $notifications = collect();
+            $ticketsCount = 0;
+            $avatarUrl = null;
+
+            if ($user) {
+                $unreadCount = Notification::where('user_id', $user->id)
+                    ->where('is_read', false)
+                    ->count();
+
+                $notifications = Notification::where('user_id', $user->id)
+                    ->latest()
+                    ->limit(5)
+                    ->get();
+
+                // Count open or pending tickets
+                $ticketsCount = Ticket::whereIn('status', ['open', 'pending'])->count();
+
+                $avatarUrl = $user->profile_image_path
+                    ? asset('storage/' . $user->profile_image_path)
+                    : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=0D8ABC&color=fff';
+            }
+
+            $view->with(compact('unreadCount', 'notifications', 'ticketsCount', 'avatarUrl'));
+        });
     }
 }
