@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\DoctorResource;
 use App\Models\Doctor;
 use App\Models\User;
 use App\Services\FavoriteService;
@@ -47,9 +48,7 @@ class FavoriteController extends Controller
         }
 
         return ApiResponse::success([
-            'favorites' => $favorites
-
-
+            'favorites' => DoctorResource::collection($favorites)
         ]);
 
         }catch (\Exception $e){
