@@ -17,6 +17,7 @@ The Doctor Appointment System is a full-stack healthcare platform that enables p
 - Search for doctors by specialty or location (Google Maps API)
 - Manage favorite doctors (Add/Remove)
 - Book appointments with multiple payment methods (PayPal / Stripe / Cash)
+- Save and manage payment methods (tokenized cards & wallets) for faster checkout
 - View upcoming and past bookings
 - Write reviews after sessions
 - Real-time chat with doctors (Laravel WebSocket)
@@ -44,6 +45,7 @@ The Doctor Appointment System is a full-stack healthcare platform that enables p
 - Manage FAQs and Policies content
 - Real-time notifications and alerts
 - Flexible permissions using Spatie Laravel Permission (Roles: Admin, Doctor, Patient)
+- Review patient payment methods, set defaults, and restore deleted tokens
 - **Server maintenance endpoints** with API key protection
 - **Multi-language support** (Arabic / English) for all API responses
 
@@ -78,6 +80,7 @@ The Doctor Appointment System is a full-stack healthcare platform that enables p
 | **Patients Management** | Manage patient profiles and booking history |
 | **Bookings** | Create, cancel, and reschedule appointments |
 | **Payments** | Process payments via PayPal or Stripe |
+| **Payment Methods** | Tokenized storage and management of patient payment methods |
 | **Reviews** | Write reviews after sessions |
 | **Chat** | Real-time messaging between doctor and patient |
 | **Notifications** | Notifications for bookings and updates |
@@ -119,6 +122,7 @@ The Doctor Appointment System is a full-stack healthcare platform that enables p
 - **doctors**: Doctor profiles with specialty, license, and pricing
 - **patients**: Patient medical information
 - **bookings**: Appointment bookings
+- **payment_methods**: Tokenized payment methods linked to users (no PAN/CVV stored)
 - **payments**: Payment transactions
 - **reviews**: Patient reviews and ratings
 - **chats**: Real-time messaging
@@ -127,6 +131,19 @@ The Doctor Appointment System is a full-stack healthcare platform that enables p
 - **faqs**: Frequently asked questions
 - **policies**: System policies
 - **system_logs**: System event logging
+
+---
+
+## 💳 Patient Payment Methods
+
+- Payment methods are tokenized and stored in the `payment_methods` table (only gateway tokens, last4, brand, and expiry metadata).
+- Patient API endpoints:
+  - `GET /api/patient/payment-methods` — list saved methods
+  - `POST /api/patient/payment-methods` — add a new method via gateway token
+  - `PUT /api/patient/payment-methods/{id}/default` — set a default method
+  - `DELETE /api/patient/payment-methods/{id}` — soft delete and auto-promote the next default
+- Admin dashboard provides a per-patient view to review, soft delete, restore, or set default payment methods.
+- All actions are logged through Spatie Activity Log for full traceability.
 
 ---
 

@@ -29,6 +29,15 @@ return [
     'patient.not_found' => 'Patient data not found',
     'doctor.not_found' => 'Doctor not found',
 
+    // Payment method
+    'payment_method.list' => 'Payment methods fetched successfully',
+    'payment_method.created' => 'Payment method added successfully',
+    'payment_method.deleted' => 'Payment method removed successfully',
+    'payment_method.set_default' => 'Payment method set as default',
+    'payment_method.cannot_set_default_deleted' => 'Cannot set a deleted payment method as default.',
+    'payment_method.restored' => 'Payment method restored successfully',
+    'payment_method.expiry_required' => 'Expiry month and year are required for card payments.',
+
     // Common messages
     'success' => 'Operation completed successfully',
     'error' => 'An error occurred',
