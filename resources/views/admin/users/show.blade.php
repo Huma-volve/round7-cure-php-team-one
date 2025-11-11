@@ -6,6 +6,9 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">تفاصيل المستخدم</h1>
         <div>
+            <a href="{{ route('admin.users.payment-methods.index', $user->id) }}" class="btn btn-info mr-2">
+                <i class="fas fa-credit-card"></i> طرق الدفع
+            </a>
             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> تعديل
             </a>

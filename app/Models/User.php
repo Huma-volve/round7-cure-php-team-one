@@ -135,6 +135,11 @@ public function favorites()
         return $this->hasMany(Chat::class, 'patient_id');
     }
 
+    public function paymentMethods(): HasMany
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
 
 
     // ✅ لو المستخدم طرف أول في الشات
