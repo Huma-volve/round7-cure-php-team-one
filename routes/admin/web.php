@@ -83,7 +83,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::delete('/patients/{id}', [PatientController::class, 'destroy'])->name('patients.destroy');
 
         // Settings
-        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::get('/settings', action: [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
         // Account (Profile, Settings, Activity Log)

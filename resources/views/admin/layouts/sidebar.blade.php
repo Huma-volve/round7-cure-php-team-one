@@ -125,7 +125,7 @@
         </a>
         <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">{{ __('sidebar.Settings Screens:') }}</h6>            </div>
+            <h6 class="collapse-header">Test</h6>            </div>
         </div>
     </li>
 
