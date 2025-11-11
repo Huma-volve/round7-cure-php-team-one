@@ -57,6 +57,8 @@ class HomeController extends Controller
                 'consultation'   => $doctor->consultation ?? 'clinic',
                 'is_favorite'    => $doctor->is_favorite,
                 'image'          => $doctor->user->profile_photo,
+                'latitude'       => $doctor->latitude,
+                'longitude'      => $doctor->longitude,
                 'distance_km'    => round($doctor->distance, 2),
         ];
     });
