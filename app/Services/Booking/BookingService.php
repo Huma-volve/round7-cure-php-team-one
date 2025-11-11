@@ -69,6 +69,9 @@ class BookingService
             return; // إذا لم يحدد توفر، نقبل أي موعد
         }
 
+        // تحويل البنية القديمة إلى البنية الجديدة (array من الأوقات)
+        $availability = $this->normalizeAvailabilityStructure($availability);
+
         $slotDateTime = Carbon::parse($dateTime);
         $dayOfWeek = strtolower($slotDateTime->format('l'));
         $time = $slotDateTime->format('H:i');
@@ -182,6 +185,9 @@ class BookingService
             return [];
         }
         
+        // تحويل البنية القديمة إلى البنية الجديدة (array من الأوقات)
+        $availability = $this->normalizeAvailabilityStructure($availability);
+        
         $today = Carbon::now();
         
         // جلب جميع الحجوزات للطبيب في المدى الزمني المحدد (استعلام واحد فقط)
@@ -231,6 +237,136 @@ class BookingService
         }
         
         return $slots;
+    }
+
+    /**
+     * تحويل البنية القديمة للـ availability إلى البنية الجديدة
+     * 
+     * @param mixed $availability
+     * @return array
+     */
+    private function normalizeAvailabilityStructure($availability): array
+    {
+        // إذا كانت البيانات null أو فارغة
+        if (empty($availability)) {
+            return [];
+        }
+        
+        // إذا كانت البيانات string (JSON)، قم بتحويلها إلى array
+        if (is_string($availability)) {
+            $decoded = json_decode($availability, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $availability = $decoded;
+            } else {
+                return [];
+            }
+        }
+        
+        // التأكد من أن البيانات array
+        if (!is_array($availability)) {
+            return [];
+        }
+        
+        // إذا كانت البيانات object واحد به day, from, to (البنية القديمة)
+        if (isset($availability['day']) && isset($availability['from']) && isset($availability['to'])) {
+            $dayMap = [
+                'mon' => 'monday',
+                'tue' => 'tuesday',
+                'wed' => 'wednesday',
+                'thu' => 'thursday',
+                'fri' => 'friday',
+                'sat' => 'saturday',
+                'sun' => 'sunday',
+            ];
+            
+            $dayName = $dayMap[strtolower($availability['day'])] ?? strtolower($availability['day']);
+            
+            // توليد الأوقات من from إلى to
+            $from = Carbon::parse($availability['from']);
+            $to = Carbon::parse($availability['to']);
+            $times = [];
+            
+            while ($from->lte($to)) {
+                $times[] = $from->format('H:i');
+                $from->addHour();
+            }
+            
+            return [$dayName => $times];
+        }
+        
+        // إذا كانت البيانات array من objects (البنية القديمة)
+        if (isset($availability[0]) && is_array($availability[0]) && isset($availability[0]['day'])) {
+            $dayMap = [
+                'mon' => 'monday',
+                'tue' => 'tuesday',
+                'wed' => 'wednesday',
+                'thu' => 'thursday',
+                'fri' => 'friday',
+                'sat' => 'saturday',
+                'sun' => 'sunday',
+            ];
+            
+            $normalized = [];
+            
+            foreach ($availability as $item) {
+                if (is_array($item) && isset($item['day']) && isset($item['from']) && isset($item['to'])) {
+                    $dayName = $dayMap[strtolower($item['day'])] ?? strtolower($item['day']);
+                    
+                    // توليد الأوقات من from إلى to
+                    $from = Carbon::parse($item['from']);
+                    $to = Carbon::parse($item['to']);
+                    $times = [];
+                    
+                    while ($from->lte($to)) {
+                        $times[] = $from->format('H:i');
+                        $from->addHour();
+                    }
+                    
+                    if (!isset($normalized[$dayName])) {
+                        $normalized[$dayName] = [];
+                    }
+                    
+                    $normalized[$dayName] = array_unique(array_merge($normalized[$dayName], $times));
+                }
+            }
+            
+            return $normalized;
+        }
+        
+        // إذا كانت البيانات بالبنية الجديدة (monday, tuesday, etc.)
+        // لكن القيم objects بدلاً من arrays (مثل {"monday": {"09:00": "17:00"}})
+        $normalized = [];
+        foreach ($availability as $dayName => $times) {
+            // إذا كانت القيمة object (مثل {"09:00": "17:00"})
+            // حيث المفتاح هو وقت البداية والقيمة هي وقت النهاية
+            if (is_array($times) && !isset($times[0]) && !empty($times)) {
+                // تحويل من {"09:00": "17:00"} إلى ["09:00", "10:00", ..., "17:00"]
+                $keys = array_keys($times);
+                if (count($keys) >= 1) {
+                    $fromTime = $keys[0]; // وقت البداية (المفتاح)
+                    $toTime = $times[$keys[0]]; // وقت النهاية (القيمة)
+                    
+                    $from = Carbon::parse($fromTime);
+                    $to = Carbon::parse($toTime);
+                    $timesArray = [];
+                    
+                    while ($from->lte($to)) {
+                        $timesArray[] = $from->format('H:i');
+                        $from->addHour();
+                    }
+                    
+                    $normalized[$dayName] = $timesArray;
+                } else {
+                    $normalized[$dayName] = [];
+                }
+            } 
+            // إذا كانت القيمة array بالفعل (مثل ["09:00", "10:00"])
+            elseif (is_array($times)) {
+                $normalized[$dayName] = $times;
+            }
+        }
+        
+        return $normalized;
     }
 }
 
