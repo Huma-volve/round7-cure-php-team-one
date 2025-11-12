@@ -32,10 +32,49 @@ class BookingController extends Controller
         return view('admin.bookings.index', compact('bookings'));
     }
 
-    public function show(int $id): View
+    public function show(Request $request, int $id): View
     {
         $booking = Booking::with(['doctor.user', 'patient.user', 'payment', 'disputes'])->findOrFail($id);
-        return view('admin.bookings.show', compact('booking'));
+        
+        // Get previous URL and determine the best back URL
+        $backUrl = $this->getBackUrl($request, $booking);
+        
+        return view('admin.bookings.show', compact('booking', 'backUrl'));
+    }
+    
+    /**
+     * Determine the best URL to return to based on previous page
+     */
+    private function getBackUrl(Request $request, Booking $booking): string
+    {
+        $previousUrl = url()->previous();
+        $currentUrl = url()->current();
+        
+        // If previous URL is the same as current, use fallback
+        if (!$previousUrl || $previousUrl === $currentUrl) {
+            return route('admin.bookings.index');
+        }
+        
+        // Check if previous URL is a doctor or patient details page
+        $previousPath = parse_url($previousUrl, PHP_URL_PATH);
+        
+        // If coming from doctor details page
+        if (preg_match('#/admin/doctors/(\d+)#', $previousPath, $matches)) {
+            return route('admin.doctors.show', $matches[1]);
+        }
+        
+        // If coming from patient details page
+        if (preg_match('#/admin/patients/(\d+)#', $previousPath, $matches)) {
+            return route('admin.patients.show', $matches[1]);
+        }
+        
+        // If previous URL is from admin panel, use it
+        if (str_contains($previousPath, '/admin/')) {
+            return $previousUrl;
+        }
+        
+        // Default fallback
+        return route('admin.bookings.index');
     }
 
     public function edit(int $id): View

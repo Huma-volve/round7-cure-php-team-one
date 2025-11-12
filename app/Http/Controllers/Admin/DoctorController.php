@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ArabicSearchHelper;
 use App\Http\Requests\Admin\StoreDoctorRequest;
 use App\Http\Requests\Admin\UpdateDoctorRequest;
 use App\Models\Doctor;
@@ -29,11 +30,17 @@ class DoctorController extends Controller
 
         if ($request->filled('q')) {
             $q = $request->string('q');
-            $query->whereHas('user', function ($w) use ($q) {
+            $normalizedQ = ArabicSearchHelper::normalizeArabicText($q);
+            
+            $query->whereHas('user', function ($w) use ($q, $normalizedQ) {
                 $w->withTrashed()
-                    ->where(function ($sub) use ($q) {
+                    ->where(function ($sub) use ($q, $normalizedQ) {
+                        // Search with original text
                         $sub->where('name', 'like', "%{$q}%")
-                            ->orWhere('email', 'like', "%{$q}%");
+                            ->orWhere('email', 'like', "%{$q}%")
+                            // Search with normalized text (handles Arabic character variations)
+                            ->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(name, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), 'ة', 'ه') LIKE ?", ["%{$normalizedQ}%"])
+                            ->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(email, 'أ', 'ا'), 'إ', 'ا'), 'آ', 'ا'), 'ة', 'ه') LIKE ?", ["%{$normalizedQ}%"]);
                     });
             });
         }
