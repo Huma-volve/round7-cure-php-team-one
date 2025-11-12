@@ -4,7 +4,7 @@
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    <h1 class="h3 mb-0 text-gray-800">{{ __('dashboard.Dashboard') }}</h1>
 </div>
 
 <!-- Content Row -->
@@ -15,9 +15,9 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">إجمالي المستخدمين</div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ __('dashboard.Total users') }}</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalUsers }}</div>
-                        <div class="text-xs text-muted mt-1">مرضى: {{ $totalPatients }} | أطباء: {{ $totalDoctors }}</div>
+                        <div class="text-xs text-muted mt-1">{{ __('dashboard.Total patients') }}: {{ $totalPatients }} |  {{__('dashboard.Total doctors')}}: {{ $totalDoctors }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -33,9 +33,9 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">إجمالي الحجوزات</div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{ __('dashboard.Total Bookings') }}</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalBookings }}</div>
-                        <div class="text-xs text-muted mt-1">مؤكدة: {{ $confirmedBookings }} | معلقة: {{ $pendingBookings }}</div>
+                        <div class="text-xs text-muted mt-1">{{ __('dashboard.Confirmed') }}: {{ $confirmedBookings }} | {{ __('dashboard.Pending') }}: {{ $pendingBookings }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
@@ -51,9 +51,9 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">إجمالي الإيرادات (شهري)</div>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ __('dashboard.Total revenue') }} ({{ __('dashboard.Months') }})</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ number_format($monthlyPayments, 2) }} EGP</div>
-                        <div class="text-xs text-muted mt-1">اليوم: {{ number_format($todayPayments, 2) }} | السنة: {{ number_format($yearlyPayments, 2) }}</div>
+                        <div class="text-xs text-muted mt-1">{{ __('dashboard.Today') }}: {{ number_format($todayPayments, 2) }} | {{ __('dashboard.Yearly') }}: {{ number_format($yearlyPayments, 2) }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -69,9 +69,9 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">النزاعات المعلقة</div>
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{ __('dashboard.For pending disputes') }}</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $openDisputes }}</div>
-                        <div class="text-xs text-muted mt-1">محلولة: {{ $resolvedDisputes }} | مرفوضة: {{ $rejectedDisputes }}</div>
+                        <div class="text-xs text-muted mt-1">{{ __('dashboard.Resolved') }}: {{ $resolvedDisputes }} | {{ __('dashboard.Rejected') }}: {{ $rejectedDisputes }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
@@ -88,7 +88,7 @@
     <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">الحجوزات حسب الشهر (آخر 6 أشهر)</h6>
+                <h6 class="m-0 font-weight-bold text-primary"> {{ __('dashboard.Bookings by Month') }}( {{ __('dashboard.Last 6 months') }})</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area">
@@ -102,7 +102,7 @@
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">توزيع حالات الحجوزات</h6>
+                <h6 class="m-0 font-weight-bold text-primary">   {{ __('dashboard.Booking Status Distribution') }}  </h6>
             </div>
             <div class="card-body">
                 <div class="chart-pie pt-4 pb-2">
@@ -119,7 +119,7 @@
     <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">المدفوعات حسب الشهر (آخر 6 أشهر)</h6>
+                <h6 class="m-0 font-weight-bold text-primary">  {{ __('dashboard.Payments by Month') }}   (  {{ __('dashboard.Last 6 months') }}  )</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area">
@@ -133,7 +133,7 @@
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">توزيع بوابات الدفع</h6>
+                <h6 class="m-0 font-weight-bold text-primary">  {{ __('dashboard.Payment Gateway Distribution') }}  </h6>
             </div>
             <div class="card-body">
                 <div class="chart-pie pt-4 pb-2">
@@ -149,7 +149,7 @@
     <div class="col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">الحجوزات القادمة</h6>
+                <h6 class="m-0 font-weight-bold text-primary"> {{ __('dashboard.Upcoming Bookings') }}</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -157,10 +157,10 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>الطبيب</th>
-                                <th>المريض</th>
-                                <th>التاريخ والوقت</th>
-                                <th>الحالة</th>
+                                <th>{{ __('dashboard.Doctor') }}</th>
+                                <th>{{ __('dashboard.Patient') }}</th>
+                                <th> {{ __('dashboard.Date and Time') }}</th>
+                                <th>{{ __('dashboard.Status') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -176,7 +176,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">لا توجد حجوزات قادمة</td>
+                                    <td colspan="5" class="text-center"> {{ __('dashboard.No upcoming bookings') }}      </td>
                                 </tr>
                             @endforelse
                         </tbody>
