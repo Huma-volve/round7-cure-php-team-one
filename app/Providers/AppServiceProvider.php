@@ -58,8 +58,8 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::policy(PaymentMethod::class, PaymentMethodPolicy::class);
 
-        // Share navbar data for admin layout
-        View::composer('admin.layouts.navbar', function ($view) {
+        // Share navbar data for admin layout - apply to master layout to ensure data is available on all pages
+        View::composer(['admin.master', 'admin.layouts.navbar'], function ($view) {
             $user = Auth::user();
             $unreadCount = 0;
             $notifications = collect();
