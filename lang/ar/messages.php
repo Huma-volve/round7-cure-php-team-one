@@ -29,6 +29,15 @@ return [
     'patient.not_found' => 'لم يتم العثور على بيانات المريض',
     'doctor.not_found' => 'الطبيب غير موجود',
 
+    // Payment method
+    'payment_method.list' => 'تم جلب طرق الدفع بنجاح',
+    'payment_method.created' => 'تم إضافة طريقة الدفع بنجاح',
+    'payment_method.deleted' => 'تم حذف طريقة الدفع بنجاح',
+    'payment_method.set_default' => 'تم تعيين طريقة الدفع كطريقة افتراضية',
+    'payment_method.cannot_set_default_deleted' => 'لا يمكن تعيين طريقة دفع محذوفة كطريقة افتراضية.',
+    'payment_method.restored' => 'تم استعادة طريقة الدفع بنجاح',
+    'payment_method.expiry_required' => 'يجب إدخال شهر وسنة الانتهاء لطرق الدفع بالبطاقة.',
+
     // Common messages
     'success' => 'تمت العملية بنجاح',
     'error' => 'حدث خطأ',

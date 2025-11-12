@@ -6,6 +6,9 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">تفاصيل المستخدم</h1>
         <div>
+            <a href="{{ route('admin.users.payment-methods.index', $user->id) }}" class="btn btn-info mr-2">
+                <i class="fas fa-credit-card"></i> طرق الدفع
+            </a>
             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> تعديل
             </a>
@@ -129,14 +132,29 @@
                     <h6 class="m-0 font-weight-bold text-primary">إحصائيات</h6>
                 </div>
                 <div class="card-body">
-                    <p><strong>عدد الحجوزات:</strong> {{ $bookings->count() }}</p>
+                    <div class="row mb-3">
+                        <div class="col-6"><strong>عدد الحجوزات:</strong></div>
+                        <div class="col-6">{{ $bookings->count() }}</div>
+                    </div>
                     @if($user->patient)
-                        <p><strong>نوع المستخدم:</strong> مريض</p>
-                        <p><strong>الجنس:</strong> {{ $user->patient->gender ?? '-' }}</p>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>نوع المستخدم:</strong></div>
+                            <div class="col-6">مريض</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>الجنس:</strong></div>
+                            <div class="col-6">{{ $user->patient->gender ?? '-' }}</div>
+                        </div>
                     @endif
                     @if($user->doctor)
-                        <p><strong>نوع المستخدم:</strong> طبيب</p>
-                        <p><strong>التخصص:</strong> {{ $user->doctor->specialty->name ?? '-' }}</p>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>نوع المستخدم:</strong></div>
+                            <div class="col-6">طبيب</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>التخصص:</strong></div>
+                            <div class="col-6">{{ $user->doctor->specialty->name ?? '-' }}</div>
+                        </div>
                     @endif
                 </div>
             </div>

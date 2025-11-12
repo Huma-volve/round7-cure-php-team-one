@@ -4,13 +4,16 @@ namespace App\Providers;
 
 use App\Models\Booking;
 use App\Models\Notification;
+use App\Models\PaymentMethod;
 use App\Models\Ticket;
 use App\Models\Review;
+use App\Policies\PaymentMethodPolicy;
 use App\Observers\BookingObserver;
 use App\Observers\ReviewObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Stripe\StripeClient;
@@ -53,8 +56,10 @@ class AppServiceProvider extends ServiceProvider
         Booking::observe(BookingObserver::class);
         Review::observe(ReviewObserver::class);
 
-        // Share navbar data for admin layout
-        View::composer('admin.layouts.navbar', function ($view) {
+        Gate::policy(PaymentMethod::class, PaymentMethodPolicy::class);
+
+        // Share navbar data for admin layout - apply to master layout to ensure data is available on all pages
+        View::composer(['admin.master', 'admin.layouts.navbar'], function ($view) {
             $user = Auth::user();
             $unreadCount = 0;
             $notifications = collect();

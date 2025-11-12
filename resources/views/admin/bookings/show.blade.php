@@ -9,8 +9,11 @@
             <a href="{{ route('admin.bookings.edit', $booking->id) }}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> {{ __('bookings.edit') }}
             </a>
-            <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">
+        
+
+            <a href="{{ $backUrl ?? route('admin.bookings.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-right"></i> {{ __('bookings.return') }}
+
             </a>
         </div>
     </div>

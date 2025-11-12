@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\PatientPaymentMethodController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,5 +28,16 @@ Route::middleware(['auth:sanctum', 'role:patient'])
             Route::put('/{id}/reschedule', 'reschedule')->name('reschedule');
             Route::delete('/{id}/cancel', 'cancel')->name('cancel');
         });
+
+        // Payment Methods
+        Route::prefix('payment-methods')
+            ->name('payment-methods.')
+            ->controller(PatientPaymentMethodController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/', 'store')->name('store');
+                Route::put('/{paymentMethod}/default', 'setDefault')->name('set-default');
+                Route::delete('/{paymentMethod}', 'destroy')->name('destroy');
+            });
     });
 
