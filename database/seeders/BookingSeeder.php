@@ -164,15 +164,15 @@ class BookingSeeder extends Seeder
         // ]);
 
         // حجز في يوم الثلاثاء القادم
-        $nextTuesday = now()->next(Carbon::TUESDAY);
-        Booking::updateOrCreate([
-            'doctor_id' => $doctor->id,
-            'patient_id' => $patient2->id,
-            'date_time' => $nextTuesday->copy()->setTime(14, 0, 0),
-            'payment_method' => 'stripe',
-            'status' => 'confirmed',
-            'price' => $doctor->session_price,
-        ]);
+        // $nextTuesday = now()->next(Carbon::TUESDAY);
+        // Booking::updateOrCreate([
+        //     'doctor_id' => $doctor->id,
+        //     'patient_id' => $patient2->id,
+        //     'date_time' => $nextTuesday->copy()->setTime(14, 0, 0),
+        //     'payment_method' => 'stripe',
+        //     'status' => 'confirmed',
+        //     'price' => $doctor->session_price,
+        // ]);
 
         // حجز في يوم الأربعاء القادم
         $nextWednesday = now()->next(Carbon::WEDNESDAY);
