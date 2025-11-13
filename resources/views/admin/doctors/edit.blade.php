@@ -1,18 +1,18 @@
 @extends('admin.master')
-@section('title', 'تعديل الطبيب')
+@section('title', __('doctor_edit.Edit Doctor'))
 
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">تعديل الطبيب</h1>
+        <h1 class="h3 mb-0 text-gray-800"> {{ __('doctor_edit.Edit Doctor') }}</h1>
         <a href="{{ route('admin.doctors.show', $doctor->id) }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-right"></i> رجوع
+            <i class="fas fa-arrow-right"></i> {{ __('doctor_edit.Back') }}
         </a>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">تعديل بيانات الطبيب</h6>
+            <h6 class="m-0 font-weight-bold text-primary"> {{ __('doctor_edit.Update Doctor Details') }} </h6>
         </div>
         <div class="card-body">
             <form method="POST" action="{{ route('admin.doctors.update', $doctor->id) }}">
@@ -22,8 +22,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">الاسم <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                            <label for="name">{{__('doctor_edit.Name')}}<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror"
                                    id="name" name="name" value="{{ old('name', $doctor->user->name) }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -33,8 +33,8 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="email">البريد الإلكتروني <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                            <label for="email">{{ __('doctor_edit.Email') }} <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror"
                                    id="email" name="email" value="{{ old('email', $doctor->user->email) }}" required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -44,8 +44,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="mobile">رقم الهاتف <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('mobile') is-invalid @enderror" 
+                    <label for="mobile"> {{ __('doctor_edit.Mobile') }} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('mobile') is-invalid @enderror"
                            id="mobile" name="mobile" value="{{ old('mobile', $doctor->user->mobile) }}" required>
                     @error('mobile')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -55,9 +55,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="specialty_id">التخصص <span class="text-danger">*</span></label>
+                            <label for="specialty_id">{{ __('doctor_edit.Specialty') }} <span class="text-danger">*</span></label>
                             <select name="specialty_id" id="specialty_id" class="form-control @error('specialty_id') is-invalid @enderror" required>
-                                <option value="">اختر التخصص</option>
+                                <option value=""> {{ __('doctor_edit.Choose Specialty') }}</option>
                                 @foreach($specialties as $specialty)
                                     <option value="{{ $specialty->id }}" {{ old('specialty_id', $doctor->specialty_id) == $specialty->id ? 'selected' : '' }}>
                                         {{ $specialty->name }}
@@ -72,8 +72,8 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="license_number">رقم الترخيص <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('license_number') is-invalid @enderror" 
+                            <label for="license_number"> {{ __('doctor_edit.License Number') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('license_number') is-invalid @enderror"
                                    id="license_number" name="license_number" value="{{ old('license_number', $doctor->license_number) }}" required>
                             @error('license_number')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -85,8 +85,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="session_price">سعر الجلسة <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" class="form-control @error('session_price') is-invalid @enderror" 
+                            <label for="session_price">{{ __('doctor_edit.Session Price') }}<span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" class="form-control @error('session_price') is-invalid @enderror"
                                    id="session_price" name="session_price" value="{{ old('session_price', $doctor->session_price) }}" required>
                             @error('session_price')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -96,8 +96,8 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="clinic_address">عنوان العيادة</label>
-                            <input type="text" class="form-control @error('clinic_address') is-invalid @enderror" 
+                            <label for="clinic_address">{{ __('doctor_edit.Clinic Address') }}</label>
+                            <input type="text" class="form-control @error('clinic_address') is-invalid @enderror"
                                    id="clinic_address" name="clinic_address" value="{{ old('clinic_address', $doctor->clinic_address) }}">
                             @error('clinic_address')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="consultation">نوع الاستشارة <span class="text-danger">*</span></label>
+                    <label for="consultation">{{ __('doctor_edit.Consultation Type') }}<span class="text-danger">*</span></label>
                     <select name="consultation" id="consultation" class="form-control @error('consultation') is-invalid @enderror" required>
                         <option value="clinic" {{ old('consultation', $doctor->consultation ?? 'clinic') == 'clinic' ? 'selected' : '' }}>في العيادة (Clinic)</option>
                         <option value="home" {{ old('consultation', $doctor->consultation ?? '') == 'home' ? 'selected' : '' }}>زيارة منزلية (Home)</option>
@@ -121,8 +121,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="latitude">خط العرض</label>
-                            <input type="number" step="0.00000001" class="form-control @error('latitude') is-invalid @enderror" 
+                            <label for="latitude">{{ __('doctor_edit.Latitude') }}</label>
+                            <input type="number" step="0.00000001" class="form-control @error('latitude') is-invalid @enderror"
                                    id="latitude" name="latitude" value="{{ old('latitude', $doctor->latitude) }}">
                             @error('latitude')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -132,8 +132,8 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="longitude">خط الطول</label>
-                            <input type="number" step="0.00000001" class="form-control @error('longitude') is-invalid @enderror" 
+                            <label for="longitude">{{ __('doctor_edit.Longitude') }}</label>
+                            <input type="number" step="0.00000001" class="form-control @error('longitude') is-invalid @enderror"
                                    id="longitude" name="longitude" value="{{ old('longitude', $doctor->longitude) }}">
                             @error('longitude')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -143,8 +143,8 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
-                    <a href="{{ route('admin.doctors.show', $doctor->id) }}" class="btn btn-secondary">إلغاء</a>
+                    <button type="submit" class="btn btn-primary">{{ __('doctor_edit.Save Changes') }}</button>
+                    <a href="{{ route('admin.doctors.show', $doctor->id) }}" class="btn btn-secondary">{{ __('doctor_edit.Cancel') }}</a>
                 </div>
             </form>
         </div>
