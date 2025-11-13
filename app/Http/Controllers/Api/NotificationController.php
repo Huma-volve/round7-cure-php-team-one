@@ -72,11 +72,38 @@ class NotificationController extends Controller
     public function markAsRead($id)
     {
         try {
+            
+            $notificationExists = Notification::where('id', $id)->exists();
+            if (!$notificationExists) {
+                return ApiResponse::error(null, 'Notification not found.', 404);
+            }
+
             $notification = Notification::findOrFail($id);
 
             $notification->update(['is_read' => true]);
 
             return ApiResponse::success(null, 'Notification marked as read', 200);
+        } catch (\Throwable $e) {
+            Log::error('NotificationController@markAsRead failed', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
+            return ApiResponse::error(null, 'An unexpected error occurred while marked notifications.', 500);
+        }
+    }
+
+     public function markAllAsRead($user_id)
+    {
+        try {
+
+            $userExists = User::where('id', $user_id)->exists();
+            if (!$userExists) {
+                return ApiResponse::error(null, 'User not found.', 404);
+            }
+
+            Notification::where('user_id', $user_id)->update(['is_read' => true]);
+
+            return ApiResponse::success(null, 'All notifications marked as read', 200);
         } catch (\Throwable $e) {
             Log::error('NotificationController@markAsRead failed', [
                 'message' => $e->getMessage(),
