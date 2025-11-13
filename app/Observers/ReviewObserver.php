@@ -20,7 +20,8 @@ class ReviewObserver
             'New Review',
             "{$review->patient->user->name} has left a new review for you.",
             'review',
-            $review->booking->id
+            $review->booking->id,
+            'Completed'
         );
 
         NotificationService::sendToUser(
@@ -28,14 +29,16 @@ class ReviewObserver
             'Review Added',
             "Your review for Dr. {$review->doctor->user->name} has been submitted.",
             'review',
-            $review->booking->id
+            $review->booking->id,
+            'Completed'
         );
 
         NotificationService::sendToAdmin(
             'Review Added',
             "Your review for Dr. {$review->patient->user->name} has been submitted to Dr. {$review->doctor->user->name}.",
             'system',
-            $review->booking->id
+            $review->booking->id,
+            'Completed'
         );
 
 
@@ -55,7 +58,8 @@ class ReviewObserver
             'ُUpdate Review',
             "{$review->patient->user->name} updated review for you.",
             'review',
-            $review->booking->id
+            $review->booking->id,
+            'Completed'
         );
 
         NotificationService::sendToUser(
@@ -63,7 +67,8 @@ class ReviewObserver
             'ُUpdate Review',
             "Your review for Dr. {$review->doctor->user->name} has been updated.",
             'review',
-            $review->booking->id
+            $review->booking->id,
+            'Completed'
         );
     }
     

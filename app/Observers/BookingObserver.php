@@ -24,7 +24,8 @@ class BookingObserver
                 'New Booking',
                 "You have a new booking from {$patient->user->name}",
                 'booking',
-                $booking_id
+                $booking_id,
+                'pending'
             );
             // send to user
         NotificationService::sendToUser(
@@ -32,14 +33,16 @@ class BookingObserver
                 'Booking Created',
                 "Your booking with Dr. {$doctor->user->name} has been created successfully.",
                 'booking',
-                $booking_id
+                $booking_id,
+                'pending'
             );
             // send to admin
             NotificationService::sendToAdmin(
                 'System Log',
                 "A new booking was created by {$patient->user->name}",
                 'system',
-                $booking_id
+                $booking_id,
+                'pending'
             );
             
     }
@@ -62,7 +65,8 @@ class BookingObserver
                     'Booking Cancelled',
                     "Your booking with Dr. {$booking->doctor->user->name} has been cancelled.",
                     'booking',
-                    $booking_id
+                    $booking_id,
+                    'cancelled'
                 );
             }
 
@@ -72,7 +76,8 @@ class BookingObserver
                     'Booking Rescheduled',
                     "Your booking with Dr. {$booking->doctor->user->name} has been rescheduled.",
                     'booking',
-                    $booking_id
+                    $booking_id,
+                    'rescheduled'
                 );
             }
 
@@ -82,7 +87,8 @@ class BookingObserver
                 'Booking Updated',
                 "Booking #{$booking->id} status changed from {$old} to {$new}.",
                 'booking',
-                $booking_id
+                $booking_id,
+                $new
             );
         }
     
@@ -107,7 +113,8 @@ class BookingObserver
             'Booking Deleted',
             "Your booking with Dr. {$doctor->user->name} has been deleted from the system.",
             'booking',
-            $booking_id
+            $booking_id,
+            'deleted'
         );
 
         // send to admin
@@ -116,7 +123,8 @@ class BookingObserver
             'Booking Removed',
             "The booking with patient {$patient->user->name} has been deleted from the system.",
             'booking',
-            $booking_id
+            $booking_id,
+            'deleted'
         );
 
         // send to admin 
@@ -124,7 +132,8 @@ class BookingObserver
             'System Alert',
             "Booking #{$booking_id} between Dr. {$doctor->user->name} and {$patient->user->name} was deleted.",
             'system',
-            $booking_id
+            $booking_id,
+            'deleted'
         );
     }
 
