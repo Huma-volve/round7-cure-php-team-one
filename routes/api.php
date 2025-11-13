@@ -66,11 +66,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/favorites/check/{doctor}', [FavoriteController::class, 'checkFavorite']);
 
 });
-
+Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('reviews', ReviewController::class);
 Route::apiResource('notifications', NotificationController::class);
 Route::post('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
 Route::post('notifications/{user_id}/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doctor/notifications', [DoctorNotificationController::class, 'index']);
