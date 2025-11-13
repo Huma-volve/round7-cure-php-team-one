@@ -26,6 +26,8 @@ class BookingCreated implements ShouldBroadcast
       
         return [
             new Channel('doctor.' . $this->booking->doctor_id),
+            new Channel('patient.' . $this->booking->patient_id),
+            new Channel('admin.' . $this->booking->user_id),
         ];
     }
 

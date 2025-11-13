@@ -11,10 +11,12 @@ class Notification extends Model
         'title',
         'body',
         'type',
+        'status',
         'booking_id',
         'is_read',
     ];
 
+    
    
     public function user()
     {
