@@ -16,12 +16,17 @@ class SendMessageRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'chat_id' => 'required', 'exists:chats,id',
-            'type' => 'required|string|in:text,attachment',
-            'body' => 'nullable|string',
-            'attachment' => 'nullable|file|max:51200', // 50MB
-        ];
+      return [
+        'chat_id' => 'nullable|exists:chats,id',
+        'receiver_id' => 'required_without:chat_id|exists:users,id',
+
+        'type' => 'required|string|in:text,image,voice,video',
+
+        'body' => 'nullable|string',
+
+    
+        'attachment' => 'required_if:type,image,video,voice|file|max:51200',
+    ];
     }
 
  protected function prepareForValidation()
