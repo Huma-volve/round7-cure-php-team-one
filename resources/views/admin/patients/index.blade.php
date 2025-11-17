@@ -18,7 +18,7 @@
       <select name="gender" class="form-control">
         <option value="">{{ __('patients.All Genders') }}</option>
         <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>{{ __('patients.Male') }}</option>
-        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>{{ __('patients.Male') }}</option>
+        <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>{{ __('patients.Female') }}</option>
         <option value="other" {{ request('gender') == 'other' ? 'selected' : '' }}>{{ __('patients.Other') }}</option>
       </select>
     </div>

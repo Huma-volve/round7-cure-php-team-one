@@ -142,6 +142,8 @@ Route::middleware('auth:sanctum')->controller(ProfileController::class)->group(f
 Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileLogin']);
 Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
 Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
+Route::get('/google-auth-url', [AuthController::class, 'getGoogleAuthUrl']);
+Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 

@@ -12,7 +12,7 @@
             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary">
                 <i class="fas fa-edit"></i> تعديل
             </a>
-            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
+            <a href="{{ url()->previous() !== url()->current() ? url()->previous() : route('admin.users.index') }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-right"></i> رجوع
             </a>
         </div>
