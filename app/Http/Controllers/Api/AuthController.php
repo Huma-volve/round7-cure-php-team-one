@@ -34,6 +34,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            if (!$user->hasAnyRole(['patient', 'doctor'])) {
+                Auth::logout();
+                return response()->json(['error' => 'user not allowed to login '], 403);
+            }
             $token = $user->createToken('auth_token')->plainTextToken;
             return response()->json(['token' => $token, new UserResource($user)]);
         }
@@ -102,7 +106,6 @@ class AuthController extends Controller
                 'data' => new UserResource($user),
                 'token' => $token
             ]);
-
         } catch (\Exception $e) {
 
             return response()->json([
@@ -215,8 +218,8 @@ class AuthController extends Controller
 
 
 
-        if ($user->email_otp_sent_at && now()->diffInSeconds($user->email_otp_expires_at) < 30) {
-            return response()->json(['status' => false, 'message' => 'Please wait 1 minute before requesting another OTP.'], 429);
+        if ($user->email_otp_sent_at && $user->email_otp_sent_at->diffInSeconds(now()) < 180) {
+            return response()->json(['status' => false, 'message' => 'Please wait 3 minute before requesting another OTP.'], 429);
         }
 
         // $otp = rand(1000, 9999);
@@ -417,4 +420,3 @@ class AuthController extends Controller
         ]);
     }
 }
-
