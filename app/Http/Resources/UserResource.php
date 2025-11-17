@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'role' => $this->getRoleNames()->first(),
             'doctor' => $this->when($this->hasRole('doctor'), new DoctorResource($this->doctor)),
             'patient' => $this->when($this->hasRole('patient'), [
+                'patient_id'=>$this->patient->id,
                 'birthdate' => optional(optional($this->patient)->birthdate)->format('Y-m-d'),
                 'medical_notes' => optional($this->patient)->medical_notes,
             ]),

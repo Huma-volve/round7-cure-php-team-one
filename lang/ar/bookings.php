@@ -49,6 +49,6 @@ return [
     "Price" => "المبلغ",
     "Save Changes" => "حفظ التغييرات",
     "Cancel" => "إلغاء",
-
+   
 
 ];
