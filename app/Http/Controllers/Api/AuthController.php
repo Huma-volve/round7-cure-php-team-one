@@ -16,6 +16,8 @@ use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\Rules\Password;
+use Google_Client;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -381,6 +383,28 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Account deleted successfully ',
+        ]);
+    }
+
+    public function getGoogleAuthUrl(Request $request): JsonResponse
+    {
+        $state = $request->input('state', bin2hex(random_bytes(16)));
+
+        $client = new Google_Client();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(env('GOOGLE_REDIRECT_URI', config('services.google.redirect')));
+        $client->setScopes(['email', 'profile']);
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+        $client->setState($state);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'url' => $client->createAuthUrl(),
+                'state' => $state,
+            ],
         ]);
     }
 
