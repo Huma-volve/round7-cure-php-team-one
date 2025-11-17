@@ -1,16 +1,16 @@
 @extends('admin.master')
-@section('title', 'تفاصيل المريض')
+@section('title', __('patients.Patient Details'))
 
 @section('content')
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">تفاصيل المريض</h1>
+        <h1 class="h3 mb-0 text-gray-800">{{__('patients.Patient Details')}}</h1>
         <div>
             <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-primary">
-                <i class="fas fa-edit"></i> تعديل
+                <i class="fas fa-edit"></i> {{ __('patients.Edit') }}
             </a>
             <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-right"></i> رجوع
+                <i class="fas fa-arrow-right"></i>  {{ __('patients.Back') }}
             </a>
         </div>
     </div>
@@ -19,23 +19,23 @@
         <div class="col-lg-8">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">معلومات المريض</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">  {{ __('patients.Patient Information') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>الاسم:</strong></div>
+                        <div class="col-md-4"><strong>{{ __('patients.Name') }}:</strong></div>
                         <div class="col-md-8">{{ $patient->user->name }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>البريد الإلكتروني:</strong></div>
+                        <div class="col-md-4"><strong> :{{ __('patients.Email') }}</strong></div>
                         <div class="col-md-8">{{ $patient->user->email }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>رقم الهاتف:</strong></div>
+                        <div class="col-md-4"><strong> :{{ __('patients.Mobile') }}</strong></div>
                         <div class="col-md-8">{{ $patient->user->mobile ?? '-' }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>الجنس:</strong></div>
+                        <div class="col-md-4"><strong>:{{ __('patients.Gender') }}</strong></div>
                         <div class="col-md-8">
                             @if($patient->gender)
                                 <span class="badge badge-info">
@@ -47,17 +47,17 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>تاريخ الميلاد:</strong></div>
+                        <div class="col-md-4"><strong> :{{ __('patients.Birthdate') }}</strong></div>
                         <div class="col-md-8">{{ $patient->birthdate ? $patient->birthdate->format('Y-m-d') : '-' }}</div>
                     </div>
                     @if($patient->medical_notes)
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>ملاحظات طبية:</strong></div>
+                        <div class="col-md-4"><strong> :{{ __('patients.Medical Notes') }}</strong></div>
                         <div class="col-md-8">{{ $patient->medical_notes }}</div>
                     </div>
                     @endif
                     <div class="row mb-3">
-                        <div class="col-md-4"><strong>تاريخ التسجيل:</strong></div>
+                        <div class="col-md-4"><strong> :{{__('patients.Created At')}}</strong></div>
                         <div class="col-md-8">{{ $patient->created_at->format('Y-m-d H:i') }}</div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             @if($bookings && $bookings->count() > 0)
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">الحجوزات ({{ $patient->bookings_count }})</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('patients.Bookings') }} ({{ $patient->bookings_count }})</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -74,9 +74,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>الطبيب</th>
-                                    <th>التاريخ</th>
-                                    <th>الحالة</th>
+                                    <th>{{__('patients.Doctor')}}</th>
+                                    <th>{{__('patients.Date')}}</th>
+                                    <th>{{__('patients.Status')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -105,15 +105,15 @@
         <div class="col-lg-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 bg-danger">
-                    <h6 class="m-0 font-weight-bold text-primary">حذف المريض</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('patients.Delete Patient')}}</h6>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">تنبيه: سيتم حذف المريض نهائياً ولا يمكن التراجع عن هذه العملية.</p>
-                    <form action="{{ route('admin.patients.destroy', $patient->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد من حذف هذا المريض؟');">
+                    <p class="text-muted">{{__('patients.Delete Warning')}}</p>
+                    <form action="{{ route('admin.patients.destroy', $patient->id) }}" method="POST" onsubmit="return confirm(__('patients.Are you sure you want to delete this doctor?'));" >
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-block">
-                            <i class="fas fa-trash"></i> حذف المريض
+                            <i class="fas fa-trash"></i>  {{ __('patients.Patients') }}
                         </button>
                     </form>
                 </div>
@@ -121,12 +121,12 @@
 
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">إحصائيات</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{__('patients.Statistics')}}</h6>
                 </div>
                 <div class="card-body">
-                    <p><strong>عدد الحجوزات:</strong> {{ $patient->bookings_count ?? 0 }}</p>
+                    <p><strong>  {{ __('patients.Total Bookings')}} :</p>
                     <a href="{{ route('admin.users.show', $patient->user_id) }}" class="btn btn-info btn-block">
-                        <i class="fas fa-user"></i> عرض بيانات المستخدم
+                        <i class="fas fa-user"></i> {{ __('patients.View User Details') }}
                     </a>
                 </div>
             </div>

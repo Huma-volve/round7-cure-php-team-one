@@ -1,15 +1,20 @@
 @extends('admin.master')
+@section('title' , __('disputes.title'))
 
 @section('content')
 <div class="container-fluid">
-  <h1 class="h3 mb-3">النزاعات</h1>
+  <h1 class="h3 mb-3">{{ __('disputes.title') }}</h1>
 
   <ul class="nav nav-tabs mb-3" id="disputesTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="payments-tab" data-toggle="tab" href="#payments" role="tab">نزاعات المدفوعات</a>
+      <a class="nav-link active" id="payments-tab" data-toggle="tab" href="#payments" role="tab">
+        {{ __('disputes.payment_disputes') }}
+      </a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link" id="bookings-tab" data-toggle="tab" href="#bookings" role="tab">نزاعات الحجوزات</a>
+      <a class="nav-link" id="bookings-tab" data-toggle="tab" href="#bookings" role="tab">
+        {{ __('disputes.booking_disputes') }}
+      </a>
     </li>
   </ul>
 
@@ -19,11 +24,11 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>#</th>
-              <th>السبب</th>
-              <th>الحالة</th>
-              <th>الحجز</th>
-              <th>الإجراءات</th>
+              <th>{{ __('disputes.table.id') }}</th>
+              <th>{{ __('disputes.table.reason') }}</th>
+              <th>{{ __('disputes.table.status') }}</th>
+              <th>{{ __('disputes.table.booking') }}</th>
+              <th>{{ __('disputes.table.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +38,7 @@
                 <td>{{ $dispute->reason ?? '-' }}</td>
                 <td>
                   <span class="badge badge-{{ $dispute->status == 'resolved' ? 'success' : ($dispute->status == 'rejected' ? 'danger' : 'warning') }}">
-                    {{ $dispute->status }}
+                    {{ __('disputes.status.' . $dispute->status) }}
                   </span>
                 </td>
                 <td>
@@ -45,13 +50,13 @@
                 </td>
                 <td>
                   <a href="{{ route('admin.disputes.show', ['payment', $dispute->id]) }}" class="btn btn-sm btn-info">
-                    <i class="fas fa-eye"></i> عرض
+                    <i class="fas fa-eye"></i> {{ __('disputes.table.view') }}
                   </a>
                 </td>
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="text-center">لا توجد نتائج</td>
+                <td colspan="5" class="text-center">{{ __('disputes.table.no_results') }}</td>
               </tr>
             @endforelse
           </tbody>
@@ -59,16 +64,17 @@
       </div>
       {{ $paymentDisputes->appends(request()->query())->links() }}
     </div>
+
     <div class="tab-pane fade" id="bookings" role="tabpanel">
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>#</th>
-              <th>النوع</th>
-              <th>الحالة</th>
-              <th>الحجز</th>
-              <th>الإجراءات</th>
+              <th>{{ __('disputes.table.id') }}</th>
+              <th>{{ __('disputes.table.type') }}</th>
+              <th>{{ __('disputes.table.status') }}</th>
+              <th>{{ __('disputes.table.booking') }}</th>
+              <th>{{ __('disputes.table.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +84,7 @@
                 <td>{{ $dispute->type }}</td>
                 <td>
                   <span class="badge badge-{{ $dispute->status == 'resolved' ? 'success' : ($dispute->status == 'rejected' ? 'danger' : 'warning') }}">
-                    {{ $dispute->status }}
+                    {{ __('disputes.status.' . $dispute->status) }}
                   </span>
                 </td>
                 <td>
@@ -86,13 +92,13 @@
                 </td>
                 <td>
                   <a href="{{ route('admin.disputes.show', ['booking', $dispute->id]) }}" class="btn btn-sm btn-info">
-                    <i class="fas fa-eye"></i> عرض
+                    <i class="fas fa-eye"></i> {{ __('disputes.table.view') }}
                   </a>
                 </td>
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="text-center">لا توجد نتائج</td>
+                <td colspan="5" class="text-center">{{ __('disputes.table.no_results') }}</td>
               </tr>
             @endforelse
           </tbody>
@@ -103,4 +109,3 @@
   </div>
 </div>
 @endsection
-

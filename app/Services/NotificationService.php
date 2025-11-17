@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Event;
 class NotificationService
 {
     //  send notification to user 
-    public static function sendToUser(User $user, string $title, string $body, string $type = null, $booking_id = null)
+    public static function sendToUser(User $user, string $title, string $body, string $type = null, $booking_id = null, $status= 'pending')
     {
         try {
             $notification = Notification::create([
@@ -20,6 +20,7 @@ class NotificationService
                 'body' => $body,
                 'booking_id' => $booking_id,
                 'type' => $type,
+                'status' => $status,
             ]);
 
             Event::dispatch(new NotificationSent($notification, "user.{$user->id}"));
@@ -35,7 +36,7 @@ class NotificationService
     }
 
     //  send notification to doctor 
-    public static function sendToDoctor(User $doctorUser, string $title, string $body, string $type = null, $booking_id = null)
+    public static function sendToDoctor(User $doctorUser, string $title, string $body, string $type = null, $booking_id = null, $status= 'pending')
     {
         try {
             $notification = Notification::create([
@@ -44,6 +45,7 @@ class NotificationService
                 'body' => $body,
                 'booking_id' => $booking_id,
                 'type' => $type,
+                'status' => $status,
             ]);
 
             // event(new NotificationSent($notification, "doctor.{$doctorUser->id}"));
@@ -58,7 +60,7 @@ class NotificationService
     }
 
      //  send notification to Admin 
-    public static function sendToAdmin(string $title, string $body, string $type = 'system',  $booking_id = null)
+    public static function sendToAdmin(string $title, string $body, string $type = 'system',  $booking_id = null, $status= 'pending')
     {
         try {
             $admins = User::role('admin')->get();
@@ -70,6 +72,7 @@ class NotificationService
                     'body' => $body,
                     'booking_id' => $booking_id,
                     'type' => $type,
+                    'status' => $status,
                 ]);
 
                 event(new NotificationSent($notification, "admin.{$admin->id}"));

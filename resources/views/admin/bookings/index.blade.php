@@ -1,4 +1,5 @@
 @extends('admin.master')
+@section('title' , __('bookings.title'))
 
 @section('content')
 <div class="container-fluid">
@@ -6,11 +7,11 @@
   <form method="GET" action="{{ route('admin.bookings.index') }}" class="row g-2 mb-3">
     <div class="col-md-3">
       <select name="status" class="form-select">
-        <option value="">كل الحالات</option>
-        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>قيد الانتظار</option>
-        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>مؤكد</option>
-        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>ملغى</option>
-        <option value="rescheduled" {{ request('status') == 'rescheduled' ? 'selected' : '' }}>معاد جدولته</option>
+        <option value=""> {{__('bookings.title')}}</option>
+        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}> {{__('bookings.pending')}}</option>
+        <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>{{__('bookings.confirmed')}}</option>
+        <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{__('bookings.cancelled')}}</option>
+        <option value="rescheduled" {{ request('status') == 'rescheduled' ? 'selected' : '' }}> {{__('bookings.rescheduled')}}</option>
       </select>
     </div>
     <div class="col-md-3">
@@ -20,7 +21,7 @@
       <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
     </div>
     <div class="col-md-3">
-      <button type="submit" class="btn btn-primary w-100">تصفية</button>
+      <button type="submit" class="btn btn-primary w-100">{{__('bookings.filter')}}</button>
     </div>
   </form>
   <div class="table-responsive">
@@ -28,11 +29,11 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>الطبيب</th>
-          <th>المريض</th>
-          <th>الوقت</th>
-          <th>الحالة</th>
-          <th>الإجراءات</th>
+          <th>{{__('bookings.doctor')}}</th>
+          <th>{{__('bookings.patient')}}</th>
+          <th>{{__('bookings.time')}}</th>
+          <th>{{__('bookings.status')}}</th>
+          <th>{{__('bookings.actions')}}</th>
         </tr>
       </thead>
       <tbody>
@@ -50,16 +51,16 @@
             <td>
               <div class="btn-group" role="group">
                 <a href="{{ route('admin.bookings.show', $booking->id) }}" class="btn btn-sm btn-info">
-                  <i class="fas fa-eye"></i> عرض
+                  <i class="fas fa-eye"></i> {{__('bookings.show')}}
                 </a>
                 <a href="{{ route('admin.bookings.edit', $booking->id) }}" class="btn btn-sm btn-primary">
-                  <i class="fas fa-edit"></i> تعديل
+                  <i class="fas fa-edit"></i> {{__('bookings.edit')}}
                 </a>
-                <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذا الحجز؟');">
+                <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('bookings.confirm_delete') }}');">
                   @csrf
                   @method('DELETE')
                   <button type="submit" class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash"></i> حذف
+                    <i class="fas fa-trash"></i> {{__('bookings.delete')}}
                   </button>
                 </form>
               </div>
@@ -67,7 +68,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="6" class="text-center">لا توجد نتائج</td>
+            <td colspan="6" class="text-center">{{__('bookings.no_results')}}</td>
           </tr>
         @endforelse
       </tbody>

@@ -2,7 +2,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; Your Website Eslam Crespo || Moahmed Samir .. {{ now()->format('Y.m.d') }}</span>
                     </div>
                 </div>
             </footer>

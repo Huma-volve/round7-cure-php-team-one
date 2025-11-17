@@ -1,0 +1,31 @@
+<?php
+
+return [
+    
+    "Doctors" => "الطبيبين",
+    "Add New Doctor" => "اضافة طبيب جديد",
+    "Search by name or email" => "بحث بالاسم او البريد الالكتروني",
+    "Search" => "بحث",
+    "All statuses" => "كل الحالات",
+    "Active" => "نشط",
+    "Inactive" => "غير نشط",
+    "Suspended" => "معلق",
+    "#" => "#",
+    "Name" => "الاسم",
+    "Email" => "البريد الالكتروني",
+    "Specialty" => "التخصص",
+    "License Number" => "رقم الترخيص",
+    "Session Price" => "سعر الجلسة",
+    "Status" => "الحالة",
+    "Actions" => "الاجراءات",
+    "View" => "عرض",
+    "Edit" => "تعديل",
+    "Suspend" => "معلق",
+    "Disable" => "تعطيل",
+    "Enable" => "تفعيل",
+    "Delete" => "حذف",
+    "Deleted" => "تم الحذف",
+    "Are you sure you want to delete this doctor?" => "هل انت متاكد من حذف هذا الطبيب؟",
+    "EGP" => "جنيه",
+    "No results found'" => "لم يتم العثور على نتائج",
+];
