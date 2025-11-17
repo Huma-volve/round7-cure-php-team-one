@@ -154,7 +154,9 @@ else wil create new row in table chat and return the id and all things
 */
 Route::middleware('auth:sanctum')->group(function () {
 
-
+//  php artisan reverb:start --port=6001 --debug    
+// php artisan serve --host=127.0.0.1 --port=8000 
+// php artisan queue:work   
     // create New chat
     Route::post('chats', [ChatController::class, 'createChat']);
     // get all chat
