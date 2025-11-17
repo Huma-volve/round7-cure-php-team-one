@@ -31,7 +31,7 @@ class DoctorController extends Controller
         if ($request->filled('q')) {
             $q = $request->string('q');
             $normalizedQ = ArabicSearchHelper::normalizeArabicText($q);
-            
+
             $query->whereHas('user', function ($w) use ($q, $normalizedQ) {
                 $w->withTrashed()
                     ->where(function ($sub) use ($q, $normalizedQ) {
@@ -50,7 +50,7 @@ class DoctorController extends Controller
         }
 
         $doctors = $query->orderByDesc('id')->paginate(15);
-        
+
         return view('admin.doctors.index', compact('doctors'));
     }
 
@@ -74,9 +74,9 @@ class DoctorController extends Controller
         // Assign doctor role
         $doctorRoleApi = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'api']);
         $doctorRoleWeb = Role::firstOrCreate(['name' => 'doctor', 'guard_name' => 'web']);
-        
+
         $user->assignRole($doctorRoleApi);
-        
+
         DB::table('model_has_roles')->insertOrIgnore([
             'role_id' => $doctorRoleWeb->id,
             'model_type' => get_class($user),
@@ -120,7 +120,7 @@ class DoctorController extends Controller
     public function update(UpdateDoctorRequest $request, int $id): RedirectResponse
     {
         $doctor = Doctor::with('user')->findOrFail($id);
-        
+
         // Update user
         $doctor->user->update([
             'name' => $request->name,
@@ -148,7 +148,7 @@ class DoctorController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $doctor = Doctor::findOrFail($id);
-        
+
         // Delete user (this will cascade delete doctor due to foreign key)
         $doctor->delete();
 
@@ -163,7 +163,7 @@ class DoctorController extends Controller
     public function toggleStatus(int $id): RedirectResponse
     {
         $doctor = Doctor::findOrFail($id);
-        
+
         $newStatus = $doctor->status === 'active' ? 'inactive' : 'active';
         $doctor->update(['status' => $newStatus]);
 
@@ -172,5 +172,16 @@ class DoctorController extends Controller
         return redirect()
             ->route('admin.doctors.show', $doctor->id)
             ->with('success', $message);
+    }
+    public function restore($id): RedirectResponse
+    {
+        $doctor = Doctor::onlyTrashed()->findOrFail($id);
+        $doctor->restore();
+        if ($doctor->user()->onlyTrashed()->exists()) {
+            $doctor->user()->onlyTrashed()->restore();
+        }
+        return redirect()
+            ->route('admin.doctors.index')
+            ->with('success', 'تم استرجاع الطبيب بنجاح');
     }
 }

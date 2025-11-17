@@ -27,4 +27,5 @@ return [
   "Are you sure you want to delete this doctor?"=> "Are you sure you want to delete this doctor?",
   "EGP"=> "EGP",
   "No results found'"=> "No results found",
+  "Restore"=>"Restore",
 ];
