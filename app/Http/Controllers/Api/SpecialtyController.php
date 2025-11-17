@@ -10,11 +10,19 @@ class SpecialtyController extends Controller
 {
     public function index()
     {
-        $specialties = Specialty::select('id', 'name','image')->get();
+        
+    $specialties = Specialty::select('id', 'name', 'image')->get()->map(function ($item) {
+        // لو الصورة عندك في public/storage
+        if ($item->image && !str_starts_with($item->image, 'http')) {
+            $item->image = asset('storage/specialties/' . $item->image);
+        }
 
-        return response()->json([
-            'specialties' => $specialties
-            ], 200);
+        return $item;
+    });
+
+    return response()->json([
+        'specialties' => $specialties
+    ]);
 
     }
 }
