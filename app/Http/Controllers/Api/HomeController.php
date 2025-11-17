@@ -35,8 +35,10 @@ class HomeController extends Controller
 
     $user = Auth::user();
 
-    $lat = $request->location_lat   ?? $user->location_lat  ?? 29.415598 ; // Cairo center
-    $lng = $request->location_lng   ?? $user->location_lng  ??  31.893025  ;
+    $lat = $request->latitude   ?? $user->location_lat  ?? 29.415598 ; // Cairo center
+    $lng = $request->longitude   ?? $user->location_lng  ??  31.893025  ;
+
+
 
     $specialties = Specialty::select('id' , 'name')->get();
     $doctors = $this->doctorService->searchDoctorsNearby($user, $lat, $lng, $request->input('search'));
