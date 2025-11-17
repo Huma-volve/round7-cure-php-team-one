@@ -143,6 +143,7 @@ Route::post('/sendOtpFormobileLogin', [AuthController::class, 'sendOtpFormobileL
 Route::post('/verifyOtpForMobileLogin', [AuthController::class, 'verifyOtpForMobileLogin']);
 Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::get('/google-auth-url', [AuthController::class, 'getGoogleAuthUrl']);
+Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
 
 

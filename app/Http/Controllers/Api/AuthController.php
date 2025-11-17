@@ -18,6 +18,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Validation\Rules\Password;
 use Google_Client;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -390,14 +391,7 @@ class AuthController extends Controller
     {
         $state = $request->input('state', bin2hex(random_bytes(16)));
 
-        $client = new Google_Client();
-        $client->setClientId(env('GOOGLE_CLIENT_ID'));
-        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectUri(env('GOOGLE_REDIRECT_URI', config('services.google.redirect')));
-        $client->setScopes(['email', 'profile']);
-        $client->setAccessType('offline');
-        $client->setPrompt('select_account consent');
-        $client->setState($state);
+        $client = $this->buildGoogleClient($state);
 
         return response()->json([
             'success' => true,
@@ -406,6 +400,52 @@ class AuthController extends Controller
                 'state' => $state,
             ],
         ]);
+    }
+
+    public function handleGoogleCallback(Request $request): JsonResponse
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'state' => 'nullable|string',
+        ]);
+
+        try {
+            $client = $this->buildGoogleClient($request->input('state'));
+            $tokenData = $client->fetchAccessTokenWithAuthCode($request->code);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to exchange authorization code with Google.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
+        if (isset($tokenData['error'])) {
+            return response()->json([
+                'success' => false,
+                'message' => $tokenData['error_description'] ?? 'Failed to fetch Google tokens.',
+            ], 400);
+        }
+
+        $idToken = $tokenData['id_token'] ?? null;
+
+        if (!$idToken) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Google response did not include an ID token.',
+            ], 400);
+        }
+
+        $payload = $client->verifyIdToken($idToken);
+
+        if (!$payload) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to verify Google ID token.',
+            ], 401);
+        }
+
+        return $this->completeGoogleLogin($payload);
     }
 
     public function googleLogin(Request $request)
@@ -421,15 +461,49 @@ class AuthController extends Controller
             return response()->json(['error' => 'Invalid Google token'], 401);
         }
 
+        return $this->completeGoogleLogin($payload);
+    }
+
+    protected function buildGoogleClient(?string $state = null): Google_Client
+    {
+        $client = new Google_Client();
+        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+
+        if ($secret = env('GOOGLE_CLIENT_SECRET')) {
+            $client->setClientSecret($secret);
+        }
+
+        $client->setRedirectUri(env('GOOGLE_REDIRECT_URI', config('services.google.redirect')));
+        $client->setScopes(['email', 'profile']);
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+
+        if ($state !== null) {
+            $client->setState($state);
+        }
+
+        return $client;
+    }
+
+    protected function completeGoogleLogin(array $payload): JsonResponse
+    {
         $user = User::updateOrCreate(
             ['email' => $payload['email']],
             [
                 'name' => $payload['name'] ?? '',
                 'google_id' => $payload['sub'],
+                'mobile' => isset($payload['phoneNumber']) ? $payload['phoneNumber'] : substr('google-' . $payload['sub'], 0, 20),
+                'password' => isset($payload['email']) && ($existing = User::where('email', $payload['email'])->first())
+                    ? $existing->password
+                    : Hash::make(Str::random(32)),
                 'email_verified_at' => now(),
                 'profile_photo' => $payload['picture'] ?? null,
             ]
         );
+
+        if (!$user->hasRole('patient')) {
+            $user->assignRole('patient');
+        }
 
         Auth::login($user);
         $token = $user->createToken('auth_token')->plainTextToken;
