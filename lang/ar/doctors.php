@@ -28,4 +28,5 @@ return [
     "Are you sure you want to delete this doctor?" => "هل انت متاكد من حذف هذا الطبيب؟",
     "EGP" => "جنيه",
     "No results found'" => "لم يتم العثور على نتائج",
+    "Restore"=>"استرجاع",
 ];

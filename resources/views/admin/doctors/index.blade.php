@@ -4,7 +4,7 @@
 @section('content')
     <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">{{__('doctors.Doctors')}}</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ __('doctors.Doctors') }}</h1>
             <a href="{{ route('admin.doctors.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> {{ __('doctors.Add New Doctor') }}
             </a>
@@ -12,15 +12,18 @@
 
         <form method="GET" action="{{ route('admin.doctors.index') }}" class="row g-2 mb-3">
             <div class="col-md-4">
-                <input type="text" name="q" class="form-control" placeholder="{{ __('doctors.Search by name or email') }}"
-                    value="{{ request('q') }}">
+                <input type="text" name="q" class="form-control"
+                    placeholder="{{ __('doctors.Search by name or email') }}" value="{{ request('q') }}">
             </div>
             <div class="col-md-3">
                 <select name="status" class="form-control">
                     <option value="">{{ __('doctors.All statuses') }}</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('doctors.Active') }}</option>
-                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('doctors.Inactive') }}</option>
-                    <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>{{  __('doctors.Suspended')}}</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('doctors.Active') }}
+                    </option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                        {{ __('doctors.Inactive') }}</option>
+                    <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>
+                        {{ __('doctors.Suspended') }}</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -36,8 +39,8 @@
                         <th>{{ __('doctors.Name') }}</th>
                         <th>{{ __('doctors.Email') }}</th>
                         <th> {{ __('doctors.Specialty') }}</th>
-                        <th >{{ __('doctors.License Number') }}</th>
-                        <th> {{ __('doctors.Session Price') }}  </th>
+                        <th>{{ __('doctors.License Number') }}</th>
+                        <th> {{ __('doctors.Session Price') }} </th>
                         <th> {{ __('doctors.Status') }}</th>
                         <th>{{ __('doctors.Actions') }}</th>
                     </tr>
@@ -57,7 +60,7 @@
                                 @else
                                     <span
                                         class="badge badge-{{ $doctor->status == 'active' ? 'success' : ($doctor->status == 'suspended' ? 'danger' : 'warning') }}">
-                                        {{ $doctor->status == 'active' ? __('doctors.Active') : ($doctor->status == 'suspended' ?  __('doctors.Suspended') : __('doctors.Inactive')) }}
+                                        {{ $doctor->status == 'active' ? __('doctors.Active') : ($doctor->status == 'suspended' ? __('doctors.Suspended') : __('doctors.Inactive')) }}
                                     </span>
                                 @endif
                             </td>
@@ -82,7 +85,8 @@
                                             </button>
                                         </form>
                                         <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('{{ __('doctors.Are you sure you want to delete this doctor?') }}');">
+                                            class="d-inline"
+                                            onsubmit="return confirm('{{ __('doctors.Are you sure you want to delete this doctor?') }}');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger">
@@ -93,6 +97,11 @@
                                         <button class="btn btn-sm btn-secondary" disabled>
                                             <i class="fas fa-ban"></i> {{ __('doctors.Deleted') }}
                                         </button>
+                                        <form action="{{ route('admin.doctors.restore', $doctor->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-success"> {{ __('doctors.Restore') }}</button>
+                                        </form>
                                     @endif
                                 </div>
                             </td>

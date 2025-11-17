@@ -64,4 +64,5 @@ return [
 
     // Currency
     "EGP" => "ج.م",
+    "Restore"=>"استرجاع",
 ];
