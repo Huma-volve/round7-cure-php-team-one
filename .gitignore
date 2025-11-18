@@ -43,3 +43,5 @@ ADMIN_PANEL.md
 
 /storage/tntsearch/
 
+# Ignore docs directory
+/docs/
