@@ -7,6 +7,7 @@ return [
   "Users"       =>"المستخدمين",
   "Doctors"=> "الأطباء",
   "Patients"=> "المرضى",
+   "Specialties" => "التخصصات",
   "Bookings" =>"الحجوزات",
   "Payments"=> "المدفوعات",
   "Disputes"=>"النزاعات",

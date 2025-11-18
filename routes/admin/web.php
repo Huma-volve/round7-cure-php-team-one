@@ -15,8 +15,7 @@ use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Support\Facades\Route;
-
-
+use App\Http\Controllers\Admin\SpecialtyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,4 +118,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+
+
+        //specialties
+
+
+    Route::resource('/specialties', SpecialtyController::class);
+
+
     });

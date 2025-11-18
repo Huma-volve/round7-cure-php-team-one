@@ -10,6 +10,7 @@ return [
   "Doctors"=> "Doctors",
   "Patients"=> "Patients",
   "Bookings" =>"Bookings",
+  "Specialties" => "Specialties",
   "Payments"=> "Payments",
   "Disputes"=>"Disputes",
   "Tickets"=> "Tickets",

@@ -405,7 +405,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function handleGoogleCallback(Request $request): JsonResponse
+    public function handleGoogleCallback(Request $request)
     {
         $request->validate([
             'code' => 'required|string',
@@ -416,39 +416,89 @@ class AuthController extends Controller
             $client = $this->buildGoogleClient($request->input('state'));
             $tokenData = $client->fetchAccessTokenWithAuthCode($request->code);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unable to exchange authorization code with Google.',
-                'error' => $e->getMessage(),
-            ], 500);
+            // Check if request wants JSON response (API call) or redirect (web browser)
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to exchange authorization code with Google.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+            
+            // Redirect to frontend with error
+            $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+            return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Unable to exchange authorization code'));
         }
 
         if (isset($tokenData['error'])) {
-            return response()->json([
-                'success' => false,
-                'message' => $tokenData['error_description'] ?? 'Failed to fetch Google tokens.',
-            ], 400);
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $tokenData['error_description'] ?? 'Failed to fetch Google tokens.',
+                ], 400);
+            }
+            
+            $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+            return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode($tokenData['error_description'] ?? 'Failed to fetch Google tokens'));
         }
 
         $idToken = $tokenData['id_token'] ?? null;
 
         if (!$idToken) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Google response did not include an ID token.',
-            ], 400);
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Google response did not include an ID token.',
+                ], 400);
+            }
+            
+            $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+            return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Google response did not include an ID token'));
         }
 
         $payload = $client->verifyIdToken($idToken);
 
         if (!$payload) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unable to verify Google ID token.',
-            ], 401);
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to verify Google ID token.',
+                ], 401);
+            }
+            
+            $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+            return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Unable to verify Google ID token'));
         }
 
-        return $this->completeGoogleLogin($payload);
+        // Complete login using existing method
+        $loginResponse = $this->completeGoogleLogin($payload);
+        
+        // If request wants JSON (API call), return JSON directly
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return $loginResponse;
+        }
+
+        // Extract token and user from response
+        $responseData = json_decode($loginResponse->getContent(), true);
+        $token = $responseData['token'] ?? null;
+        
+        if (!$token) {
+            $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+            return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Failed to generate authentication token'));
+        }
+
+        // For web browser, redirect to frontend with token
+        $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
+        $redirectUrl = $frontendUrl . '/auth/google/callback?token=' . urlencode($token) . '&success=true';
+        
+        // For mobile apps, check if state contains mobile app identifier
+        $state = $request->input('state', '');
+        if (str_contains($state, 'mobile://') || str_contains($state, 'app://')) {
+            // Mobile app deep link
+            return redirect($state . '?token=' . urlencode($token) . '&success=true');
+        }
+        
+        return redirect($redirectUrl);
     }
 
     public function googleLogin(Request $request)
@@ -457,14 +507,125 @@ class AuthController extends Controller
             'token' => 'required|string',
         ]);
 
-        $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
-        $payload = $client->verifyIdToken($request->token);
+        // Strict validation: Google ID tokens MUST be in JWT format (3 parts separated by dots)
+        $token = trim($request->token);
+        $tokenParts = explode('.', $token);
+        $isJWT = count($tokenParts) === 3;
 
-        if (!$payload) {
-            return response()->json(['error' => 'Invalid Google token'], 401);
+        // Reject Sanctum tokens (format: id|token or just token part)
+        if (str_contains($token, '|')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token type',
+                'error' => 'The provided token appears to be a Laravel Sanctum token, not a Google ID token.',
+                'hint' => 'Google ID tokens must be in JWT format (3 parts separated by dots, starting with eyJ...). Get the token from Google Identity Services on your mobile app, not from Laravel authentication.',
+                'received_token_preview' => substr($token, 0, 50) . '...',
+                'token_length' => strlen($token),
+            ], 400);
         }
 
-        return $this->completeGoogleLogin($payload);
+        // STRICT: Reject any token that is not JWT format (must have exactly 3 parts)
+        if (!$isJWT) {
+            $tokenLength = strlen($token);
+            $startsWithEyJ = str_starts_with($token, 'eyJ');
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token format - not a JWT',
+                'error' => 'Google ID tokens must be in JWT format with exactly 3 parts separated by dots.',
+                'hint' => 'The token you sent has ' . count($tokenParts) . ' part(s), but Google ID tokens must have exactly 3 parts (header.payload.signature). Make sure you are sending the Google ID token from Google Sign-In SDK, not a Sanctum token or authorization code.',
+                'token_format' => [
+                    'parts_count' => count($tokenParts),
+                    'starts_with_eyJ' => $startsWithEyJ,
+                    'length' => $tokenLength,
+                    'preview' => substr($token, 0, 50) . '...',
+                ],
+                'expected_format' => 'eyJ... (3 parts separated by dots)',
+            ], 400);
+        }
+
+        // Additional validation: JWT tokens should start with 'eyJ' (base64 encoded JSON header)
+        $startsWithEyJ = str_starts_with($token, 'eyJ');
+        if (!$startsWithEyJ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid JWT format',
+                'error' => 'Google ID tokens (JWT) must start with "eyJ" (base64 encoded JSON header).',
+                'hint' => 'The token format looks incorrect. Make sure you are sending the complete Google ID token from Google Sign-In SDK.',
+                'token_preview' => substr($token, 0, 50) . '...',
+            ], 400);
+        }
+
+        // Validate token length (JWT tokens are typically 500+ characters)
+        if (strlen($token) < 100) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token too short',
+                'error' => 'Google ID tokens are typically 500+ characters long. The provided token is too short.',
+                'hint' => 'Make sure you are sending the complete Google ID token, not a partial token or Sanctum token.',
+                'token_length' => strlen($token),
+            ], 400);
+        }
+
+        try {
+            $clientId = env('GOOGLE_CLIENT_ID');
+            
+            if (!$clientId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Google Client ID not configured',
+                    'error' => 'GOOGLE_CLIENT_ID is not set in .env file.',
+                    'hint' => 'Please set GOOGLE_CLIENT_ID in your .env file.',
+                ], 500);
+            }
+
+            $client = new Google_Client(['client_id' => $clientId]);
+            $payload = $client->verifyIdToken($token);
+
+            if (!$payload) {
+                // Try to decode token to get more info
+                $tokenParts = explode('.', $token);
+                $decodedPayload = null;
+                
+                if (count($tokenParts) >= 2) {
+                    try {
+                        $decodedPayload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $tokenParts[1])), true);
+                    } catch (\Exception $e) {
+                        // Ignore decode errors
+                    }
+                }
+
+                $errorDetails = [
+                    'success' => false,
+                    'message' => 'Invalid Google token',
+                    'error' => 'Unable to verify Google ID token. The token may be expired, invalid, or the Client ID does not match.',
+                    'hint' => 'Make sure you are sending a fresh Google ID token from Google Sign-In SDK, and that the Client ID in your .env matches the one used to generate the token.',
+                ];
+
+                if ($decodedPayload) {
+                    $errorDetails['token_info'] = [
+                        'audience' => $decodedPayload['aud'] ?? null,
+                        'issuer' => $decodedPayload['iss'] ?? null,
+                        'expires_at' => isset($decodedPayload['exp']) ? date('Y-m-d H:i:s', $decodedPayload['exp']) : null,
+                        'is_expired' => isset($decodedPayload['exp']) ? (time() > $decodedPayload['exp']) : null,
+                        'configured_client_id' => $clientId,
+                        'client_id_match' => isset($decodedPayload['aud']) && $decodedPayload['aud'] === $clientId,
+                    ];
+                }
+
+                return response()->json($errorDetails, 401);
+            }
+
+            return $this->completeGoogleLogin($payload);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to verify Google token',
+                'error' => $e->getMessage(),
+                'hint' => 'Make sure you are sending a valid Google ID token (JWT format) from Google Sign-In SDK. Check that GOOGLE_CLIENT_ID in .env matches the Client ID used to generate the token.',
+                'exception_type' => get_class($e),
+            ], 400);
+        }
     }
 
     protected function buildGoogleClient(?string $state = null): Google_Client
