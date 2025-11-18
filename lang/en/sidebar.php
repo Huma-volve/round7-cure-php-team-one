@@ -12,6 +12,7 @@ return [
   "Payments"=> "Payments",
   "Disputes"=>"Disputes",
   "Tickets"=> "Tickets",
+  "Faqs" => "FAQs",
   "Settings"=> "Settings",
   "Settings Screens"=> "Settings Screens"
 

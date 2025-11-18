@@ -13,17 +13,62 @@ class SpecialtySeeder extends Seeder
      */
     public function run(): void
     {
-      $specialties = [
+        $specialties = [
             'Cardiology',
             'Dermatology',
             'Pediatrics',
-            'Dentist',
+            'Dentistry',
             'Neurology',
             'Ophthalmology',
             'General Practice',
+            'Orthopedics',
+            'Oncology',
+            'Endocrinology',
+            'Gastroenterology',
+            'Pulmonology',
+            'Nephrology',
+            'Rheumatology',
+            'Hematology',
+            'Infectious Diseases',
+            'Allergy and Immunology',
+            'Psychiatry',
+            'Psychology',
+            'Obstetrics and Gynecology',
+            'Urology',
+            'Otolaryngology (ENT)',
+            'Dermatologic Surgery',
+            'Plastic Surgery',
+            'Emergency Medicine',
+            'Family Medicine',
+            'Sports Medicine',
+            'Pain Management',
+            'Internal Medicine',
+            'Geriatrics',
+            'Palliative Care',
+            'Radiology',
+            'Nuclear Medicine',
+            'Pathology',
+            'Anesthesiology',
+            'Critical Care',
+            'Sleep Medicine',
+            'Rehabilitative Medicine',
+            'Clinical Nutrition',
+            'Diabetology',
+            'Public Health',
+            'Occupational Medicine',
+            'Dental Surgery',
+            'Periodontics',
+            'Prosthodontics',
+            'Endodontics',
+            'Pediatric Dentistry',
+            'Oral and Maxillofacial Surgery',
+            'Speech and Language Therapy',
+            'Audiology',
+            'Genetics and Genomics',
         ];
+
         foreach ($specialties as $specialtyName) {
-           Specialty::create(['name' => $specialtyName]);
+            Specialty::firstOrCreate(['name' => $specialtyName]);
         }
     }
 }

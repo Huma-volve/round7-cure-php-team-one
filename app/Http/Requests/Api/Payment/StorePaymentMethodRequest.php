@@ -17,40 +17,22 @@ class StorePaymentMethodRequest extends FormRequest
         $maxYear = $currentYear + 20;
 
         return [
-            'provider' => ['required', 'in:card,apple_pay,paypal'],
-            'brand' => ['nullable', 'string', 'max:100'],
-            'last4' => ['nullable', 'digits:4'],
-            'exp_month' => ['nullable', 'integer', 'between:1,12'],
-            'exp_year' => ['nullable', 'integer', "between:$currentYear,$maxYear"],
-            'gateway' => ['required', 'string', 'max:100'],
-            'token' => ['required', 'string', 'max:255'],
-            'is_default' => ['sometimes', 'boolean'],
-            'metadata' => ['nullable', 'array'],
+            'cardholder_name' => ['required', 'string', 'max:120'],
+            'card_number' => ['required', 'digits_between:12,19'],
+            'brand' => ['nullable', 'string', 'max:60'],
+            'exp_month' => ['required', 'integer', 'between:1,12'],
+            'exp_year' => ['required', 'integer', "between:$currentYear,$maxYear"],
+            'cvv' => ['required', 'digits_between:3,4'],
+            'gateway' => ['nullable', 'string', 'max:60'],
+            'is_default' => ['nullable', 'boolean'],
         ];
     }
 
-    public function prepareForValidation(): void
+    protected function prepareForValidation(): void
     {
         $this->merge([
             'is_default' => $this->boolean('is_default'),
         ]);
-    }
-
-    public function withValidator($validator): void
-    {
-        $validator->after(function ($validator) {
-            $provider = $this->input('provider');
-
-            if ($provider === 'card') {
-                if (!$this->filled('last4')) {
-                    $validator->errors()->add('last4', __('validation.required', ['attribute' => 'last4']));
-                }
-
-                if (!$this->filled('exp_month') || !$this->filled('exp_year')) {
-                    $validator->errors()->add('expiry', __('messages.payment_method.expiry_required'));
-                }
-            }
-        });
     }
 }
 

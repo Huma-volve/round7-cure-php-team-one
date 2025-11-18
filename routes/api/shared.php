@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\PatientPaymentMethodController;
+use App\Http\Controllers\Api\SupportTicketController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\WebhookController;
@@ -32,6 +34,30 @@ Route::middleware(['auth:sanctum'])
         Route::post('/create-intent', 'createIntent')->name('create-intent');
         Route::post('/confirm', 'confirm')->name('confirm');
         Route::get('/{payment}', 'show')->name('show');
+    });
+
+// Patient payment methods
+Route::middleware(['auth:sanctum'])
+    ->prefix('payment-methods')
+    ->name('payment-methods.')
+    ->controller(PatientPaymentMethodController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/{paymentMethod}/default', 'setDefault')->name('set-default');
+        Route::delete('/{paymentMethod}', 'destroy')->name('destroy');
+    });
+
+// Support tickets
+Route::middleware(['auth:sanctum'])
+    ->prefix('support/tickets')
+    ->name('support.tickets.')
+    ->controller(SupportTicketController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{ticket}', 'show')->name('show');
+        Route::post('/', 'store')->name('store');
+        Route::post('/{ticket}/reply', 'reply')->name('reply');
     });
 
 // Webhooks (public by provider, protect via secrets)

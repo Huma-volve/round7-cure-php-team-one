@@ -53,8 +53,8 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-            <li class="nav-item active  ms-auto">
-                <a class="nav-link" href="{{ route('admin.dashboard') }}">
+            <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} ms-auto">
+                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>{{ __('sidebar.Dashboard') }}</span>
                 </a>
@@ -66,15 +66,15 @@
                 {{ __('sidebar.Management') }}
             </div>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.users.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
                     <i class="fas fa-users"></i>
                     <span>{{ __('sidebar.Users') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.doctors.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.doctors.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.doctors.*') ? 'active' : '' }}" href="{{ route('admin.doctors.index') }}">
                     <i class="fas fa-user-md"></i>
                     <span>{{ __('sidebar.Doctors') }}</span>
                 </a>
@@ -82,42 +82,48 @@
 
             <hr class="sidebar-divider">
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.patients.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.patients.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.patients.*') ? 'active' : '' }}" href="{{ route('admin.patients.index') }}">
                     <i class="fas fa-user-injured"></i>
                     <span>{{ __('sidebar.Patients') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.bookings.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
                     <i class="fas fa-calendar-check"></i>
                     <span>{{ __('sidebar.Bookings') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.payments.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
                     <i class="fas fa-credit-card"></i>
                     <span>{{ __('sidebar.Payments') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.disputes.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.disputes.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.disputes.*') ? 'active' : '' }}" href="{{ route('admin.disputes.index') }}">
                     <i class="fas fa-exclamation-triangle"></i>
                     <span>{{ __('sidebar.Disputes') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.tickets.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}" href="{{ route('admin.tickets.index') }}">
                     <i class="fas fa-ticket-alt"></i>
                     <span>{{ __('sidebar.Tickets') }}</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.settings.index') }}">
+            <li class="nav-item {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
+                    <i class="fas fa-question-circle"></i>
+                    <span>{{ __('sidebar.Faqs') }}</span>
+                </a>
+            </li>
+            <li class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
                     {{-- <i class="fas fa-ticket-alt"></i> --}}
                   <i class="fas fa-cog"></i>
 

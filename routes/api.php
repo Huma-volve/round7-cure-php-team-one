@@ -145,6 +145,8 @@ Route::delete('/delete-account', [AuthController::class, 'deleteAccount']);
 Route::get('/google-auth-url', [AuthController::class, 'getGoogleAuthUrl']);
 Route::get('/google/callback', [AuthController::class, 'handleGoogleCallback']);
 Route::post('/google-login', [AuthController::class, 'googleLogin']);
+Route::post('/google/user-data', [AuthController::class, 'getGoogleUserData']);
+Route::middleware('auth:sanctum')->get('/google/my-data', [AuthController::class, 'getMyGoogleData']);
 
 
 /*first case for the patient */
