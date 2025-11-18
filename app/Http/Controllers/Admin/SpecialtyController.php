@@ -18,7 +18,7 @@ class SpecialtyController extends Controller
         $query = $request->input('q');
 
         if ($query) {
-            $specialties = Specialty::scopeSearch(  $query , $query)->paginate();
+            $specialties = Specialty::search($query)->paginate();
             return view('admin.specialties.index', compact('specialties'));
         }
         $specialties = Specialty::latest()->paginate();
