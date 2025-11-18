@@ -8,7 +8,7 @@
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
-        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <!-- Search Dropdown (XS only) -->
         <li class="nav-item dropdown no-arrow d-sm-none">
             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,14 +41,12 @@
                     : 'https://flagcdn.com/w20/us.png';
                 $currentShort = strtoupper($currentLocale);
             @endphp
-
             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="languageDropdown"
                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="{{ $currentFlag }}" alt="{{ $currentLanguage }}" class="rounded" width="20" height="20">
                 <span class="text-gray-600 small d-none d-sm-inline">{{ $currentLanguage }}</span>
                 <span class="text-gray-600 small d-inline d-sm-none">{{ $currentShort }}</span>
             </a>
-
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="languageDropdown">
                 <a class="dropdown-item d-flex align-items-center py-2 {{ app()->getLocale() == 'ar' ? 'active font-weight-bold' : '' }}"
@@ -64,20 +62,18 @@
             </div>
         </li>
 
-        <!-- Nav Item - Alerts -->
+        <!-- Alerts Dropdown -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
-
                 <span class="badge badge-danger badge-counter">{{ $unreadCount ?? 0 }}</span>
             </a>
-
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">Alerts Center</h6>
 
-                <!-- START Scrollable area -->
+                <!-- Scrollable notifications -->
                 <div class="notifications-scroll">
                     @forelse (($notifications ?? collect()) as $notification)
                         <a class="dropdown-item d-flex align-items-center" href="#">
@@ -97,7 +93,6 @@
                         <a class="dropdown-item text-center small text-gray-500">No notifications found</a>
                     @endforelse
                 </div>
-                <!-- END Scrollable area -->
 
                 <a class="dropdown-item text-center small text-gray-500"
                    href="{{ route('admin.notifications.index') }}">
@@ -106,18 +101,16 @@
             </div>
         </li>
 
-        <!-- Nav Item - Messages -->
+        <!-- Messages Dropdown -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-envelope fa-fw"></i>
                 <span class="badge badge-danger badge-counter">{{ $ticketsCount ?? 0 }}</span>
             </a>
-
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="messagesDropdown">
                 <h6 class="dropdown-header">Tickets Center</h6>
-
                 <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.tickets.index') }}">
                     <div class="dropdown-list-image mr-3">
                         <div class="status-indicator bg-success"></div>
@@ -128,11 +121,8 @@
                         <div class="small text-gray-500">Go to tickets to view details</div>
                     </div>
                 </a>
-
                 <a class="dropdown-item text-center small text-gray-500"
-                   href="{{ route('admin.tickets.index') }}">
-                    Read More Messages
-                </a>
+                   href="{{ route('admin.tickets.index') }}">Read More Messages</a>
             </div>
         </li>
 
@@ -142,83 +132,53 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                    {{ Auth::user()->name }}
-                </span>
-                <img class="img-profile rounded-circle"
-                     src="{{ $avatarUrl ?? asset('img/undraw_profile.svg') }}">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                <img class="img-profile rounded-circle" src="{{ $avatarUrl ?? asset('img/undraw_profile.svg') }}">
             </a>
-
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                  aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ route('admin.account.profile') }}">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
                 </a>
                 <a class="dropdown-item" href="{{ route('admin.account.settings') }}">
-                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Settings
                 </a>
                 <a class="dropdown-item" href="{{ route('admin.account.activity-log') }}">
-                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Activity Log
+                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i> Activity Log
                 </a>
-
                 <div class="dropdown-divider"></div>
-
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
                 </a>
             </div>
         </li>
 
     </ul>
-
 </nav>
 
-<!-- RTL Styles -->
+<!-- RTL Support -->
 @if(app()->getLocale()=='ar')
 <style>
-    /* .rtl-navbar { direction: rtl; }
-
-    .rtl-navbar .navbar-nav.ml-auto {
-        margin-left: 0 !important;
-        margin-right: auto !important;
-    }
-
-    .rtl-navbar .dropdown-menu {
-        text-align: right;
-        direction: rtl;
-        right: auto;
-        left: 0;
-    }
-
-    .rtl-navbar .dropdown-item .mr-2 {
-        margin-right: 0 !important;
-        margin-left: .5rem !important;
-    }
-
-    .rtl-navbar #userDropdown .mr-2 {
-        margin-right: 0 !important;
-        margin-left: .5rem !important;
-    } */
+    .rtl-navbar { direction: rtl; }
+    .rtl-navbar .navbar-nav.ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+    .rtl-navbar .dropdown-menu { text-align: right; direction: rtl; right: auto; left: 0; }
+    .rtl-navbar .dropdown-item .mr-2, .rtl-navbar #userDropdown .mr-2 { margin-right: 0 !important; margin-left: .5rem !important; }
 </style>
 @endif
 
+<!-- Scrollable notifications -->
 <style>
-/* Scroll area inside notifications */
-/* .notifications-scroll {
+.notifications-scroll {
     max-height: 250px;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 5px;
-} */
+}
 </style>
 
+<!-- Mark All Notifications as Read -->
 <script>
 document.getElementById('alertsDropdown').addEventListener('click', function () {
-
     fetch('/notifications/{{ Auth::id() }}/markAllAsRead', {
         method: 'POST',
         headers: {
@@ -228,18 +188,16 @@ document.getElementById('alertsDropdown').addEventListener('click', function () 
     })
     .then(res => res.json())
     .then(data => {
-        if (data.success) {
-
-            // صفر العداد
+        if (data.status === true) {
+            // Reset badge counter
             let counter = document.querySelector('.badge-counter');
             if (counter) counter.textContent = 0;
 
-            // شيل الخط العريض من الإشعارات
+            // Remove bold from unread notifications
             document.querySelectorAll('.notifications-scroll span.font-weight-bold')
                 .forEach(el => el.classList.remove('font-weight-bold'));
         }
-    });
+    })
+    .catch(err => console.error(err));
 });
 </script>
-
-
