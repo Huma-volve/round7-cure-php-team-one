@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\ContactInfoController;
+use App\Http\Controllers\Api\FaqController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +29,9 @@ Route::get('/test-role', function () {
         'roles_list' => ['admin', 'doctor', 'patient'],
     ]);
 });
+
+Route::get('/faqs', [FaqController::class, 'index'])->name('public.faqs.index');
+Route::get('/faqs/{faq}', [FaqController::class, 'show'])->name('public.faqs.show');
+Route::post('/contact', [ContactController::class, 'store'])->name('public.contact.store');
+Route::get('/contact-info', [ContactInfoController::class, 'show'])->name('public.contact.info');
 

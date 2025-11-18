@@ -14,6 +14,11 @@ return [
     'booking.conflict' => 'هذا الوقت غير متاح، يرجى اختيار وقت آخر',
     'booking.unavailable' => 'الوقت غير متاح',
 
+    // Ticket messages
+    'ticket.created' => 'تم إرسال طلب الدعم بنجاح',
+    'ticket.reply_sent' => 'تم إرسال الرد على التذكرة بنجاح',
+    'ticket.status_updated' => 'تم تحديث حالة التذكرة بنجاح',
+
     // Payment messages
     'payment.created' => 'تم إنشاء عملية الدفع',
     'payment.confirmed' => 'تم تأكيد عملية الدفع',

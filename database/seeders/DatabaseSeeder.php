@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed Dashboard data (bookings, payments, disputes, tickets)
         $this->call(DashboardDataSeeder::class);
+        $this->call(FaqSeeder::class);
+        $this->call(ContactInfoSeeder::class);
 
 
     }

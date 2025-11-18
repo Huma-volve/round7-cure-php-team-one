@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\DisputeController;
 use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PatientPaymentMethodController;
 use App\Http\Controllers\Admin\AccountController;
@@ -72,7 +73,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])
 
         // Support Tickets
         Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-        Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
+        Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+        Route::post('/tickets/{ticket}/reply', [TicketController::class, 'reply'])->name('tickets.reply');
+        Route::post('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.status');
+
+        // FAQs Management
+        Route::resource('faqs', FaqController::class)->except(['show']);
 
         // Doctors Management
         Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');

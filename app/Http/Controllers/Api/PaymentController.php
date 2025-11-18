@@ -91,13 +91,45 @@ class PaymentController extends Controller
             ]);
         }
         
-        return $this->successResponse([
+        // Extract error message from raw response if payment failed
+        $errorMessage = null;
+        if (!$resp->isSuccessful()) {
+            $raw = $resp->getRaw();
+            
+            // Check for PayPal error structure
+            if (isset($raw['error'])) {
+                $error = $raw['error'];
+                $errorMessage = $error['details'][0]['description'] 
+                    ?? $error['message'] 
+                    ?? $error['name'] 
+                    ?? 'PayPal payment failed';
+            } else {
+                // Fallback for other error structures
+                $errorMessage = $raw['error_description'] 
+                    ?? $raw['message'] 
+                    ?? $raw['details'][0]['description'] 
+                    ?? ($raw['name'] ?? 'Payment confirmation failed');
+            }
+        }
+        
+        $responseData = [
             'status' => $resp->getStatus(),
             'provider' => $resp->getProvider(),
             'payment_id' => $resp->getPaymentId(),
             'successful' => $resp->isSuccessful(),
             'payment_updated' => $payment !== null,
-        ], 'messages.payment.confirmed');
+        ];
+        
+        if ($errorMessage) {
+            $responseData['error_message'] = $errorMessage;
+        }
+        
+        // Add raw response in debug mode
+        if (config('app.debug')) {
+            $responseData['raw_response'] = $resp->getRaw();
+        }
+        
+        return $this->successResponse($responseData, 'messages.payment.confirmed');
     }
 
     public function show(Payment $payment): JsonResponse

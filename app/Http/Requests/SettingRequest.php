@@ -22,12 +22,20 @@ class SettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'app_name'    => 'nullable|string|max:255',
-            'email'       => 'nullable|email',
-            'phone'       => 'nullable|string|max:20',
-            'address'     => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'logo'        => 'nullable|image|mimes:jpeg,jpg,png,bmp,gif,svg',
+            'app_name'        => 'nullable|string|max:255',
+            'email'           => 'nullable|email',
+            'phone'           => 'nullable|string|max:30',
+            'address'         => 'nullable|string|max:255',
+            'description'     => 'nullable|string',
+            'footer_tagline'  => 'nullable|string',
+            'footer_phone'    => 'nullable|string|max:30',
+            'footer_email'    => 'nullable|email',
+            'footer_address'  => 'nullable|string|max:255',
+            'social_facebook' => 'nullable|url',
+            'social_whatsapp' => 'nullable|url',
+            'social_youtube'  => 'nullable|url',
+            'social_linkedin' => 'nullable|url',
+            'logo'            => 'nullable|image|mimes:jpeg,jpg,png,bmp,gif,svg',
         ];
 
     }

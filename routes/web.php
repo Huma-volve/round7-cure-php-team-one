@@ -21,9 +21,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+
     Route::patch('/doctors/{id}/restore', [DoctorController::class, 'restore'])
-    ->name('admin.doctors.restore');
+        ->name('admin.doctors.restore');
+});
 
 // Payment Test Routes (for testing payment services)
 Route::prefix('payment-test')->name('payment-test.')->group(function () {
@@ -32,7 +33,6 @@ Route::prefix('payment-test')->name('payment-test.')->group(function () {
     Route::post('/confirm', [\App\Http\Controllers\PaymentTestController::class, 'confirm'])->name('confirm');
 });
 
-
-require __DIR__ . '/admin/doctor.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin/web.php';
+require __DIR__.'/admin/doctor.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin/web.php';
