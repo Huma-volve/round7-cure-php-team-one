@@ -89,6 +89,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         });
+        
             $appName = Setting::getValue('app_name', config('app.name'));
                View::share('appName', $appName);
             $logo = Setting::getValue('logo');
