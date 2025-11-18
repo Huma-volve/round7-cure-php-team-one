@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
 
             // نوع الرسالة: text, image, video, file, audio
-            $table->enum('type', ['text','image','video','file','audio'])->default('text');
+            $table->enum('type', ['text','image','video','file','audio','pdf'])->default('text');
 
             // نص الرسالة إن وجد
             $table->text('body')->nullable();

@@ -12,7 +12,7 @@ class ConfirmPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gateway' => ['required', Rule::in(['stripe', 'paypal'])],
+            'gateway' => ['required', Rule::in(['stripe', 'paypal', 'cash'])],
             'payment_id' => ['required', 'string'],
         ];
     }

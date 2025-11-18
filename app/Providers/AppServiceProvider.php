@@ -3,19 +3,23 @@
 namespace App\Providers;
 
 use App\Models\Booking;
+use App\Models\Chat;
 use App\Models\Notification;
+use App\Models\Payment;
 use App\Models\PaymentMethod;
-use App\Models\Ticket;
 use App\Models\Review;
 use App\Models\Setting;
-use App\Policies\PaymentMethodPolicy;
+use App\Models\Ticket;
 use App\Observers\BookingObserver;
+use App\Observers\ChatObserver;
+use App\Observers\PaymentObserver;
 use App\Observers\ReviewObserver;
+use App\Policies\PaymentMethodPolicy;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Stripe\StripeClient;
 
@@ -56,6 +60,10 @@ class AppServiceProvider extends ServiceProvider
 
         Booking::observe(BookingObserver::class);
         Review::observe(ReviewObserver::class);
+        Payment::observe(PaymentObserver::class);
+        Chat::observe(ChatObserver::class);
+
+
 
         Gate::policy(PaymentMethod::class, PaymentMethodPolicy::class);
 
@@ -89,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         });
-        
+
             $appName = Setting::getValue('app_name', config('app.name'));
                View::share('appName', $appName);
             $logo = Setting::getValue('logo');

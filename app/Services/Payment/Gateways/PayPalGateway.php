@@ -50,13 +50,40 @@ class PayPalGateway implements PaymentGatewayInterface
     public function confirm(string $paymentId, array $context = []): PaymentResponseDTO
     {
         $captured = $this->client->capturePaymentOrder($paymentId);
+        
+        // Check for errors first
+        if (isset($captured['error']) || isset($captured['error_description']) || isset($captured['name'])) {
+            return new PaymentResponseDTO(
+                successful: false,
+                provider: 'paypal',
+                paymentId: $paymentId,
+                clientSecret: null,
+                approveUrl: null,
+                status: 'FAILED',
+                raw: $captured,
+            );
+        }
+        
+        // PayPal response structure can vary, check multiple possible locations for status
+        $status = $captured['status'] 
+            ?? $captured['purchase_units'][0]['payments']['captures'][0]['status'] 
+            ?? 'UNKNOWN';
+        
+        // Check if status indicates success
+        $isSuccessful = in_array(strtoupper($status), ['COMPLETED', 'APPROVED']);
+        
+        // Get the actual capture ID if available
+        $captureId = $captured['id'] 
+            ?? $captured['purchase_units'][0]['payments']['captures'][0]['id'] 
+            ?? $paymentId;
+        
         return new PaymentResponseDTO(
-            successful: ($captured['status'] ?? '') === 'COMPLETED',
+            successful: $isSuccessful,
             provider: 'paypal',
-            paymentId: $captured['id'] ?? $paymentId,
+            paymentId: $captureId,
             clientSecret: null,
             approveUrl: null,
-            status: (string)($captured['status'] ?? 'COMPLETED'),
+            status: (string)$status,
             raw: $captured,
         );
     }

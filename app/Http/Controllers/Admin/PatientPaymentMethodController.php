@@ -26,6 +26,7 @@ class PatientPaymentMethodController extends Controller
         return view('admin.users.payment_methods.index', compact('user', 'methods'));
     }
 
+
     public function setDefault(User $user, PaymentMethod $paymentMethod): RedirectResponse
     {
         $this->ensureMethodBelongsToUser($user, $paymentMethod);

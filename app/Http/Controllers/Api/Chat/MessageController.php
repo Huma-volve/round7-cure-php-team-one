@@ -73,7 +73,11 @@ class MessageController extends Controller
 
 
     public function send(SendMessageRequest $request)
+    
     {
+
+      
+
         $user = $request->user();
         $chatId = $request->input('chat_id');
         $receiverId = $request->input('receiver_id'); // هنستخدمها لو مفيش chat_id
@@ -122,26 +126,27 @@ if (!$chat) {
             $attachmentMime = null;
             $attachmentSize = null;
 
-            if ($request->hasFile('attachment')) {
-                $file = $request->file('attachment');
-                $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
-                $attachmentPath = $file->storeAs('chat_attachments', $filename, 'public');
-                $attachmentMime = $file->getClientMimeType();
-                $attachmentSize = $file->getSize();
-            }
-            // $receiverId=$request->receiver_id;
-            //  dd($receiverId);
-            // ✅ إنشاء الرسالة
-            $message = Message::create([
-                'chat_id' => $chat->id,
-                'sender_id' => $user->id,
-                'receiver_id' => $receiverId,
-                'type' => $request->type,
-                'body' => $request->body,
-                'attachment_path' => $attachmentPath,
-                'attachment_mime' => $attachmentMime,
-                'attachment_size' => $attachmentSize,
-            ]);
+        if ($request->hasFile('attachment')) {
+    $file = $request->file('attachment');
+
+    $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+
+    $attachmentPath = $file->storeAs('chat_attachments', $filename, 'public');
+    $attachmentMime = $file->getClientMimeType();
+    $attachmentSize = $file->getSize();
+}
+
+$message = Message::create([
+    'chat_id' => $chat->id,
+    'sender_id' => $user->id,
+    'receiver_id' => $receiverId,
+    'type' => $request->type,
+    'body' => $request->body,
+    'attachment_path' => $attachmentPath,
+    'attachment_mime' => $attachmentMime,
+    'attachment_size' => $attachmentSize,
+]);
+
 
             // ✅ تحديث بيانات الشات
             $chat->update([
@@ -154,16 +159,18 @@ if (!$chat) {
 
             DB::commit();
 
-            // ✅ إعداد الريسبونس
-            return response()->json([
-                'chat' => $chat->id,
-                'message' => [
-                    'id' => $message->id,
-                    'body' => $message->body,
-                    'attachment_url' => $attachmentPath ? Storage::disk('public')->url($attachmentPath) : null,
-                    'created_at' => $message->created_at,
-                ],
-            ], 201);
+        return response()->json([
+    'chat_id' => $chat->id,
+    'message' => [
+        'id' => $message->id,
+        'body' => $message->body,
+        'type' => $message->type,
+        'attachment_url' => $attachmentPath
+            ? Storage::disk('public')->url($attachmentPath)
+            : null,
+        'created_at' => $message->created_at,
+    ],
+]);
 
         } catch (\Exception $e) {
             DB::rollBack();

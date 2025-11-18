@@ -175,6 +175,7 @@ class ChatController extends Controller
     {
         $user = auth()->user();
 
+
         $favorite = $request->query('favorite'); // true/false/null
         $archived = $request->query('archived'); // true/false/null
 
@@ -227,6 +228,8 @@ class ChatController extends Controller
                     'id' => $chat->messages->first()->id,
                     'body' => $chat->messages->first()->body,
                     'created_at' => $chat->messages->first()->created_at,
+                    'type' => $chat->messages->first()->type,
+                    'attachment_url' => $chat->messages->first()->attachment_path,
                 ] : null,
                 'unread_count' => $unreadCount,
                 'meta' => $chat->meta->first() ? [
