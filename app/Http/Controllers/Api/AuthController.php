@@ -45,7 +45,7 @@ class AuthController extends Controller
             return response()->json(['token' => $token, new UserResource($user)]);
         }
 
-        return response()->json(['error' => 'fail to login'], 401);
+        return response()->json(['error' => 'Incorrect email or password'], 401);
     }
 
 

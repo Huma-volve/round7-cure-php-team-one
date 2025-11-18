@@ -73,7 +73,11 @@ class MessageController extends Controller
 
 
     public function send(SendMessageRequest $request)
+    
     {
+
+      
+
         $user = $request->user();
         $chatId = $request->input('chat_id');
         $receiverId = $request->input('receiver_id'); // هنستخدمها لو مفيش chat_id

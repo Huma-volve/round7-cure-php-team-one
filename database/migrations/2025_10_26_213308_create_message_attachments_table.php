@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('message_attachments', function (Blueprint $table) {
       $table->id();
     $table->foreignId('message_id')->constrained('messages')->cascadeOnDelete();
-    $table->enum('type', ['image', 'video', 'voice', 'file']);
+    $table->enum('type', ['image', 'video', 'voice', 'file','pdf']);
     $table->string('url');
     $table->string('size')->nullable();
     $table->timestamps();
