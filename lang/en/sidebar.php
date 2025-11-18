@@ -6,6 +6,7 @@ return [
   "Dashboard"  =>"  Dashboard",
   "Management" => "Management",
   "Users"       =>"Users",
+  "Admins"       =>"Admins",
   "Doctors"=> "Doctors",
   "Patients"=> "Patients",
   "Bookings" =>"Bookings",

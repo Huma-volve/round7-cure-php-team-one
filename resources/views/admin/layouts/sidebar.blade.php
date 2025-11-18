@@ -125,6 +125,13 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" href="{{ route('admin.admins.index') }}">
+
+                    <i class="fas fa-user-shield"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Admins') }}</span>
+                </a>
+            </li>
 
 
             <li class="nav-item {{ request()->routeIs('admin.doctors.*') ? 'active' : '' }}">

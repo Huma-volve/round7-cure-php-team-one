@@ -18,7 +18,8 @@ return [
   "DoctorBookings" => "حجوزاتي",
   "DoctorPatients" => "مرضاي",
   "DoctorPayments" => "مدفوعاتي",
-  "DoctorSchedule" => "أوقات العمل"
+  "DoctorSchedule" => "أوقات العمل",
+  "Admins"       =>"الادمن",
 
 
 ] ;

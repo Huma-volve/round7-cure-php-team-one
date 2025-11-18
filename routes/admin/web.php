@@ -1,19 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\DisputeController;
-use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PatientPaymentMethodController;
-use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use Illuminate\Support\Facades\Route;
+
 
 
 /*
@@ -41,6 +43,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/{id}/roles', [UserController::class, 'updateRoles'])->name('users.updateRoles');
+
+        Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
+
 
         Route::prefix('users/{user}/payment-methods')
             ->name('users.payment-methods.')
