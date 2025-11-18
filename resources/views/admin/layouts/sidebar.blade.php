@@ -45,18 +45,22 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
                 href="{{ route('admin.dashboard') }}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon  ">
+                     <img style="width: 50px;" src="{{ asset('storage/' . $logo) }}" alt="{{ $appName }}" >
                 </div>
-                <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
+
+             <div class="sidebar-brand-text mx-3 font-weight-bold">
+                {{ \App\Models\Setting::getValue('app_name', config('app.name')) }}  </div>
+
+
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-            <li class="nav-item active  ms-auto">
+            <li class="nav-item   {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>{{ __('sidebar.Dashboard') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Dashboard') }}</span>
                 </a>
             </li>
 
@@ -66,62 +70,63 @@
                 {{ __('sidebar.Management') }}
             </div>
 
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.users.index') }}">
+            <li class="nav-item {{request()->routeIs('admin.users.*') ? 'active' : ''}}">
+                <a class="nav-link " href="{{ route('admin.users.index') }}">
                     <i class="fas fa-users"></i>
-                    <span>{{ __('sidebar.Users') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Users') }}</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.doctors.index') }}">
+                <a class="nav-link {{request()->routeIs('admin.doctors.*') ? 'active text-white' : ''}}"
+                 href="{{ route('admin.doctors.index') }}">
                     <i class="fas fa-user-md"></i>
-                    <span>{{ __('sidebar.Doctors') }}</span>
+                    <span style="font-size: large;"> {{ __('sidebar.Doctors') }}</span>
                 </a>
             </li>
 
             <hr class="sidebar-divider">
 
-            <li class="nav-item">
+            <li class="nav-item  {{request()->routeIs('admin.patients.*') ? 'active' : ''}}">
                 <a class="nav-link" href="{{ route('admin.patients.index') }}">
                     <i class="fas fa-user-injured"></i>
-                    <span>{{ __('sidebar.Patients') }}</span>
+                    <span style="font-size: large;">{{ __('sidebar.Patients') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item  {{ request()->routeIs('admin.bookings.*')  ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.bookings.index') }}">
                     <i class="fas fa-calendar-check"></i>
-                    <span>{{ __('sidebar.Bookings') }}</span>
+                    <span style="font-size: large;">{{ __('sidebar.Bookings') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item  {{request()->routeIs('admin.payments.*') ? 'active' : ''}}">
                 <a class="nav-link" href="{{ route('admin.payments.index') }}">
                     <i class="fas fa-credit-card"></i>
-                    <span>{{ __('sidebar.Payments') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Payments') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item  {{request()->routeIs('admin.disputes.*') ? 'active' : ''}}">
                 <a class="nav-link" href="{{ route('admin.disputes.index') }}">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <span>{{ __('sidebar.Disputes') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Disputes') }}</span>
                 </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item {{request()->routeIs('admin.tickets.*') ? 'active' : ''}} ">
                 <a class="nav-link" href="{{ route('admin.tickets.index') }}">
                     <i class="fas fa-ticket-alt"></i>
-                    <span>{{ __('sidebar.Tickets') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Tickets') }}</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item  {{request()->routeIs('admin.settings.*') ? 'active' : ''}} ">
                 <a class="nav-link" href="{{ route('admin.settings.index') }}">
                     {{-- <i class="fas fa-ticket-alt"></i> --}}
                   <i class="fas fa-cog"></i>
 
-                    <span>{{ __('sidebar.Settings') }}</span>
+                    <span style="font-size: large;" >{{ __('sidebar.Settings') }}</span>
                 </a>
             </li>
 
@@ -141,7 +146,7 @@
                     direction: rtl;
                     display: flex;
                     flex-direction: row-reverse;
-                    justify-content: flex-start;
+                    justify-content: flex-end;
                     align-items: center;
                     gap: .75rem;
                 }

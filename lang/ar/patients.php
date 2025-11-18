@@ -31,7 +31,7 @@ return [
 
     // ============== Add
 
-    
+
 
 
 
@@ -46,6 +46,7 @@ return [
     "Bookings" => "الحجوزات",
     "Delete Patient" => "حذف المريض",
     "Statistics" => "إحصائيات",
+    "Total Bookings" => "عدد الحجوزات",
 
     // Fields
     "Name" => "الاسم",
