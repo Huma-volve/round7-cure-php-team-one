@@ -14,20 +14,28 @@ class SendMessageRequest extends FormRequest
         return Auth::check();
     }
 
-    public function rules()
-    {
-        return [
-            'chat_id' => 'nullable|exists:chats,id',
-            'receiver_id' => 'required_without:chat_id|exists:users,id',
+public function rules()
+{
+    $rules = [
+        'chat_id' => 'nullable|exists:chats,id',
+        'receiver_id' => 'required_without:chat_id|exists:users,id',
+        'body' => 'nullable|string',
+        'type' => 'required|string|in:text,image,voice,video,pdf',
+    ];
 
-            
-            'body' => 'nullable|string',
-            
-            
-   'type' => 'required|string|in:text,image,voice,video,pdf',
-'attachment' => 'required_if:type,image,video,voice,pdf|file|mimes:pdf|max:51200',
-        ];
+    if ($this->type === 'pdf') {
+        $rules['attachment'] = 'required|file|mimes:pdf|max:51200';
+    } elseif (in_array($this->type, ['image'])) {
+        $rules['attachment'] = 'required|file|mimes:jpeg,jpg,png,gif,webp|max:51200';
+    } elseif (in_array($this->type, ['video'])) {
+        $rules['attachment'] = 'required|file|mimes:mp4,quicktime|max:51200';
+    } elseif (in_array($this->type, ['voice'])) {
+        $rules['attachment'] = 'required|file|mimes:mp3,ogg|max:51200';
     }
+
+    return $rules;
+}
+
 
     protected function prepareForValidation()
     {
