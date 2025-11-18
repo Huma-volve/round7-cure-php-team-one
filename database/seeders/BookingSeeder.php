@@ -142,9 +142,6 @@ class BookingSeeder extends Seeder
         ]);
 
 
-
-
-
         // حجز في يوم الثلاثاء القادم
         // $nextTuesday = now()->next(Carbon::TUESDAY);
         // Booking::updateOrCreate([
