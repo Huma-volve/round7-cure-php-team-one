@@ -33,6 +33,6 @@ Route::prefix('payment-test')->name('payment-test.')->group(function () {
     Route::post('/confirm', [\App\Http\Controllers\PaymentTestController::class, 'confirm'])->name('confirm');
 });
 
-require __DIR__.'/admin/doctor.php';
 require __DIR__.'/auth.php';
+require __DIR__.'/admin/doctor.php';
 require __DIR__.'/admin/web.php';

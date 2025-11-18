@@ -14,8 +14,24 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        // If user is already authenticated, redirect based on role
+        if (Auth::guard('web')->check()) {
+            $user = Auth::guard('web')->user();
+            
+            if ($user->hasRole('admin', 'web')) {
+                return redirect()->route('admin.dashboard');
+            }
+            
+            if ($user->hasRole('doctor', 'web') && $user->doctor) {
+                return redirect()->route('doctor.dashboard');
+            }
+            
+            // If authenticated but no valid role, logout and show login
+            Auth::guard('web')->logout();
+        }
+        
         return view('auth.login');
     }
 
@@ -28,20 +44,43 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        $user = Auth::guard('web')->user();
 
-        // Clear any old intended URL to force direct redirect
-        $request->session()->forget('url.intended');
+        // Log للـ debugging
+        \Log::info('User logged in', [
+            'user_id' => $user->id,
+            'roles' => $user->getRoleNames(),
+        ]);
 
-        if ($user?->hasRole('admin', 'web')) {
+        // Admin redirect
+        if ($user->hasRole('admin', 'web')) {
             return redirect()->route('admin.dashboard');
         }
 
-        if ($user?->hasRole('doctor', 'web')) {
+        // Doctor redirect
+        if ($user->hasRole('doctor', 'web')) {
+            if (!$user->doctor) {
+                Auth::guard('web')->logout();
+                \Log::warning('Doctor login failed - no doctor record', ['user_id' => $user->id]);
+                
+                return redirect()->route('login')->withErrors([
+                    'email' => 'المستخدم ليس لديه ملف طبيب. يرجى التواصل مع الإدارة.',
+                ]);
+            }
+
             return redirect()->route('doctor.dashboard');
         }
 
-        return redirect('/');
+        // Default redirect - users without admin/doctor role are not allowed
+        \Log::warning('User logged in without admin/doctor role', [
+            'user_id' => $user->id,
+            'roles' => $user->getRoleNames(),
+        ]);
+        
+        Auth::guard('web')->logout();
+        return redirect()->route('login')->withErrors([
+            'email' => 'ليس لديك صلاحيات للدخول إلى لوحة التحكم.',
+        ]);
     }
 
     /**

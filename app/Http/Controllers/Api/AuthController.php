@@ -418,11 +418,11 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             // Check if request wants JSON response (API call) or redirect (web browser)
             if ($request->wantsJson() || $request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Unable to exchange authorization code with Google.',
-                    'error' => $e->getMessage(),
-                ], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to exchange authorization code with Google.',
+                'error' => $e->getMessage(),
+            ], 500);
             }
             
             // Redirect to frontend with error
@@ -432,10 +432,10 @@ class AuthController extends Controller
 
         if (isset($tokenData['error'])) {
             if ($request->wantsJson() || $request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $tokenData['error_description'] ?? 'Failed to fetch Google tokens.',
-                ], 400);
+            return response()->json([
+                'success' => false,
+                'message' => $tokenData['error_description'] ?? 'Failed to fetch Google tokens.',
+            ], 400);
             }
             
             $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
@@ -446,10 +446,10 @@ class AuthController extends Controller
 
         if (!$idToken) {
             if ($request->wantsJson() || $request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Google response did not include an ID token.',
-                ], 400);
+            return response()->json([
+                'success' => false,
+                'message' => 'Google response did not include an ID token.',
+            ], 400);
             }
             
             $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
@@ -460,18 +460,18 @@ class AuthController extends Controller
 
         if (!$payload) {
             if ($request->wantsJson() || $request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Unable to verify Google ID token.',
-                ], 401);
-            }
-            
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to verify Google ID token.',
+            ], 401);
+        }
+
             $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
             return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Unable to verify Google ID token'));
         }
 
-        // Complete login using existing method
-        $loginResponse = $this->completeGoogleLogin($payload);
+        // Complete login using existing method (web guard for callback)
+        $loginResponse = $this->completeGoogleLogin($payload, 'web');
         
         // If request wants JSON (API call), return JSON directly
         if ($request->wantsJson() || $request->expectsJson()) {
@@ -582,7 +582,7 @@ class AuthController extends Controller
             $client = new Google_Client(['client_id' => $clientId]);
             $payload = $client->verifyIdToken($token);
 
-            if (!$payload) {
+        if (!$payload) {
                 // Try to decode token to get more info
                 $tokenParts = explode('.', $token);
                 $decodedPayload = null;
@@ -614,9 +614,9 @@ class AuthController extends Controller
                 }
 
                 return response()->json($errorDetails, 401);
-            }
+        }
 
-            return $this->completeGoogleLogin($payload);
+            return $this->completeGoogleLogin($payload, 'api');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -649,7 +649,7 @@ class AuthController extends Controller
         return $client;
     }
 
-    protected function completeGoogleLogin(array $payload): JsonResponse
+    protected function completeGoogleLogin(array $payload, string $guard = 'api'): JsonResponse
     {
         $user = User::updateOrCreate(
             ['email' => $payload['email']],
@@ -671,11 +671,16 @@ class AuthController extends Controller
             $user->save();
         }
 
-        if (!$user->hasRole('patient')) {
-            $user->assignRole('patient');
+        // Assign patient role with the specified guard
+        if (!$user->hasRole('patient', $guard)) {
+            $user->assignRole('patient', $guard);
         }
 
-        Auth::login($user);
+        // Login with the specified guard
+        if ($guard === 'web') {
+            Auth::guard('web')->login($user);
+        }
+        
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

@@ -115,7 +115,7 @@ class DoctorPaymentController extends Controller
      */
     private function canAccessBooking(Booking $booking, $doctor): bool
     {
-        return $booking->doctor_id === $doctor->id || Auth::user()->hasRole('admin');
+        return $booking->doctor_id === $doctor->id || Auth::user()->hasRole('admin', 'api');
     }
 
     /**

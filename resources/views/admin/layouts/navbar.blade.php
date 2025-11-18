@@ -95,11 +95,17 @@
                                 <a class="dropdown-item text-center small text-gray-500">No notifications found</a>
                             @endforelse
 
-                                <a class="dropdown-item text-center small text-gray-500" href="{{ route('admin.notifications.index') }}">Show All Alerts</a>
+                                @php
+                                    $notificationsRoute = auth()->user()->hasRole('admin', 'web') 
+                                        ? route('admin.notifications.index') 
+                                        : route('doctor.notifications.index');
+                                @endphp
+                                <a class="dropdown-item text-center small text-gray-500" href="{{ $notificationsRoute }}">Show All Alerts</a>
                             </div>
                         </li>
 
-                        <!-- Nav Item - Messages -->
+                        <!-- Nav Item - Messages (Tickets Center) - Only for Admin -->
+                        @if(auth()->user()->hasRole('admin', 'web'))
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -126,6 +132,7 @@
                                 <a class="dropdown-item text-center small text-gray-500" href="{{ route('admin.tickets.index') }}">Read More Messages</a>
                             </div>
                         </li>
+                        @endif
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 

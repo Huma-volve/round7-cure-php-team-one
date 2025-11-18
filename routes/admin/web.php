@@ -26,7 +26,21 @@ use App\Http\Controllers\Admin\SettingController;
 |
 */
 
-Route::middleware(['auth', 'verified', 'role:admin'])
+// Account routes for both admin and doctor (shared)
+// These routes are available to any authenticated user (admin or doctor)
+Route::middleware(['auth:web', 'verified'])
+    ->prefix('admin/account')
+    ->name('admin.account.')
+    ->group(function () {
+        Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
+        Route::post('/profile', [AccountController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/settings', [AccountController::class, 'settings'])->name('settings');
+        Route::put('/settings/password', [AccountController::class, 'updatePassword'])->name('settings.password');
+        Route::put('/settings/language', [AccountController::class, 'updateLanguage'])->name('settings.language');
+        Route::get('/activity-log', [AccountController::class, 'activityLog'])->name('activity-log');
+    });
+
+Route::middleware(['auth:web', 'verified', 'role:admin,web'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -102,14 +116,6 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         // Settings
         Route::get('/settings', action: [SettingController::class, 'index'])->name('settings.index');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
-
-        // Account (Profile, Settings, Activity Log)
-        Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
-        Route::post('/account/profile', [AccountController::class, 'updateProfile'])->name('account.profile.update');
-        Route::get('/account/settings', [AccountController::class, 'settings'])->name('account.settings');
-        Route::put('/account/settings/password', [AccountController::class, 'updatePassword'])->name('account.settings.password');
-        Route::put('/account/settings/language', [AccountController::class, 'updateLanguage'])->name('account.settings.language');
-        Route::get('/account/activity-log', [AccountController::class, 'activityLog'])->name('account.activity-log');
 
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

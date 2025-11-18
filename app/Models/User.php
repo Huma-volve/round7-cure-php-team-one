@@ -21,7 +21,8 @@ class User extends Authenticatable
 
     /**
      * The name of the guard for the Spatie permissions.
-     * Set to null to allow dynamic guard detection.
+     * Set to null to allow dynamic guard detection based on context.
+     * This allows the same User model to work with both 'web' and 'api' guards.
      *
      * @var string|null
      */

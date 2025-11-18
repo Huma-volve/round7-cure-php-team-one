@@ -127,7 +127,7 @@ class PatientController extends Controller
 
             $patient = Auth::user()->patient;
             
-            if ($booking->patient_id != $patient->id && !Auth::user()->hasRole('admin')) {
+            if ($booking->patient_id != $patient->id && !Auth::user()->hasRole('admin', 'api')) {
                 return $this->unauthorizedResponse('messages.booking.unauthorized');
             }
 

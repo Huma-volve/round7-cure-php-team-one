@@ -25,15 +25,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php($days = [
-                                'saturday' => 'السبت',
-                                'sunday' => 'الأحد',
-                                'monday' => 'الإثنين',
-                                'tuesday' => 'الثلاثاء',
-                                'wednesday' => 'الأربعاء',
-                                'thursday' => 'الخميس',
-                                'friday' => 'الجمعة',
-                            ])
+                            @php
+                                $days = [
+                                    'saturday' => 'السبت',
+                                    'sunday' => 'الأحد',
+                                    'monday' => 'الإثنين',
+                                    'tuesday' => 'الثلاثاء',
+                                    'wednesday' => 'الأربعاء',
+                                    'thursday' => 'الخميس',
+                                    'friday' => 'الجمعة',
+                                ];
+                            @endphp
                             @foreach($days as $day => $label)
                                 @php
                                     $slot = $schedule[$day][0] ?? null;

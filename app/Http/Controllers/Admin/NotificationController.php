@@ -29,7 +29,18 @@ class NotificationController extends Controller
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return redirect()->route('admin.notifications.index')
+        // Redirect based on user role
+        if ($user->hasRole('admin', 'web')) {
+            return redirect()->route('admin.notifications.index')
+                ->with('success', __('All notifications marked as read.'));
+        }
+        
+        if ($user->hasRole('doctor', 'web')) {
+            return redirect()->route('doctor.notifications.index')
+                ->with('success', __('All notifications marked as read.'));
+        }
+
+        return redirect()->back()
             ->with('success', __('All notifications marked as read.'));
     }
 }
