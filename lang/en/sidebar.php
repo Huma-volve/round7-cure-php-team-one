@@ -14,6 +14,11 @@ return [
   "Tickets"=> "Tickets",
   "Faqs" => "FAQs",
   "Settings"=> "Settings",
-  "Settings Screens"=> "Settings Screens"
+  "Settings Screens"=> "Settings Screens",
+  "DoctorDashboard" => "Dashboard",
+  "DoctorBookings" => "Bookings",
+  "DoctorPatients" => "Patients",
+  "DoctorPayments" => "Payments",
+  "DoctorSchedule" => "Working Hours"
 
 ] ;

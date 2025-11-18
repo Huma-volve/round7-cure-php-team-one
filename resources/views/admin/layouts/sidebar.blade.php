@@ -38,13 +38,17 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        @php($isArabic = app()->getLocale() === 'ar')
+        @php
+            $isArabic = app()->getLocale() === 'ar';
+            $user = auth()->user();
+            $isDoctorPortal = $user && $user->hasRole('doctor') && !$user->hasRole('admin');
+        @endphp
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion {{ $isArabic ? 'rtl-sidebar' : '' }}"
             id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
-                href="{{ route('admin.dashboard') }}">
+                href="{{ $isDoctorPortal ? route('doctor.dashboard') : route('admin.dashboard') }}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -53,7 +57,46 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-            <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} ms-auto">
+
+            @if($isDoctorPortal)
+                <li class="nav-item {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
+                    <a class="nav-link {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}" href="{{ route('doctor.dashboard') }}">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>{{ __('sidebar.DoctorDashboard') }}</span>
+                    </a>
+                </li>
+
+                <hr class="sidebar-divider">
+
+                <li class="nav-item {{ request()->routeIs('doctor.bookings.*') ? 'active' : '' }}">
+                    <a class="nav-link {{ request()->routeIs('doctor.bookings.*') ? 'active' : '' }}" href="{{ route('doctor.bookings.index') }}">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>{{ __('sidebar.DoctorBookings') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('doctor.patients.*') ? 'active' : '' }}">
+                    <a class="nav-link {{ request()->routeIs('doctor.patients.*') ? 'active' : '' }}" href="{{ route('doctor.patients.index') }}">
+                        <i class="fas fa-user-injured"></i>
+                        <span>{{ __('sidebar.DoctorPatients') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('doctor.payments.*') ? 'active' : '' }}">
+                    <a class="nav-link {{ request()->routeIs('doctor.payments.*') ? 'active' : '' }}" href="{{ route('doctor.payments.index') }}">
+                        <i class="fas fa-credit-card"></i>
+                        <span>{{ __('sidebar.DoctorPayments') }}</span>
+                    </a>
+                </li>
+
+                <li class="nav-item {{ request()->routeIs('doctor.schedule.*') ? 'active' : '' }}">
+                    <a class="nav-link {{ request()->routeIs('doctor.schedule.*') ? 'active' : '' }}" href="{{ route('doctor.schedule.edit') }}">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ __('sidebar.DoctorSchedule') }}</span>
+                    </a>
+                </li>
+            @else
+            <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>{{ __('sidebar.Dashboard') }}</span>
@@ -130,6 +173,7 @@
                     <span>{{ __('sidebar.Settings') }}</span>
                 </a>
             </li>
+            @endif
 
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -141,26 +185,31 @@
 
         </ul>
 
+        <style>
+            #accordionSidebar .nav-link {
+                display: flex;
+                align-items: center;
+                gap: .65rem;
+                justify-content: flex-start;
+            }
+
+            #accordionSidebar .sidebar-heading {
+                text-align: left;
+            }
+        </style>
+
         @if ($isArabic)
             <style>
-                #accordionSidebar.rtl-sidebar .nav-link {
+                #accordionSidebar.rtl-sidebar {
                     direction: rtl;
-                    display: flex;
+                }
+
+                #accordionSidebar.rtl-sidebar .nav-link {
                     flex-direction: row-reverse;
-                    justify-content: flex-start;
-                    align-items: center;
-                    gap: .75rem;
+                    justify-content: flex-end;
                 }
 
-                #accordionSidebar.rtl-sidebar .nav-link i {
-                    margin-left: 0;
-                    margin-right: 0;
-                }
-
-                #accordionSidebar.rtl-sidebar .nav-link span {
-                    text-align: right;
-                }
-
+                #accordionSidebar.rtl-sidebar .nav-link span,
                 #accordionSidebar.rtl-sidebar .sidebar-heading {
                     text-align: right;
                 }
