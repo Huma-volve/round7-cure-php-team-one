@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Booking;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\Review;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -43,8 +44,15 @@ class ReviewController extends Controller
     {
         try {
             $data = $request->validated();
+            $current_user_id = auth()->id();
+            $patient = Patient::where('user_id', $current_user_id)->first();
+            if (! $patient) {
+                return ApiResponse::error(null, 'Patient profile not found for the authenticated user', 404);
+            }
+            $patient_id = $patient->id;
+
             $bookingExists = Booking::where('id', $data['booking_id'])
-                        ->where('patient_id', $data['patient_id'])
+                        ->where('patient_id', $patient_id)
                         ->exists();
 
             if (! $bookingExists) {
@@ -54,7 +62,13 @@ class ReviewController extends Controller
             if (Review::where('booking_id', $data['booking_id'])->exists()) {
                 return ApiResponse::error(null, 'Review for this booking already exists', 409);
             }
-            $review = Review::create($data);
+            $review = Review::create([
+                'booking_id' =>$data['booking_id'],
+                'patient_id' =>$patient_id,
+                'doctor_id' =>$data['doctor_id'],
+                'rating' =>$data['rating'],
+                'comment' =>$data['comment'],
+            ]);
             return ApiResponse::success(['review' => $review], "Review created successfully", 201);
 
         } catch (\Throwable $e) {

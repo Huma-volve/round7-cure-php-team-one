@@ -164,7 +164,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">{{ __('doctor_show.Delete Doctor') }}</h6>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">{{ __('doctor_show.Warning: The doctor will be permanently deleted and this action cannot be undone') }}</p>
+                    <p class="text-muted">{{ __('doctor_show.Warning: The doctor will be permanently deleted and this action cannot be undone.') }}</p>
                     <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST" onsubmit="return confirm(__('doctor_show.Are you sure you want to delete this doctor?'));">
                         @csrf
                         @method('DELETE')

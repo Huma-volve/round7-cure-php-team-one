@@ -47,16 +47,21 @@
             id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center"
-                href="{{ $isDoctorPortal ? route('doctor.dashboard') : route('admin.dashboard') }}">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+            <a class="sidebar-brand d-flex align-items-center justify-content-center mt-2"
+
+            href="{{ $isDoctorPortal ? route('doctor.dashboard') : route('admin.dashboard') }}">
+                <div class="sidebar-brand-icon ">
+             <img style="width: 50px;" src="{{ asset('storage/' . $logo) }}" alt="{{ $appName }}" >
                 </div>
-                <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
-            </a>
+
+             <div class="sidebar-brand-text mx-3 font-weight-bold">
+                {{ \App\Models\Setting::getValue('app_name', config('app.name')) }}  </div>
+       </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
+
+
 
             @if($isDoctorPortal)
                 <li class="nav-item {{ request()->routeIs('doctor.dashboard') ? 'active' : '' }}">
@@ -98,8 +103,13 @@
             @else
             <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                     @if (app()->getlocale() == 'ar')
+                      <span style="font-size: large;" >{{ __('sidebar.Dashboard') }}</span>
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>{{ __('sidebar.Dashboard') }}</span>
+                    @else
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Dashboard') }}</span>
+                    @endif
                 </a>
             </li>
 
@@ -109,68 +119,182 @@
                 {{ __('sidebar.Management') }}
             </div>
 
+
+
             <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <i class="fas fa-users"></i>
-                    <span>{{ __('sidebar.Users') }}</span>
+                        @if (app()->getlocale() == 'ar')
+
+                       <span style="font-size: large;" >{{ __('sidebar.Users') }}</span>
+                                       <i class="fas fa-users"></i>
+                                       @else
+                         <i class="fas fa-users"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Users') }}</span>
+
+                        @endif
+
+                </a>
+            </li>
+
+            <li class="nav-item {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" href="{{ route('admin.admins.index') }}">
+                    @if (app()->getlocale() == 'ar')
+                    <span style="font-size: large;" >{{ __('sidebar.Admins') }}</span>
+                    <i class="fas fa-user-shield"></i>
+                    @else
+                     <i class="fas fa-user-shield"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Admins') }}</span>
+                    @endif
+                </a>
+            </li>
+
+
+            <li class="nav-item {{ request()->routeIs('admin.specialties.*') ? 'active' : '' }}">
+                <a class="nav-link {{ request()->routeIs('admin.specialties.*') ? 'active' : '' }}" href="{{ route('admin.specialties.index') }}">
+                        @if (app()->getlocale() == 'ar')
+
+                       <span style="font-size: large;" >{{ __('sidebar.Specialties') }}</span>
+                              <i class="fas fa-user-md"></i>
+                                       @else
+                       <i class="fas fa-user-md"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Specialties') }}</span>
+
+                        @endif
                 </a>
             </li>
 
             <li class="nav-item {{ request()->routeIs('admin.doctors.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.doctors.*') ? 'active' : '' }}" href="{{ route('admin.doctors.index') }}">
-                    <i class="fas fa-user-md"></i>
-                    <span>{{ __('sidebar.Doctors') }}</span>
+                        @if (app()->getlocale() == 'ar')
+
+                       <span style="font-size: large;" >{{ __('sidebar.Doctors') }}</span>
+                              <i class="fas fa-user-md"></i>
+                                       @else
+                       <i class="fas fa-user-md"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Doctors') }}</span>
+
+                        @endif
                 </a>
             </li>
 
             <hr class="sidebar-divider">
 
+
+
             <li class="nav-item {{ request()->routeIs('admin.patients.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.patients.*') ? 'active' : '' }}" href="{{ route('admin.patients.index') }}">
-                    <i class="fas fa-user-injured"></i>
-                    <span>{{ __('sidebar.Patients') }}</span>
+
+                       @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Patients') }}</span>
+                                <i class="fas fa-user-injured"></i>
+                                                @else
+                                <i class="fas fa-user-injured"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Patients') }}</span>
+
+                        @endif
+
+
                 </a>
             </li>
 
+
+
             <li class="nav-item {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>{{ __('sidebar.Bookings') }}</span>
+            <a class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}" href="{{ route('admin.bookings.index') }}">
+
+                       @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Bookings') }}</span>
+                                    <i class="fas fa-calendar-check"></i>
+                                                @else
+                             <i class="fas fa-calendar-check"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Bookings') }}</span>
+
+                        @endif
+
                 </a>
             </li>
+
 
             <li class="nav-item {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
-                    <i class="fas fa-credit-card"></i>
-                    <span>{{ __('sidebar.Payments') }}</span>
+        @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Payments') }}</span>
+                     <i class="fas fa-credit-card"></i>
+                                                @else
+                          <i class="fas fa-credit-card"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Payments') }}</span>
+
+                        @endif
+
+
                 </a>
             </li>
+
+
 
             <li class="nav-item {{ request()->routeIs('admin.disputes.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.disputes.*') ? 'active' : '' }}" href="{{ route('admin.disputes.index') }}">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>{{ __('sidebar.Disputes') }}</span>
+    @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Disputes') }}</span>
+                     <i class="fas fa-credit-card"></i>
+                                                @else
+                          <i class="fas fa-credit-card"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Disputes') }}</span>
+
+                        @endif
+
                 </a>
             </li>
 
+
             <li class="nav-item {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}" href="{{ route('admin.tickets.index') }}">
-                    <i class="fas fa-ticket-alt"></i>
-                    <span>{{ __('sidebar.Tickets') }}</span>
+    @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Tickets') }}</span>
+                      <i class="fas fa-ticket-alt"></i>
+                                                @else
+                           <i class="fas fa-ticket-alt"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Tickets') }}</span>
+
+                        @endif
+
+
+
                 </a>
             </li>
+
             <li class="nav-item {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}" href="{{ route('admin.faqs.index') }}">
-                    <i class="fas fa-question-circle"></i>
-                    <span>{{ __('sidebar.Faqs') }}</span>
+ @if (app()->getlocale() == 'ar')
+
+                            <span style="font-size: large;" >{{ __('sidebar.Faqs') }}</span>
+                       <i class="fas fa-question-circle"></i>
+                                                @else
+                          <i class="fas fa-question-circle"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Faqs') }}</span>
+
+                        @endif
+
                 </a>
             </li>
             <li class="nav-item {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">
-                    {{-- <i class="fas fa-ticket-alt"></i> --}}
-                  <i class="fas fa-cog"></i>
+@if (app()->getlocale() == 'ar')
 
-                    <span>{{ __('sidebar.Settings') }}</span>
+                            <span style="font-size: large;" >{{ __('sidebar.Settings') }}</span>
+                         <i class="fas fa-cog"></i>
+                                                @else
+                            <i class="fas fa-cog"></i>
+                            <span style="font-size: large;" >{{ __('sidebar.Settings') }}</span>
+
+                        @endif
+
+
                 </a>
             </li>
             @endif
@@ -207,6 +331,17 @@
                 #accordionSidebar.rtl-sidebar .nav-link {
                     flex-direction: row-reverse;
                     justify-content: flex-end;
+                    align-items: center;
+                    gap: .75rem;
+                }
+
+                #accordionSidebar.rtl-sidebar .nav-link i {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
+
+                #accordionSidebar.rtl-sidebar .nav-link span {
+                    text-align: right;
                 }
 
                 #accordionSidebar.rtl-sidebar .nav-link span,

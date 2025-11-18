@@ -7,6 +7,7 @@ return [
   "Users"       =>"المستخدمين",
   "Doctors"=> "الأطباء",
   "Patients"=> "المرضى",
+   "Specialties" => "التخصصات",
   "Bookings" =>"الحجوزات",
   "Payments"=> "المدفوعات",
   "Disputes"=>"النزاعات",
@@ -18,7 +19,8 @@ return [
   "DoctorBookings" => "حجوزاتي",
   "DoctorPatients" => "مرضاي",
   "DoctorPayments" => "مدفوعاتي",
-  "DoctorSchedule" => "أوقات العمل"
+  "DoctorSchedule" => "أوقات العمل",
+  "Admins"       =>"الادمن",
 
 
 ] ;
