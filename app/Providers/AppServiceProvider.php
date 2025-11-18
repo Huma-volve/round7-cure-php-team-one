@@ -8,6 +8,7 @@ use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Models\Review;
+use App\Models\Setting;
 use App\Models\Ticket;
 use App\Observers\BookingObserver;
 use App\Observers\ChatObserver;
@@ -31,14 +32,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(StripeClient::class, function () {
             $secret = (string) config('services.stripe.secret', env('STRIPE_SECRET'));
-            
+
             if (empty($secret) || $secret === 'sk_test_xxx' || $secret === 'YOUR_STRIPE_SECRET') {
                 throw new \RuntimeException(
                     'Stripe API key is not configured. Please set STRIPE_SECRET in your .env file. ' .
                     'Get your API key from https://dashboard.stripe.com/apikeys'
                 );
             }
-            
+
             return new StripeClient($secret);
         });
 
@@ -56,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         // Use Bootstrap 4 pagination view
         Paginator::defaultView('pagination::bootstrap-4');
         Paginator::defaultSimpleView('pagination::simple-bootstrap-4');
-        
+
         Booking::observe(BookingObserver::class);
         Review::observe(ReviewObserver::class);
         Payment::observe(PaymentObserver::class);
@@ -93,6 +94,13 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with(compact('unreadCount', 'notifications', 'ticketsCount', 'avatarUrl'));
+
+
         });
+
+            $appName = Setting::getValue('app_name', config('app.name'));
+               View::share('appName', $appName);
+            $logo = Setting::getValue('logo');
+               View::share('logo', $logo);
     }
 }
