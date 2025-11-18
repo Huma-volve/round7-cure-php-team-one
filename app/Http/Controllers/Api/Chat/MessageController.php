@@ -73,7 +73,19 @@ class MessageController extends Controller
 
 
     public function send(SendMessageRequest $request)
+    
     {
+
+        /**
+          git stash
+          git checkout main
+          git pull origin main
+          git checkout ahmed
+          git merge main
+          git stash pop
+         */
+        // dd(request()->all());
+
         $user = $request->user();
         $chatId = $request->input('chat_id');
         $receiverId = $request->input('receiver_id'); // هنستخدمها لو مفيش chat_id
