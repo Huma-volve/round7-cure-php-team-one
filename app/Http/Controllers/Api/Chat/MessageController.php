@@ -76,15 +76,7 @@ class MessageController extends Controller
     
     {
 
-        /**
-          git stash
-          git checkout main
-          git pull origin main
-          git checkout ahmed
-          git merge main
-          git stash pop
-         */
-        // dd(request()->all());
+      
 
         $user = $request->user();
         $chatId = $request->input('chat_id');
