@@ -142,26 +142,26 @@ class BookingSeeder extends Seeder
         ]);
 
         // موعد في اليوم القادم
-        Booking::updateOrCreate([
-            'doctor_id' => $doctor->id,
-            'patient_id' => $patient2->id,
-            'date_time' => now()->addDay()->setTime(9, 0, 0),
-            'payment_method' => 'cash',
-            'status' => 'confirmed',
-            'price' => $doctor->session_price,
-        ]);
+        // Booking::updateOrCreate([
+        //     'doctor_id' => $doctor->id,
+        //     'patient_id' => $patient2->id,
+        //     'date_time' => now()->addDay()->setTime(9, 0, 0),
+        //     'payment_method' => 'cash',
+        //     'status' => 'confirmed',
+        //     'price' => $doctor->session_price,
+        // ]);
 
-        // إضافة المزيد من الحجوزات للطبيب الأول (doctor@example.com) للاختبار
-        // حجز في يوم الاثنين القادم
-        $nextMonday = now()->next(Carbon::MONDAY);
-        Booking::updateOrCreate([
-            'doctor_id' => $doctor->id,
-            'patient_id' => $patient->id,
-            'date_time' => $nextMonday->copy()->setTime(10, 0, 0),
-            'payment_method' => 'cash',
-            'status' => 'confirmed',
-            'price' => $doctor->session_price,
-        ]);
+        // // إضافة المزيد من الحجوزات للطبيب الأول (doctor@example.com) للاختبار
+        // // حجز في يوم الاثنين القادم
+        // $nextMonday = now()->next(Carbon::MONDAY);
+        // Booking::updateOrCreate([
+        //     'doctor_id' => $doctor->id,
+        //     'patient_id' => $patient->id,
+        //     'date_time' => $nextMonday->copy()->setTime(10, 0, 0),
+        //     'payment_method' => 'cash',
+        //     'status' => 'confirmed',
+        //     'price' => $doctor->session_price,
+        // ]);
 
         // حجز في يوم الثلاثاء القادم
         $nextTuesday = now()->next(Carbon::TUESDAY);
