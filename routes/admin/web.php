@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\PatientPaymentMethodController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\SettingController;
-
+use App\Http\Controllers\Admin\SpecialtyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,4 +114,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+
+
+        //specialties
+
+
+    Route::resource('/specialties', SpecialtyController::class);
+
+
     });
