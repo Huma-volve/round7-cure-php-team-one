@@ -19,6 +19,11 @@ return [
     'payment.confirmed' => 'Payment confirmed successfully',
     'payment.fetched' => 'Payment details fetched successfully',
 
+    // Ticket messages
+    'ticket.created' => 'Support request submitted successfully',
+    'ticket.reply_sent' => 'Reply sent successfully',
+    'ticket.status_updated' => 'Ticket status updated successfully',
+
     // Status labels
     'status.pending' => 'Pending',
     'status.confirmed' => 'Confirmed',

@@ -10,6 +10,7 @@ use App\Services\Payment\PaymentMethodService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class PatientPaymentMethodController extends Controller
 {
@@ -34,7 +35,10 @@ class PatientPaymentMethodController extends Controller
 
     public function store(StorePaymentMethodRequest $request): JsonResponse
     {
-        $method = $this->service->create($request->user(), $request->validated(), $request->user());
+        $data = $request->validated();
+        $attributes = $this->buildPaymentAttributes($request, $data);
+
+        $method = $this->service->create($request->user(), $attributes, $request->user());
 
         return response()->json([
             'status' => true,
@@ -66,6 +70,36 @@ class PatientPaymentMethodController extends Controller
             'status' => true,
             'message' => __('messages.payment_method.deleted'),
         ]);
+    }
+
+    protected function buildPaymentAttributes(Request $request, array $data): array
+    {
+        $last4 = substr($data['card_number'], -4);
+
+        return [
+            'provider' => 'card',
+            'brand' => $data['brand'] ?? 'VISA',
+            'last4' => $last4,
+            'exp_month' => $data['exp_month'],
+            'exp_year' => $data['exp_year'],
+            'gateway' => $data['gateway'] ?? 'stripe',
+            'token' => $this->generateToken($request->user()->id, $data['card_number']),
+            'is_default' => $request->boolean('is_default'),
+            'metadata' => [
+                'cardholder_name' => $data['cardholder_name'],
+                'masked_card' => $this->maskCard($data['card_number']),
+            ],
+        ];
+    }
+
+    protected function maskCard(string $cardNumber): string
+    {
+        return str_repeat('*', max(0, strlen($cardNumber) - 4)) . substr($cardNumber, -4);
+    }
+
+    protected function generateToken(int $userId, string $cardNumber): string
+    {
+        return hash('sha256', $userId . '|' . $cardNumber . '|' . Str::uuid()->toString());
     }
 }
 

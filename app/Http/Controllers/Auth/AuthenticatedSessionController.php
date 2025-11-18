@@ -33,9 +33,12 @@ class AuthenticatedSessionController extends Controller
         // Clear any old intended URL to force direct redirect
         $request->session()->forget('url.intended');
 
-        // Check if user has admin role (web guard for admin panel)
-        if ($user && $user->hasRole('admin', 'web')) {
+        if ($user?->hasRole('admin', 'web')) {
             return redirect()->route('admin.dashboard');
+        }
+
+        if ($user?->hasRole('doctor', 'web')) {
+            return redirect()->route('doctor.dashboard');
         }
 
         return redirect('/');
