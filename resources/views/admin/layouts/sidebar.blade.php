@@ -103,9 +103,13 @@
             @else
             <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-
+                     @if (app()->getlocale() == 'ar')
+                      <span style="font-size: large;" >{{ __('sidebar.Dashboard') }}</span>
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    @else
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span style="font-size: large;" >{{ __('sidebar.Dashboard') }}</span>
+                    @endif
                 </a>
             </li>
 
@@ -134,9 +138,13 @@
 
             <li class="nav-item {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}">
                 <a class="nav-link {{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" href="{{ route('admin.admins.index') }}">
-
-                    <i class="fas fa-user-shield"></i>
+                    @if (app()->getlocale() == 'ar')
                     <span style="font-size: large;" >{{ __('sidebar.Admins') }}</span>
+                    <i class="fas fa-user-shield"></i>
+                    @else
+                     <i class="fas fa-user-shield"></i>
+                    <span style="font-size: large;" >{{ __('sidebar.Admins') }}</span>
+                    @endif
                 </a>
             </li>
 
