@@ -4,7 +4,12 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 text-gray-800">Notifications</h1>
-        <form action="{{ route('admin.notifications.markAllRead') }}" method="POST">
+        @php
+            $markAllReadRoute = auth()->user()->hasRole('admin', 'web') 
+                ? route('admin.notifications.markAllRead') 
+                : route('doctor.notifications.markAllRead');
+        @endphp
+        <form action="{{ $markAllReadRoute }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-sm btn-primary">
                 Mark all as read

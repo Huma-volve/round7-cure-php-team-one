@@ -23,21 +23,21 @@ use Illuminate\Support\Facades\Route;
         ->name('show');
 
     //  الأرباح الخاصة بالدكتور (للدكتور فقط)
-    Route::middleware('role:doctor')->get('doctor/earnings', [DoctorController::class, 'earnings'])
+    Route::middleware('role:doctor,api')->get('doctor/earnings', [DoctorController::class, 'earnings'])
         ->name('earnings');
 
     //  بحث داخل مرضى الدكتور (للدكتور فقط)
-    Route::middleware('role:doctor')->get('/patients/search', [DoctorController::class, 'searchPatients'])
+    Route::middleware('role:doctor,api')->get('/patients/search', [DoctorController::class, 'searchPatients'])
         ->name('patients.search');
 
     //  عرض مريض محدد عند دكتور معين
-    Route::middleware('role:doctor')->get('/patients/{patient}', [DoctorController::class, 'showPatient'])
+    Route::middleware('role:doctor,api')->get('/patients/{patient}', [DoctorController::class, 'showPatient'])
         ->name('patients.show');
 });
 
-Route::middleware(['auth:sanctum', 'role:doctor'])
+Route::middleware(['auth:sanctum', 'role:doctor,api'])
     ->prefix('doctor')
-    ->name('doctor.')
+    ->name('api.doctor.')
     ->group(function () {
 
         // Dashboard

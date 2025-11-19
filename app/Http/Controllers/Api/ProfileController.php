@@ -69,11 +69,11 @@ class ProfileController extends Controller
 
         $user->update($data);
 
-        if ($user->hasRole('patient')) {
+        if ($user->hasRole('patient', 'api')) {
             $this->handlePatientUpdate($user, $request);
         }
 
-        if ($user->hasRole('doctor')) {
+        if ($user->hasRole('doctor', 'api')) {
             $this->handleDoctorUpdate($user, $request);
         }
 

@@ -96,8 +96,10 @@ class AccountController extends Controller
 
     public function activityLog(Request $request)
     {
-        $logs = ActivityModel::where('causer_type', get_class(Auth::user()))
-            ->where('causer_id', Auth::id())
+        $user = Auth::user();
+        
+        $logs = ActivityModel::where('causer_type', get_class($user))
+            ->where('causer_id', $user->id)
             ->latest()
             ->paginate(15);
 
