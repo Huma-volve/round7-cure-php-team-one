@@ -503,6 +503,30 @@ Body: { "confirm": false }
    - X-API-Key: {{maintenance_api_key}}
    ```
 
+### 🧪 Load Testing
+
+For comprehensive load testing of all APIs using Postman Collection Runner:
+
+📂 **See:** [`load-testing/`](load-testing/) folder
+
+**Quick Start:**
+```bash
+cd load-testing
+# Read START_HERE.md or README.md
+```
+
+**Features:**
+- ✅ 15+ API endpoints organized in 6 groups
+- ✅ Automatic performance monitoring
+- ✅ Multiple test scenarios (10, 50, 100, 200+ users)
+- ✅ Complete Arabic documentation
+
+**Documentation:**
+- [`load-testing/START_HERE.md`](load-testing/START_HERE.md) - Start here
+- [`load-testing/QUICK_START.md`](load-testing/QUICK_START.md) - 5-minute guide
+- [`load-testing/LOAD_TESTING_GUIDE.md`](load-testing/LOAD_TESTING_GUIDE.md) - Complete guide
+- [`LOAD_TESTING.md`](LOAD_TESTING.md) - Overview
+
 ---
 
 ## 🧩 Code Examples
