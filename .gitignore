@@ -45,3 +45,7 @@ ADMIN_PANEL.md
 
 # Ignore docs directory
 /docs/
+
+# Ignore load testing files
+LOAD_TESTING.md
+/load-testing/
