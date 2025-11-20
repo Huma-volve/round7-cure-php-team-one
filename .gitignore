@@ -1,8 +1,6 @@
 *.log
 .DS_Store
-.env
 .env.backup
-.env.production
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -49,3 +47,4 @@ ADMIN_PANEL.md
 # Ignore load testing files
 LOAD_TESTING.md
 /load-testing/
+config.bat
