@@ -473,18 +473,39 @@ class AuthController extends Controller
         // Complete login using existing method (web guard for callback)
         $loginResponse = $this->completeGoogleLogin($payload, 'web');
         
-        // If request wants JSON (API call), return JSON directly
-        if ($request->wantsJson() || $request->expectsJson()) {
-            return $loginResponse;
-        }
-
         // Extract token and user from response
         $responseData = json_decode($loginResponse->getContent(), true);
         $token = $responseData['token'] ?? null;
+        $user = $responseData['user'] ?? null;
         
         if (!$token) {
+            if ($request->wantsJson() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to generate authentication token',
+                ], 500);
+            }
+            
             $frontendUrl = env('FRONTEND_URL', env('APP_URL'));
             return redirect($frontendUrl . '/auth/google/callback?error=' . urlencode('Failed to generate authentication token'));
+        }
+
+        // If request wants JSON (API call), return JSON with all Google OAuth data
+        if ($request->wantsJson() || $request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful with Google',
+                'token' => $token,
+                'user' => $user,
+                'google_oauth' => [
+                    'access_token' => $tokenData['access_token'] ?? null,
+                    'id_token' => $tokenData['id_token'] ?? null,
+                    'expires_in' => $tokenData['expires_in'] ?? null,
+                    'token_type' => $tokenData['token_type'] ?? null,
+                    'scope' => $tokenData['scope'] ?? null,
+                    'refresh_token' => $tokenData['refresh_token'] ?? null,
+                ],
+            ]);
         }
 
         // For web browser, redirect to frontend with token
